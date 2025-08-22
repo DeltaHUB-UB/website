@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 810 540" width="810" height="540">
+  <defs>
+    <g id="star">
+      <path d="M0,-1L.588,-.809L.951,-.309L.951,.309L.588,.809L0,1L-.588,.809L-.951,.309L-.951,-.309L-.588,-.809z" fill="#FFDD00"/>
+    </g>
+  </defs>
+  <rect width="810" height="540" fill="#003399"/>
+  <g transform="translate(405,270)">
+    <g id="circle">
+      <g id="star-row">
+        <use href="#star" transform="translate(0,-144) rotate(0)"/>
+        <use href="#star" transform="translate(0,-144) rotate(30)"/>
+        <use href="#star" transform="translate(0,-144) rotate(60)"/>
+        <use href="#star" transform="translate(0,-144) rotate(90)"/>
+        <use href="#star" transform="translate(0,-144) rotate(120)"/>
+        <use href="#star" transform="translate(0,-144) rotate(150)"/>
+        <use href="#star" transform="translate(0,-144) rotate(180)"/>
+        <use href="#star" transform="translate(0,-144) rotate(210)"/>
+        <use href="#star" transform="translate(0,-144) rotate(240)"/>
+        <use href="#star" transform="translate(0,-144) rotate(270)"/>
+        <use href="#star" transform="translate(0,-144) rotate(300)"/>
+        <use href="#star" transform="translate(0,-144) rotate(330)"/>
+      </g>
+    </g>
+  </g>
+</svg>

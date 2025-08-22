@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Research - Delta-Hub Horizon Europe{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h1 class="display-4">Research & Results</h1>
+                <p class="lead text-muted">
+                    Publications, reports, and datasets advancing delta science and management
+                </p>
+            </div>
+        </div>
+
+        <!-- Research Categories -->
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <div class="card text-center h-100 shadow-sm hover-card">
+                    <div class="card-body">
+                        <i class="fas fa-file-alt fa-3x text-primary mb-3"></i>
+                        <h5>Publications</h5>
+                        <p class="text-muted">Peer-reviewed articles and conference papers</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center h-100 shadow-sm hover-card">
+                    <div class="card-body">
+                        <i class="fas fa-chart-bar fa-3x text-success mb-3"></i>
+                        <h5>Reports</h5>
+                        <p class="text-muted">Technical reports and policy briefs</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center h-100 shadow-sm hover-card">
+                    <div class="card-body">
+                        <i class="fas fa-database fa-3x text-warning mb-3"></i>
+                        <h5>Datasets</h5>
+                        <p class="text-muted">Open research data and monitoring records</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if research_items %}
+            <!-- Dynamic Research Items -->
+            <div class="row">
+                {% for item in research_items %}
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-{{ 'primary' if item.type == 'publication' else 'success' if item.type == 'report' else 'warning' }}">
+                                        {{ item.type|title }}
+                                    </span>
+                                    <small class="text-muted">{{ item.date }}</small>
+                                </div>
+                                <h5 class="card-title">{{ item.title }}</h5>
+                                <p class="card-text">{{ item.description }}</p>
+                                {% if item.authors %}
+                                    <p class="text-muted small">
+                                        <i class="fas fa-users me-1"></i>{{ item.authors }}
+                                    </p>
+                                {% endif %}
+                                <div class="d-flex gap-2 mt-3">
+                                    {% if item.url %}
+                                        <a href="{{ item.url }}" class="btn btn-sm btn-primary" target="_blank">
+                                            <i class="fas fa-external-link-alt me-1"></i>View
+                                        </a>
+                                    {% endif %}
+                                    {% if item.download_url %}
+                                        <a href="{{ item.download_url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                            <i class="fas fa-download me-1"></i>Download
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Default content when no research items are available -->
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-info">Coming Soon</span>
+                                <small class="text-muted">2025</small>
+                            </div>
+                            <h5 class="card-title">Publications in Progress</h5>
+                            <p class="card-text">
+                                Our research team is currently working on several peer-reviewed publications 
+                                that will present the latest findings from the Delta-Hub project.
+                            </p>
+                            <p class="text-muted small">
+                                <i class="fas fa-clock me-1"></i>Expected publication dates throughout 2025
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-info">Coming Soon</span>
+                                <small class="text-muted">2025</small>
+                            </div>
+                            <h5 class="card-title">Technical Reports</h5>
+                            <p class="card-text">
+                                Comprehensive technical reports documenting our methodologies, findings, 
+                                and recommendations will be published as they become available.
+                            </p>
+                            <p class="text-muted small">
+                                <i class="fas fa-file-alt me-1"></i>Regular updates and deliverables
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-info">Coming Soon</span>
+                                <small class="text-muted">2025</small>
+                            </div>
+                            <h5 class="card-title">Open Datasets</h5>
+                            <p class="card-text">
+                                Research datasets collected through the project will be made freely 
+                                available to the scientific community following data management protocols.
+                            </p>
+                            <p class="text-muted small">
+                                <i class="fas fa-database me-1"></i>FAIR data principles compliance
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-info">Coming Soon</span>
+                                <small class="text-muted">2025</small>
+                            </div>
+                            <h5 class="card-title">Policy Briefs</h5>
+                            <p class="card-text">
+                                Policy-oriented summaries will translate research findings into 
+                                actionable recommendations for delta management authorities.
+                            </p>
+                            <p class="text-muted small">
+                                <i class="fas fa-balance-scale me-1"></i>Evidence-based policy support
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Research Impact -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card bg-gradient-blue text-white">
+                    <div class="card-body text-center py-5">
+                        <h3 class="mb-4">Research Impact</h3>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4>Open Science</h4>
+                                <p class="mb-0">All publications will be made available through open access channels</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h4>Data Sharing</h4>
+                                <p class="mb-0">Research data will be shared following FAIR principles</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h4>Policy Impact</h4>
+                                <p class="mb-0">Findings will inform EU and national delta management policies</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-gradient-blue text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">Welcome to Delta-Hub</h1>
+                <p class="lead mb-4">
+                    Delta-Hub is an innovative Horizon Europe project focused on advancing sustainable 
+                    delta management through cutting-edge research, collaboration, and knowledge sharing 
+                    across European river deltas.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('about') }}" class="btn btn-light btn-lg">
+                        <i class="fas fa-info-circle me-2"></i>Learn More
+                    </a>
+                    <a href="{{ url_for('research') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-microscope me-2"></i>Our Research
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <i class="fas fa-water fa-10x opacity-50"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Highlights -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="section-title">Project Highlights</h2>
+                <p class="text-muted">Key achievements and ongoing initiatives</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-globe-europe fa-3x text-eu-blue mb-3"></i>
+                        <h5>Pan-European Collaboration</h5>
+                        <p class="text-muted">Connecting researchers and stakeholders across European river deltas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+                        <h5>Sustainable Solutions</h5>
+                        <p class="text-muted">Developing innovative approaches for climate-resilient delta management</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-database fa-3x text-warning mb-3"></i>
+                        <h5>Open Data Platform</h5>
+                        <p class="text-muted">Sharing research data and findings with the global scientific community</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest News -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h2 class="section-title">Latest News</h2>
+                {% if latest_news %}
+                    {% for news_item in latest_news %}
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">{{ news_item.title }}</h5>
+                                        <p class="card-text">{{ news_item.content[:200] }}{% if news_item.content|length > 200 %}...{% endif %}</p>
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1"></i>{{ news_item.date }}
+                                            <i class="fas fa-user ms-3 me-1"></i>{{ news_item.author }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="text-center">
+                        <a href="{{ url_for('news') }}" class="btn btn-eu-blue">
+                            <i class="fas fa-newspaper me-2"></i>View All News
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No news items available yet. Check back soon for updates!</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Upcoming Workshops Sidebar -->
+            <div class="col-lg-4">
+                <h3>Upcoming Workshops</h3>
+                {% if upcoming_workshops %}
+                    {% for workshop in upcoming_workshops %}
+                        <div class="card mb-3 border-start border-4 border-eu-blue">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ workshop.title }}</h6>
+                                <p class="card-text small">
+                                    <i class="fas fa-calendar me-1"></i>{{ workshop.date }}
+                                    {% if workshop.location %}
+                                        <br><i class="fas fa-map-marker-alt me-1"></i>{{ workshop.location }}
+                                    {% endif %}
+                                </p>
+                                {% if workshop.registration_link %}
+                                    <a href="{{ workshop.registration_link }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-external-link-alt me-1"></i>Register
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="text-center">
+                        <a href="{{ url_for('workshops') }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-calendar me-1"></i>View All Workshops
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-3">
+                        <i class="fas fa-calendar fa-2x text-muted mb-2"></i>
+                        <p class="text-muted small">No upcoming workshops scheduled.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}News - Delta-Hub Horizon Europe{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h1 class="display-4">Project News</h1>
+                <p class="lead text-muted">
+                    Stay informed about the latest developments, achievements, and announcements
+                </p>
+            </div>
+        </div>
+
+        {% if news_items %}
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    {% for news_item in news_items %}
+                        <article class="card mb-4 shadow-sm">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="badge bg-eu-blue">News Update</span>
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar me-1"></i>{{ news_item.date }}
+                                    </small>
+                                </div>
+                                <h2 class="h4 card-title mb-3">{{ news_item.title }}</h2>
+                                <p class="card-text">{{ news_item.content }}</p>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-user me-1"></i>{{ news_item.author }}
+                                    </small>
+                                    <div class="social-share">
+                                        <small class="text-muted me-2">Share:</small>
+                                        <a href="#" class="text-muted me-2" onclick="shareOnTwitter('{{ news_item.title }}')">
+                                            <i class="fab fa-x-twitter"></i>
+                                        </a>
+                                        <a href="#" class="text-muted" onclick="shareOnLinkedIn('{{ news_item.title }}')">
+                                            <i class="fab fa-linkedin"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-newspaper fa-5x text-muted mb-4"></i>
+                <h3>No News Available</h3>
+                <p class="text-muted lead">
+                    News updates and announcements will be posted here as they become available.
+                </p>
+                <p class="text-muted">
+                    Check back regularly for the latest information about the Delta-Hub project, 
+                    research developments, and upcoming events.
+                </p>
+                <div class="mt-4">
+                    <a href="{{ url_for('contact') }}" class="btn btn-eu-blue">
+                        <i class="fas fa-envelope me-2"></i>Contact Us for Updates
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Newsletter Subscription -->
+        <div class="row mt-5">
+            <div class="col-lg-8 mx-auto">
+                <div class="card bg-gradient-blue text-white">
+                    <div class="card-body text-center py-4">
+                        <h4 class="mb-3">
+                            <i class="fas fa-envelope me-2"></i>Stay Updated
+                        </h4>
+                        <p class="mb-4">
+                            Don't miss important project updates, research findings, and event announcements.
+                        </p>
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="email" class="form-control" placeholder="Enter your email address">
+                                    <button class="btn btn-light" type="button">
+                                        <i class="fas fa-bell me-1"></i>Subscribe
+                                    </button>
+                                </div>
+                                <small class="text-light mt-2 d-block">
+                                    We respect your privacy. Unsubscribe at any time.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Categories -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="text-center mb-4">News Categories</h3>
+                <div class="row g-3">
+                    <div class="col-md-3 text-center">
+                        <div class="p-3 border rounded hover-card">
+                            <i class="fas fa-microscope fa-2x text-primary mb-2"></i>
+                            <h6>Research Updates</h6>
+                            <small class="text-muted">Latest findings and publications</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3 border rounded hover-card">
+                            <i class="fas fa-calendar fa-2x text-success mb-2"></i>
+                            <h6>Events</h6>
+                            <small class="text-muted">Workshops and conferences</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3 border rounded hover-card">
+                            <i class="fas fa-handshake fa-2x text-warning mb-2"></i>
+                            <h6>Partnerships</h6>
+                            <small class="text-muted">Collaborations and alliances</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3 border rounded hover-card">
+                            <i class="fas fa-award fa-2x text-info mb-2"></i>
+                            <h6>Achievements</h6>
+                            <small class="text-muted">Milestones and recognition</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function shareOnTwitter(title) {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(title + ' - Delta-Hub Horizon Europe');
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=600,height=400');
+}
+
+function shareOnLinkedIn(title) {
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=600,height=400');
+}
+</script>
+{% endblock %}

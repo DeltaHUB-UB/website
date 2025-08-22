@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "title": "54rt",
+    "content": "rr",
+    "date": "2025-08-22",
+    "author": "Admin"
+  },
+  {
+    "id": 2,
+    "title": "Masuratori Baliza",
+    "content": "\nData Input\n\u2022\tRead MPA GeoDataFrame (parquet files from directory_mpa).\n\u2022\tRead Coastline GeoDataFrame (parquet files from directory_lines).\nPreprocessing\n\u2022\tSmooth MPA Geometries:\no\tUse smooth_geodataframe to smooth polygons.\n\u2022\tExplode Coastline:\no\tBreak multiparts into individual geometries using .explode().\nGenerate Perpendiculars and Polygons\n\u2022\tFor each LineString in the exploded coastline:\no\tSplit lines into segments with create_line_strings.\no\tGenerate perpendicular lines and points:\n\uf0a7\tCalculate nearest points with nearest_points.\n\uf0a7\tCalculate angles with calculate_angle.\n\uf0a7\tExtend points to generate perpendiculars using extend_point.\no\tCreate polygons from perpendicular lines:\n\uf0a7\tSort points using sort_by_angle_from_middle.\n\uf0a7\tForm Polygon objects.\n",
+    "date": "2025-08-22",
+    "author": "Florin Miron"
+  }
+]

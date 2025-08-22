@@ -1,0 +1,473 @@
+/* Delta-Hub Horizon Europe Website Styles */
+
+/* CSS Custom Properties for EU Branding */
+:root {
+    --eu-blue: #003399;
+    --eu-blue-dark: #002266;
+    --eu-blue-light: #0044cc;
+    --eu-yellow: #ffdd00;
+    --white: #ffffff;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-600: #6c757d;
+    --gray-800: #343a40;
+    --gray-900: #212529;
+    --success: #198754;
+    --warning: #ffc107;
+    --info: #0dcaf0;
+    --danger: #dc3545;
+}
+
+/* Base Styles */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--gray-800);
+}
+
+/* EU Blue Theme */
+.bg-eu-blue {
+    background-color: var(--eu-blue) !important;
+}
+
+.text-eu-blue {
+    color: var(--eu-blue) !important;
+}
+
+.btn-eu-blue {
+    background-color: var(--eu-blue);
+    border-color: var(--eu-blue);
+    color: white;
+}
+
+.btn-eu-blue:hover {
+    background-color: var(--eu-blue-dark);
+    border-color: var(--eu-blue-dark);
+    color: white;
+}
+
+.border-eu-blue {
+    border-color: var(--eu-blue) !important;
+}
+
+/* Gradient Background */
+.bg-gradient-blue {
+    background: linear-gradient(135deg, var(--eu-blue) 0%, var(--eu-blue-light) 100%);
+}
+
+/* EU Flag Styling */
+.eu-flag {
+    width: 60px;
+    height: auto;
+}
+
+.eu-flag-small {
+    width: 30px;
+    height: auto;
+}
+
+/* Header Styling */
+header.sticky-top {
+    box-shadow: 0 2px 10px rgba(0, 51, 153, 0.1);
+    z-index: 1030;
+}
+
+.navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+.navbar-nav .nav-link:hover {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.navbar-nav .nav-link.active {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Hero Section */
+.hero-section {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, var(--eu-blue) 0%, var(--eu-blue-light) 50%, var(--eu-blue-dark) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.05)"><path d="M0,100 C150,0 350,0 500,50 C650,100 850,100 1000,50 L1000,100 Z"/></svg>') no-repeat bottom center;
+    background-size: cover;
+}
+
+/* Card Hover Effects */
+.hover-card {
+    transition: all 0.3s ease;
+    border: 1px solid var(--gray-200);
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 51, 153, 0.15) !important;
+    border-color: var(--eu-blue-light);
+}
+
+/* Section Titles */
+.section-title {
+    position: relative;
+    color: var(--eu-blue);
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--eu-blue) 0%, var(--eu-blue-light) 100%);
+    border-radius: 2px;
+}
+
+.text-center .section-title::after {
+    left: 50%;
+}
+
+.text-start .section-title::after {
+    left: 0;
+    transform: none;
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+/* Form Styles */
+.form-control {
+    border-radius: 6px;
+    border: 1px solid var(--gray-200);
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--eu-blue-light);
+    box-shadow: 0 0 0 0.2rem rgba(0, 51, 153, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--gray-800);
+}
+
+/* Progress Bar */
+.progress {
+    border-radius: 10px;
+    background-color: var(--gray-200);
+}
+
+.progress-bar {
+    border-radius: 10px;
+}
+
+/* Footer Styles */
+footer {
+    background-color: var(--gray-900) !important;
+    margin-top: auto;
+}
+
+footer a {
+    color: var(--gray-200);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: white;
+}
+
+/* Social Media Links */
+.fab {
+    transition: all 0.3s ease;
+}
+
+.fab:hover {
+    transform: scale(1.2);
+}
+
+/* News and Blog Styles */
+article.card {
+    border: none;
+    border-left: 4px solid var(--eu-blue);
+}
+
+.social-share a {
+    transition: color 0.3s ease;
+}
+
+.social-share a:hover {
+    color: var(--eu-blue) !important;
+}
+
+/* Workshop Cards */
+.card.border-start {
+    border-left-width: 4px !important;
+}
+
+/* Partner Logo Container */
+.partner-logo-container {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Badge Styles */
+.badge {
+    font-size: 0.75em;
+    padding: 0.5em 0.75em;
+    border-radius: 4px;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 6px;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    border-left-color: var(--success);
+}
+
+.alert-danger {
+    border-left-color: var(--danger);
+}
+
+/* Contact Form Validation */
+.was-validated .form-control:valid {
+    border-color: var(--success);
+}
+
+.was-validated .form-control:invalid {
+    border-color: var(--danger);
+}
+
+/* Admin Panel Styles */
+.card-header {
+    border-bottom: 1px solid var(--gray-200);
+    font-weight: 600;
+}
+
+/* Accessibility Improvements */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Focus Styles */
+a:focus,
+button:focus,
+.btn:focus,
+.form-control:focus {
+    outline: 2px solid var(--eu-blue);
+    outline-offset: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-section {
+        min-height: 50vh;
+        text-align: center;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 0.5rem 1rem;
+        margin: 2px 0;
+    }
+    
+    .section-title::after {
+        width: 40px;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .lead {
+        font-size: 1.1rem;
+    }
+    
+    .eu-flag {
+        width: 45px;
+    }
+    
+    .card-body {
+        padding: 1.5rem 1rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    header,
+    footer,
+    .navbar,
+    .btn,
+    .social-share {
+        display: none !important;
+    }
+    
+    .card {
+        border: 1px solid #000 !important;
+        break-inside: avoid;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    /* This can be expanded for full dark mode support */
+    .card {
+        background-color: var(--gray-900);
+        color: white;
+    }
+    
+    .text-muted {
+        color: var(--gray-200) !important;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.6s ease-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .btn-outline-primary,
+    .btn-outline-secondary {
+        border-width: 2px;
+    }
+    
+    .card {
+        border-width: 2px;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    html {
+        scroll-behavior: auto;
+    }
+}
