@@ -39,6 +39,9 @@ async function loadAllStaticData() {
             await loadFromJsonFiles();
         }
 
+        // Always attempt to overlay team.json (preferred for Our Team page)
+        await attemptLoadTeamJsonOverlay();
+
         // Resolve any markdown file references to content strings
         await resolveMarkdownReferences();
 
@@ -49,6 +52,25 @@ async function loadAllStaticData() {
         console.error('Error loading static data:', error);
         // Initialize with empty arrays if all else fails
         initializeEmptyData();
+    }
+}
+
+/**
+ * Try to load team.json and use it for consortium data if present
+ */
+async function attemptLoadTeamJsonOverlay() {
+    try {
+        const res = await fetch('data/team.json');
+        if (res.ok) {
+            const payload = await res.json();
+            const team = Array.isArray(payload) ? payload : (Array.isArray(payload.team) ? payload.team : []);
+            if (Array.isArray(team) && team.length) {
+                staticData.consortium = team;
+                localStorage.setItem(STORAGE_KEYS.consortium, JSON.stringify(staticData.consortium));
+            }
+        }
+    } catch (e) {
+        // ignore
     }
 }
 
@@ -130,6 +152,22 @@ async function loadFromJsonFiles() {
             staticData[key] = [];
         }
     }
+
+    // Optionally load team.json and map to consortium structure if present
+    try {
+        const res = await fetch('data/team.json');
+        if (res.ok) {
+            const teamPayload = await res.json();
+            const team = Array.isArray(teamPayload) ? teamPayload : (Array.isArray(teamPayload.team) ? teamPayload.team : []);
+            if (Array.isArray(team) && team.length) {
+                // Prefer team members over consortium orgs for Our Team page
+                staticData.consortium = team;
+                localStorage.setItem(STORAGE_KEYS.consortium, JSON.stringify(staticData.consortium));
+            }
+        }
+    } catch (e) {
+        // ignore
+    }
 }
 
 /**
@@ -173,6 +211,7 @@ function populateCurrentPage() {
         case 'research.html':
             populateResearchPage();
             break;
+        case 'team.html':
         case 'consortium.html':
             populateConsortiumPage();
             break;
@@ -540,26 +579,31 @@ function populateConsortiumPage() {
         return;
     }
 
-    const partnersHtml = staticData.consortium.map(partner => `
+    const partnersHtml = staticData.consortium.map(partner => {
+        const name = escapeHtml(partner.name || '');
+        const position = escapeHtml(partner.position || partner.role || '');
+        const desc = partner.description_html || (partner.description ? `<p class="small text-muted">${escapeHtml(partner.description)}</p>` : '');
+        const photo = partner.photo ? `<div class="team-photo-container mb-3"><img class="team-photo" src="${escapeHtml(partner.photo)}" alt="${name} photo"></div>`
+            : `<div class="team-photo-container mb-3 placeholder"><i class="fas fa-user-circle fa-5x text-eu-blue"></i></div>`;
+        const socialLinks = [
+            partner.linkedin ? `<a href="${escapeHtml(partner.linkedin)}" class="me-2" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg"></i></a>` : '',
+            partner.researchgate ? `<a href="${escapeHtml(partner.researchgate)}" class="me-2" target="_blank" rel="noopener"><i class="fab fa-researchgate fa-lg"></i></a>` : '',
+            partner.website ? `<a href="${escapeHtml(partner.website)}" target="_blank" rel="noopener"><i class="fas fa-globe fa-lg"></i></a>` : ''
+        ].join('');
+
+        return `
         <div class="col-lg-4 col-md-6">
             <div class="card h-100 shadow-sm hover-card">
                 <div class="card-body text-center p-4">
-                    <div class="partner-logo-container mb-3">
-                        <i class="fas fa-university fa-4x text-eu-blue"></i>
-                    </div>
-                    <h5 class="card-title">${escapeHtml(partner.name)}</h5>
-                    <p class="text-muted small">${escapeHtml(partner.country)}</p>
-                    <p class="card-text">${escapeHtml(partner.role)}</p>
-                    ${partner.description ? `<p class="small text-muted">${escapeHtml(partner.description)}</p>` : ''}
-                    ${partner.website ? `
-                        <a href="${escapeHtml(partner.website)}" class="btn btn-sm btn-outline-primary" target="_blank">
-                            <i class="fas fa-external-link-alt me-1"></i>Visit Website
-                        </a>
-                    ` : ''}
+                    ${photo}
+                    <h5 class="card-title mb-1">${name}</h5>
+                    ${position ? `<p class="text-muted small mb-2">${position}</p>` : ''}
+                    ${desc || ''}
+                    ${socialLinks ? `<div class="social-links mt-2">${socialLinks}</div>` : ''}
                 </div>
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 
     container.innerHTML = `<div class="row g-4">${partnersHtml}</div>`;
 }

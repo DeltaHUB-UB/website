@@ -7,121 +7,121 @@
     <div class="container">
         <div class="row">
             <div class="col-12 text-center mb-5">
-                <h1 class="display-4">Our Consortium</h1>
+                <h1 class="display-4">Our Team</h1>
                 <p class="lead text-muted">
-                    A diverse partnership of leading European institutions working together 
+                    A diverse partnership of leading European institutions working together
                     for sustainable delta management
                 </p>
             </div>
         </div>
 
         {% if partners %}
-            <div class="row g-4">
-                {% for partner in partners %}
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card h-100 shadow-sm hover-card">
-                            <div class="card-body text-center p-4">
-                                <div class="partner-logo-container mb-3">
-                                    <i class="fas fa-university fa-4x text-eu-blue"></i>
-                                </div>
-                                <h5 class="card-title">{{ partner.name }}</h5>
-                                <p class="text-muted small">{{ partner.country }}</p>
-                                <p class="card-text">{{ partner.role }}</p>
-                                {% if partner.description %}
-                                    <p class="small text-muted">{{ partner.description }}</p>
-                                {% endif %}
-                                {% if partner.website %}
-                                    <a href="{{ partner.website }}" class="btn btn-sm btn-outline-primary" target="_blank">
-                                        <i class="fas fa-external-link-alt me-1"></i>Visit Website
-                                    </a>
-                                {% endif %}
-                            </div>
+        <div class="row g-4">
+            {% for partner in partners %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="partner-logo-container mb-3">
+                            <i class="fas fa-university fa-4x text-eu-blue"></i>
                         </div>
+                        <h5 class="card-title">{{ partner.name }}</h5>
+                        <p class="text-muted small">{{ partner.country }}</p>
+                        <p class="card-text">{{ partner.role }}</p>
+                        {% if partner.description %}
+                        <p class="small text-muted">{{ partner.description }}</p>
+                        {% endif %}
+                        {% if partner.website %}
+                        <a href="{{ partner.website }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                            <i class="fas fa-external-link-alt me-1"></i>Visit Website
+                        </a>
+                        {% endif %}
                     </div>
-                {% endfor %}
+                </div>
             </div>
+            {% endfor %}
+        </div>
         {% else %}
-            <!-- Default consortium structure when no data is available -->
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center p-4">
-                            <div class="partner-logo-container mb-3">
-                                <i class="fas fa-university fa-4x text-eu-blue"></i>
-                            </div>
-                            <h5 class="card-title">Project Coordinator</h5>
-                            <p class="text-muted small">Netherlands</p>
-                            <p class="card-text">Leading the overall project coordination and management</p>
-                            <span class="badge bg-primary">Coordinator</span>
+        <!-- Default consortium structure when no data is available -->
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="partner-logo-container mb-3">
+                            <i class="fas fa-university fa-4x text-eu-blue"></i>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center p-4">
-                            <div class="partner-logo-container mb-3">
-                                <i class="fas fa-microscope fa-4x text-success"></i>
-                            </div>
-                            <h5 class="card-title">Research Institute</h5>
-                            <p class="text-muted small">Germany</p>
-                            <p class="card-text">Providing scientific expertise and research methodologies</p>
-                            <span class="badge bg-success">Research Partner</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center p-4">
-                            <div class="partner-logo-container mb-3">
-                                <i class="fas fa-chart-line fa-4x text-warning"></i>
-                            </div>
-                            <h5 class="card-title">Technology Partner</h5>
-                            <p class="text-muted small">France</p>
-                            <p class="card-text">Developing monitoring technologies and data platforms</p>
-                            <span class="badge bg-warning text-dark">Technology</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center p-4">
-                            <div class="partner-logo-container mb-3">
-                                <i class="fas fa-leaf fa-4x text-success"></i>
-                            </div>
-                            <h5 class="card-title">Environmental Agency</h5>
-                            <p class="text-muted small">Spain</p>
-                            <p class="card-text">Providing environmental expertise and regulatory insights</p>
-                            <span class="badge bg-info">Government</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center p-4">
-                            <div class="partner-logo-container mb-3">
-                                <i class="fas fa-users fa-4x text-info"></i>
-                            </div>
-                            <h5 class="card-title">Stakeholder Network</h5>
-                            <p class="text-muted small">Italy</p>
-                            <p class="card-text">Facilitating community engagement and knowledge transfer</p>
-                            <span class="badge bg-secondary">Stakeholder</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 shadow-sm hover-card">
-                        <div class="card-body text-center p-4">
-                            <div class="partner-logo-container mb-3">
-                                <i class="fas fa-water fa-4x text-primary"></i>
-                            </div>
-                            <h5 class="card-title">Delta Management Authority</h5>
-                            <p class="text-muted small">Belgium</p>
-                            <p class="card-text">Providing practical delta management experience</p>
-                            <span class="badge bg-primary">Implementation</span>
-                        </div>
+                        <h5 class="card-title">Project Coordinator</h5>
+                        <p class="text-muted small">Netherlands</p>
+                        <p class="card-text">Leading the overall project coordination and management</p>
+                        <span class="badge bg-primary">Coordinator</span>
                     </div>
                 </div>
             </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="partner-logo-container mb-3">
+                            <i class="fas fa-microscope fa-4x text-success"></i>
+                        </div>
+                        <h5 class="card-title">Research Institute</h5>
+                        <p class="text-muted small">Germany</p>
+                        <p class="card-text">Providing scientific expertise and research methodologies</p>
+                        <span class="badge bg-success">Research Partner</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="partner-logo-container mb-3">
+                            <i class="fas fa-chart-line fa-4x text-warning"></i>
+                        </div>
+                        <h5 class="card-title">Technology Partner</h5>
+                        <p class="text-muted small">France</p>
+                        <p class="card-text">Developing monitoring technologies and data platforms</p>
+                        <span class="badge bg-warning text-dark">Technology</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="partner-logo-container mb-3">
+                            <i class="fas fa-leaf fa-4x text-success"></i>
+                        </div>
+                        <h5 class="card-title">Environmental Agency</h5>
+                        <p class="text-muted small">Spain</p>
+                        <p class="card-text">Providing environmental expertise and regulatory insights</p>
+                        <span class="badge bg-info">Government</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="partner-logo-container mb-3">
+                            <i class="fas fa-users fa-4x text-info"></i>
+                        </div>
+                        <h5 class="card-title">Stakeholder Network</h5>
+                        <p class="text-muted small">Italy</p>
+                        <p class="card-text">Facilitating community engagement and knowledge transfer</p>
+                        <span class="badge bg-secondary">Stakeholder</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="partner-logo-container mb-3">
+                            <i class="fas fa-water fa-4x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">Delta Management Authority</h5>
+                        <p class="text-muted small">Belgium</p>
+                        <p class="card-text">Providing practical delta management experience</p>
+                        <span class="badge bg-primary">Implementation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% endif %}
 
         <!-- Partnership Statistics -->
