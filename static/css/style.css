@@ -116,6 +116,10 @@ header.sticky-top {
     background: linear-gradient(135deg, var(--eu-blue) 0%, var(--eu-blue-light) 50%, var(--eu-blue-dark) 100%);
     position: relative;
     overflow: hidden;
+    padding-top: 0 !important;
+    /* override py-5 top padding so it touches the header */
+    padding-bottom: 3rem;
+    /* keep some bottom spacing for content */
 }
 
 .hero-section .hero-video {
@@ -283,6 +287,20 @@ footer a {
 
 footer a:hover {
     color: white;
+}
+
+/* Flash messages spacing: hide when empty, no top gap */
+#flashMessages {
+    margin-top: 0 !important;
+}
+
+#flashMessages:empty {
+    display: none;
+}
+
+#flashMessages:not(:empty) {
+    margin-top: 1rem !important;
+    /* match mt-3 only when content exists */
 }
 
 /* Social Media Links */

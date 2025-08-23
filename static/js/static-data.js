@@ -8,7 +8,8 @@ const staticData = {
     news: [],
     workshops: [],
     research: [],
-    consortium: []
+    consortium: [],
+    measurements: { stations: [] }
 };
 
 // Storage keys for localStorage
@@ -16,7 +17,8 @@ const STORAGE_KEYS = {
     news: 'deltahub_news',
     workshops: 'deltahub_workshops',
     research: 'deltahub_research',
-    consortium: 'deltahub_consortium'
+    consortium: 'deltahub_consortium',
+    measurements: 'deltahub_measurements'
 };
 
 /**
@@ -117,6 +119,7 @@ function loadFromLocalStorage() {
     staticData.workshops = JSON.parse(localStorage.getItem(STORAGE_KEYS.workshops) || '[]');
     staticData.research = JSON.parse(localStorage.getItem(STORAGE_KEYS.research) || '[]');
     staticData.consortium = JSON.parse(localStorage.getItem(STORAGE_KEYS.consortium) || '[]');
+    staticData.measurements = JSON.parse(localStorage.getItem(STORAGE_KEYS.measurements) || '{"stations": []}');
 }
 
 /**
@@ -126,7 +129,8 @@ function isDataEmpty() {
     return staticData.news.length === 0 &&
         staticData.workshops.length === 0 &&
         staticData.research.length === 0 &&
-        staticData.consortium.length === 0;
+        staticData.consortium.length === 0 &&
+        (!staticData.measurements || !Array.isArray(staticData.measurements.stations) || staticData.measurements.stations.length === 0);
 }
 
 /**
@@ -168,6 +172,20 @@ async function loadFromJsonFiles() {
     } catch (e) {
         // ignore
     }
+
+    // Load measurements if present
+    try {
+        const res = await fetch('data/measurements.json');
+        if (res.ok) {
+            const payload = await res.json();
+            if (payload && Array.isArray(payload.stations)) {
+                staticData.measurements = payload;
+                localStorage.setItem(STORAGE_KEYS.measurements, JSON.stringify(staticData.measurements));
+            }
+        }
+    } catch (e) {
+        // ignore
+    }
 }
 
 /**
@@ -178,6 +196,7 @@ function initializeEmptyData() {
     staticData.workshops = [];
     staticData.research = [];
     staticData.consortium = [];
+    staticData.measurements = { stations: [] };
 }
 
 /**
@@ -188,6 +207,7 @@ function saveToLocalStorage() {
     localStorage.setItem(STORAGE_KEYS.workshops, JSON.stringify(staticData.workshops));
     localStorage.setItem(STORAGE_KEYS.research, JSON.stringify(staticData.research));
     localStorage.setItem(STORAGE_KEYS.consortium, JSON.stringify(staticData.consortium));
+    localStorage.setItem(STORAGE_KEYS.measurements, JSON.stringify(staticData.measurements));
 }
 
 /**
@@ -214,6 +234,9 @@ function populateCurrentPage() {
         case 'team.html':
         case 'consortium.html':
             populateConsortiumPage();
+            break;
+        case 'dashboard.html':
+            populateDashboardPage();
             break;
 
     }
@@ -565,6 +588,273 @@ function populateResearchPage() {
     }).join('');
 
     container.innerHTML = `<div class="row">${researchHtml}</div>`;
+}
+
+/**
+ * Populate dashboard page
+ */
+function populateDashboardPage() {
+    const statsContainer = document.getElementById('dashboardStats');
+    const newsContainer = document.getElementById('dashboardLatestNews');
+    const workshopContainer = document.getElementById('dashboardUpcomingWorkshop');
+    const researchContainer = document.getElementById('dashboardResearch');
+    const teamContainer = document.getElementById('dashboardTeam');
+    const measSelect = document.getElementById('measurementStation');
+    const measStatus = document.getElementById('measurementsStatus');
+
+    // Stats
+    if (statsContainer) {
+        const newsCount = staticData.news.length;
+        const today = new Date().toISOString().split('T')[0];
+        const upcomingCount = staticData.workshops.filter(w => w.date >= today).length;
+        const researchCount = staticData.research.length;
+        const teamCount = staticData.consortium.length;
+
+        statsContainer.innerHTML = `
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="card shadow-sm h-100 border-start border-4 border-primary">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-newspaper fa-2x text-primary me-3"></i>
+                                <div>
+                                    <div class="h4 mb-0">${newsCount}</div>
+                                    <small class="text-muted">News</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm h-100 border-start border-4 border-success">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar-check fa-2x text-success me-3"></i>
+                                <div>
+                                    <div class="h4 mb-0">${upcomingCount}</div>
+                                    <small class="text-muted">Upcoming Workshops</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm h-100 border-start border-4 border-warning">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-microscope fa-2x text-warning me-3"></i>
+                                <div>
+                                    <div class="h4 mb-0">${researchCount}</div>
+                                    <small class="text-muted">Research Items</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm h-100 border-start border-4 border-info">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-users fa-2x text-info me-3"></i>
+                                <div>
+                                    <div class="h4 mb-0">${teamCount}</div>
+                                    <small class="text-muted">Team Members</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    // Latest News
+    if (newsContainer) {
+        const latest = [...staticData.news].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
+        if (latest.length === 0) {
+            newsContainer.innerHTML = `<p class="text-muted">No news yet. <a href="news.html">View News</a></p>`;
+        } else {
+            newsContainer.innerHTML = latest.map(n => `
+                <div class="mb-3 pb-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                        <strong>${escapeHtml(n.title)}</strong>
+                        <small class="text-muted">${n.date}</small>
+                    </div>
+                    <small class="text-muted">by ${escapeHtml(n.author)}</small>
+                </div>`).join('') + `<div><a href="news.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-newspaper me-1"></i>All News</a></div>`;
+        }
+    }
+
+    // Upcoming Workshop
+    if (workshopContainer) {
+        const today = new Date().toISOString().split('T')[0];
+        const upcoming = staticData.workshops.filter(w => w.date >= today).sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+        if (!upcoming) {
+            workshopContainer.innerHTML = `<p class="text-muted">No upcoming workshops. <a href="workshops.html">View Workshops</a></p>`;
+        } else {
+            workshopContainer.innerHTML = `
+                <div class="d-flex align-items-start mb-2">
+                    <i class="fas fa-calendar me-2 text-success"></i>
+                    <div>
+                        <strong>${escapeHtml(upcoming.title)}</strong><br>
+                        <small class="text-muted">${upcoming.date}${upcoming.location ? ' • ' + escapeHtml(upcoming.location) : ''}</small>
+                    </div>
+                </div>
+                <a href="workshops.html" class="btn btn-sm btn-outline-success"><i class="fas fa-calendar-alt me-1"></i>All Workshops</a>`;
+        }
+    }
+
+    // Research
+    if (researchContainer) {
+        const recent = staticData.research.slice(0, 3);
+        if (recent.length === 0) {
+            researchContainer.innerHTML = `<p class="text-muted">No research items yet. <a href="research.html">View Research</a></p>`;
+        } else {
+            researchContainer.innerHTML = recent.map(r => `
+                <div class="mb-3 pb-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                        <strong>${escapeHtml(r.title)}</strong>
+                        <small class="text-muted">${r.date || ''}</small>
+                    </div>
+                    <small class="text-muted">${escapeHtml(r.type || '')}</small>
+                </div>`).join('') + `<div><a href="research.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-microscope me-1"></i>All Research</a></div>`;
+        }
+    }
+
+    // Team
+    if (teamContainer) {
+        const sample = staticData.consortium.slice(0, 3);
+        if (sample.length === 0) {
+            teamContainer.innerHTML = `<p class="text-muted">No team members yet. <a href="team.html">Meet Our Team</a></p>`;
+        } else {
+            teamContainer.innerHTML = sample.map(m => `
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-3 team-photo-container" style="width:48px;height:48px;border-radius:50%;overflow:hidden;">
+                        ${m.photo ? `<img src="${escapeHtml(m.photo)}" alt="${escapeHtml(m.name)}" style="width:100%;height:100%;object-fit:cover;">` : `<i class=\"fas fa-user-circle fa-2x text-eu-blue\"></i>`}
+                    </div>
+                    <div>
+                        <div><strong>${escapeHtml(m.name)}</strong></div>
+                        <small class="text-muted">${escapeHtml(m.position || m.role || '')}</small>
+                    </div>
+                </div>`).join('') + `<div><a href="team.html" class="btn btn-sm btn-outline-info"><i class="fas fa-users me-1"></i>Full Team</a></div>`;
+        }
+    }
+
+    // Measurements: setup map and chart if containers exist
+    const mapEl = document.getElementById('measurementsMap');
+    const chartEl = document.getElementById('measurementsChart');
+    if (mapEl) {
+        // If Leaflet isn't loaded yet, retry a few times before giving up
+        let attempts = 0;
+        const tryInit = () => {
+            if (window.L) {
+                setupMeasurementsDashboard(measSelect, measStatus, mapEl, chartEl || null);
+            } else if (attempts < 10) {
+                attempts++;
+                setTimeout(tryInit, 300);
+            } else if (measStatus) {
+                measStatus.innerHTML = '<span class="text-warning">Map library not loaded.</span>';
+            }
+        };
+        tryInit();
+    }
+}
+
+function setupMeasurementsDashboard(selectEl, statusEl, mapEl, chartCanvas) {
+    const stations = staticData.measurements?.stations || [];
+    if (!stations.length) {
+        if (statusEl) statusEl.innerHTML = '<span class="text-muted">No measurement data available.</span>';
+        return;
+    }
+
+    // Populate station selector
+    if (selectEl) {
+        selectEl.innerHTML = stations.map((s, i) => `<option value="${s.id || i}">${escapeHtml(s.name || s.id || 'Station')}</option>`).join('');
+    }
+
+    // Initialize Leaflet map
+    let map;
+    if (window.L && mapEl) {
+        map = L.map(mapEl).setView([stations[0].lat, stations[0].lon], 8);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
+
+        const markers = [];
+        const bounds = [];
+        stations.forEach((s, idx) => {
+            if (typeof s.lat === 'number' && typeof s.lon === 'number') {
+                const m = L.marker([s.lat, s.lon]).addTo(map);
+                const latest = (s.timeseries || []).slice(-1)[0];
+                const lvl = latest ? latest.level : '—';
+                m.bindPopup(`<strong>${escapeHtml(s.name || s.id || 'Station')}</strong><br>Latest level: ${lvl} ${escapeHtml(s.unit || '')}`);
+                m.on('click', () => {
+                    if (selectEl) selectEl.value = s.id || idx;
+                    if (chartCanvas) drawMeasurementChart(chartCanvas, s);
+                });
+                markers.push(m);
+                bounds.push([s.lat, s.lon]);
+            }
+        });
+        if (bounds.length) {
+            try { map.fitBounds(bounds, { padding: [20, 20] }); } catch { }
+        }
+        window._dhMap = map;
+    } else if (statusEl) {
+        statusEl.innerHTML = '<span class="text-warning">Map library not loaded.</span>';
+    }
+
+    // Chart.js plot
+    if (stations[0] && chartCanvas) drawMeasurementChart(chartCanvas, stations[0]);
+
+    if (selectEl) {
+        selectEl.addEventListener('change', (e) => {
+            const value = e.target.value;
+            const found = stations.find((s, i) => (s.id || i.toString()) === value);
+            if (found && chartCanvas) drawMeasurementChart(chartCanvas, found);
+        });
+    }
+}
+
+function drawMeasurementChart(canvas, station) {
+    if (!window.Chart || !canvas) return;
+    const ctx = canvas.getContext('2d');
+    const data = (station.timeseries || []).map(p => ({ x: new Date(p.t), y: p.level }));
+    const label = `${station.name || station.id || 'Station'} (${station.unit || ''})`;
+
+    if (window._dhChart) {
+        window._dhChart.data.datasets[0].label = label;
+        window._dhChart.data.datasets[0].data = data;
+        window._dhChart.update();
+        return;
+    }
+
+    window._dhChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: [{
+                label,
+                data,
+                borderColor: '#003399',
+                backgroundColor: 'rgba(0,51,153,0.1)',
+                pointRadius: 0,
+                tension: 0.2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            parsing: false,
+            scales: {
+                x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
+                y: { title: { display: true, text: station.unit || '' } }
+            },
+            plugins: {
+                legend: { display: true },
+                tooltip: { mode: 'index', intersect: false }
+            }
+        }
+    });
 }
 
 /**
