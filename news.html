@@ -615,6 +615,22 @@
                 return true;
             }
 
+            async function deleteRepoFile(path, token, branch) {
+                // Get file SHA first
+                const { sha } = await fetchRepoFile(path, token, branch);
+                const apiUrl = `https://api.github.com/repos/${GH.OWNER}/${GH.REPO}/contents/${encodeURIComponent(path)}`;
+                const res = await fetch(apiUrl, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: `Delete ${path}`, sha, branch: branch || GH.BRANCH })
+                });
+                if (!res.ok) {
+                    const t = await res.text().catch(() => '');
+                    throw new Error(`Delete file failed: ${res.status} ${t}`);
+                }
+                return true;
+            }
+
             async function appendNewsJson(newItem, token, branch) {
                 const path = 'data/news.json';
                 const maxRetries = 3;
@@ -657,6 +673,35 @@
                     }
                 }
             }
+
+            // Listen for local deletions to optionally sync to repo
+            window.addEventListener('dh:news-deleted', async (ev) => {
+                try {
+                    const token = getGhToken();
+                    if (!token) return; // repo deletion requires token
+                    const baseBranch = GH.BRANCH;
+                    const detail = ev.detail || {};
+                    const contentFile = detail.content_file;
+
+                    // Remove content file if present
+                    if (contentFile) {
+                        try { await deleteRepoFile(contentFile, token, baseBranch); } catch (e) { console.warn('Delete content failed', e); }
+                    }
+
+                    // Remove from data/news.json
+                    try {
+                        const path = 'data/news.json';
+                        const { text, sha } = await fetchRepoFile(path, token, baseBranch);
+                        const arr = JSON.parse(text || '[]').filter(it => it.content_file !== contentFile && it.title !== detail.title);
+                        const updated = JSON.stringify(arr, null, 2) + "\n";
+                        await updateRepoFile(path, updated, sha, token, baseBranch);
+                    } catch (e) {
+                        console.warn('Update news.json failed', e);
+                    }
+                } catch (err) {
+                    console.warn('Repo sync delete skipped/failed:', err);
+                }
+            });
 
             function slugify(str) {
                 return (str || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 80);

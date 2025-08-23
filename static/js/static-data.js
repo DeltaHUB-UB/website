@@ -427,6 +427,7 @@ function populateNewsPage() {
         return;
     }
 
+    const isAdmin = (localStorage.getItem('dh_is_admin') === '1');
     const newsHtml = sortedNews.map(item => `
         <article class="card mb-4 shadow-sm">
             <div class="card-body p-4">
@@ -443,7 +444,9 @@ function populateNewsPage() {
                     <small class="text-muted">
                         <i class="fas fa-user me-1"></i>${escapeHtml(item.author)}
                     </small>
-                    <div class="social-share">
+                    <div class="d-flex align-items-center">
+                        ${isAdmin ? `<button class="btn btn-sm btn-outline-danger me-3" title="Delete" onclick="window.StaticData.deleteNewsItem(${item.id})"><i class=\"fas fa-trash-alt\"></i></button>` : ''}
+                        <div class="social-share">
                         <small class="text-muted me-2">Share:</small>
                         <a href="#" class="text-muted me-2" onclick="shareOnTwitter('${escapeHtml(item.title)}')">
                             <i class="fab fa-x-twitter"></i>
@@ -451,6 +454,7 @@ function populateNewsPage() {
                         <a href="#" class="text-muted" onclick="shareOnLinkedIn('${escapeHtml(item.title)}')">
                             <i class="fab fa-linkedin"></i>
                         </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -999,6 +1003,34 @@ function addNewsItem(title, content, author = 'Admin', extra = {}) {
 }
 
 /**
+ * Delete a news item locally by id, refresh UI, and notify for optional repo sync
+ */
+function deleteNewsItem(id) {
+    const idx = staticData.news.findIndex(n => n.id === id);
+    if (idx === -1) return false;
+    const item = staticData.news[idx];
+    const ok = window.confirm(`Delete this news item: "${item.title}"?`);
+    if (!ok) return false;
+    staticData.news.splice(idx, 1);
+    saveToLocalStorage();
+
+    // Refresh UI where applicable
+    const page = getCurrentPageName();
+    if (page === 'index.html' || page === '' || page === '/') {
+        populateLatestNews();
+    }
+    if (page === 'news.html') {
+        populateNewsPage();
+    }
+
+    // Broadcast an event so pages like news.html can attempt repo deletion
+    try {
+        window.dispatchEvent(new CustomEvent('dh:news-deleted', { detail: { id: item.id, title: item.title, content_file: item.content_file || '' } }));
+    } catch { }
+    return true;
+}
+
+/**
  * Add new workshop
  */
 function addWorkshop(workshopData) {
@@ -1053,6 +1085,7 @@ function importData(data) {
 // Make functions available globally
 window.StaticData = {
     addNewsItem,
+    deleteNewsItem,
     addWorkshop,
     getAllData,
     importData,
