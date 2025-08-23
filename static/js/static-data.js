@@ -36,9 +36,11 @@ async function loadAllStaticData() {
         // Try to load from localStorage first
         loadFromLocalStorage();
 
-        // If no data in localStorage, try to load from JSON files
+        // Refresh from JSON: if empty, fully load; otherwise, merge in any new items from JSON
         if (isDataEmpty()) {
             await loadFromJsonFiles();
+        } else {
+            await mergeWithJsonFiles();
         }
 
         // Always attempt to overlay team.json (preferred for Our Team page)
@@ -54,6 +56,43 @@ async function loadAllStaticData() {
         console.error('Error loading static data:', error);
         // Initialize with empty arrays if all else fails
         initializeEmptyData();
+    }
+}
+
+/**
+ * Merge remote JSON data into existing cached arrays (by id), preferring local items on conflict
+ */
+async function mergeWithJsonFiles() {
+    const datasets = [
+        { key: 'news', file: 'data/news.json' },
+        { key: 'workshops', file: 'data/workshops.json' },
+        { key: 'research', file: 'data/research.json' },
+        { key: 'consortium', file: 'data/consortium.json' }
+    ];
+
+    const mergeById = (localArr, remoteArr) => {
+        const map = new Map();
+        (Array.isArray(localArr) ? localArr : []).forEach(item => map.set(item.id, item));
+        (Array.isArray(remoteArr) ? remoteArr : []).forEach(item => {
+            if (!map.has(item.id)) {
+                map.set(item.id, item);
+            }
+        });
+        return Array.from(map.values());
+    };
+
+    for (const { key, file } of datasets) {
+        try {
+            const res = await fetch(file);
+            if (res.ok) {
+                const remote = await res.json();
+                const merged = mergeById(staticData[key], remote);
+                staticData[key] = merged;
+                localStorage.setItem(STORAGE_KEYS[key], JSON.stringify(staticData[key]));
+            }
+        } catch (e) {
+            // Ignore merge errors and keep local cache
+        }
     }
 }
 
