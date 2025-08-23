@@ -176,9 +176,7 @@ function populateCurrentPage() {
         case 'consortium.html':
             populateConsortiumPage();
             break;
-        case 'admin.html':
-            // Admin page is handled by static-admin.js
-            break;
+
     }
 }
 

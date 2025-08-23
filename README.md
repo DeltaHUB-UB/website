@@ -67,11 +67,7 @@ At runtime, the site fetches the `.md` file, renders it to HTML, and displays it
 Notes:
 - Markdown is rendered by `marked` (CDN) with a small built-in fallback, and sanitized by DOMPurify.
 
-## Admin page (optional editing)
-
-`admin.html` lets you add news and workshops in the browser. Data is stored in `localStorage` for quick preview. Use the Export button to download JSON files and commit them into `data/`.
-
-The site tries to load from `localStorage` first; if empty, it falls back to the JSON files. To force the site to use the committed data, clear your browser’s site storage for this domain.
+<!-- Admin page section removed -->
 
 ## Project structure
 
