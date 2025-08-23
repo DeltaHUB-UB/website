@@ -264,22 +264,16 @@
                         </div>
                         <div id="repoUploadOptions" class="border rounded p-3 mb-3 d-none">
                             <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" id="uploadToRepo">
+                                <input class="form-check-input" type="checkbox" id="uploadToRepo" checked>
                                 <label class="form-check-label" for="uploadToRepo">Upload selected file to GitHub
                                     repository</label>
                             </div>
                             <div class="row g-2 align-items-end">
                                 <div class="col-md-6">
-                                    <label class="form-label" for="ghToken">GitHub Token</label>
-                                    <input type="password" class="form-control" id="ghToken"
-                                        placeholder="Paste a token (repo scope)">
-                                    <small class="text-muted">Stored only in this browser. Don’t share it.</small>
-                                </div>
-                                <div class="col-md-3">
                                     <label class="form-label" for="ghBranch">Branch</label>
                                     <input type="text" class="form-control" id="ghBranch" value="main">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <label class="form-label" for="ghFolder">Folder</label>
                                     <input type="text" class="form-control" id="ghFolder" value="static/uploads">
                                 </div>
@@ -342,6 +336,15 @@
     <script>
         (function () {
             const ADMIN_KEY = 'dh_is_admin';
+            // GitHub config; you may set TOKEN to avoid typing it each time (be careful with public repos)
+            const GH = {
+                OWNER: 'DeltaHUB-UB',
+                REPO: 'website',
+                BRANCH: 'main',
+                TOKEN: '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', // OPTIONAL: paste your personal access token here to hardcode
+                UPLOAD_FOLDER: 'static/uploads',
+                NEWS_FOLDER: 'content/news'
+            };
             const ADMIN_PASS = 'changeme'; // TODO: change this passcode
             const params = new URLSearchParams(window.location.search);
             const bar = document.getElementById('adminAddNewsBar');
@@ -351,7 +354,6 @@
             const videoInputs = document.getElementById('videoInputs');
             const repoOptions = document.getElementById('repoUploadOptions');
             const uploadToRepoEl = document.getElementById('uploadToRepo');
-            const ghTokenEl = document.getElementById('ghToken');
             const ghBranchEl = document.getElementById('ghBranch');
             const ghFolderEl = document.getElementById('ghFolder');
             const imgFileEl = document.getElementById('newsImageFile');
@@ -410,7 +412,12 @@
                     let url = '';
                     if (f) {
                         if (uploadToRepoEl && uploadToRepoEl.checked) {
-                            url = await uploadFileToRepo(f, ghTokenEl?.value || '', ghBranchEl?.value || 'main', ghFolderEl?.value || 'static/uploads').catch(() => '');
+                            url = await uploadFileToRepo(
+                                f,
+                                getGhToken(),
+                                ghBranchEl?.value || GH.BRANCH,
+                                ghFolderEl?.value || GH.UPLOAD_FOLDER
+                            ).catch(() => '');
                         } else {
                             url = await readAsDataURL(f).catch(() => '');
                         }
@@ -423,7 +430,12 @@
                     let url = '';
                     if (f) {
                         if (uploadToRepoEl && uploadToRepoEl.checked) {
-                            url = await uploadFileToRepo(f, ghTokenEl?.value || '', ghBranchEl?.value || 'main', ghFolderEl?.value || 'static/uploads').catch(() => '');
+                            url = await uploadFileToRepo(
+                                f,
+                                getGhToken(),
+                                ghBranchEl?.value || GH.BRANCH,
+                                ghFolderEl?.value || GH.UPLOAD_FOLDER
+                            ).catch(() => '');
                         } else {
                             url = await readAsDataURL(f).catch(() => '');
                         }
@@ -432,6 +444,72 @@
                     if (url) extra.media = { type: 'video', url };
                 }
                 if (!title) return;
+
+                const wantRepo = (uploadToRepoEl && uploadToRepoEl.checked) || !!GH.TOKEN;
+                const token = getGhToken();
+                const today = new Date();
+                const dateStr = today.toISOString().split('T')[0];
+                let contentFilePath = '';
+                const baseBranch = ghBranchEl?.value || GH.BRANCH;
+                const slug = slugify(title);
+
+                if (wantRepo && token) {
+                    // Persist token presence flag for UX (no actual token stored unless set earlier)
+                    try { if (token && !GH.TOKEN) localStorage.setItem('dh_gh_token', token); } catch { }
+
+                    const newsFolder = (GH.NEWS_FOLDER || 'content/news').replace(/\/$/, '');
+                    const mdName = `${dateStr}-${slug}.md`;
+                    contentFilePath = `${newsFolder}/${mdName}`;
+
+                    const mediaMdFor = (m) => {
+                        if (!m) return '';
+                        const url = m.url;
+                        if (m.type === 'image') return `![${escapeHtml(title)}](${url})\n\n`;
+                        if (m.type === 'video') return `<video controls preload="metadata" style="max-width:100%">\n  <source src="${url}">\n</video>\n\n`;
+                        return '';
+                    };
+
+                    async function doRepoWrites(targetBranch) {
+                        if (extra.media && extra.media.url && extra.media.url.startsWith('data:')) {
+                            const fileLike = await dataUrlToFile(extra.media.url, mediaType === 'image' ? 'image.png' : 'video.mp4');
+                            const uploadedUrl = await uploadFileToRepo(fileLike, token, targetBranch, ghFolderEl?.value || GH.UPLOAD_FOLDER);
+                            extra.media.url = uploadedUrl;
+                        }
+                        const mdBody = `${mediaMdFor(extra.media)}${content || ''}\n`;
+                        await uploadTextFileToRepo(contentFilePath, mdBody, token, targetBranch);
+                        const newItem = { id: Date.now(), title, content_file: contentFilePath, date: dateStr, author: author || '' };
+                        await appendNewsJson(newItem, token, targetBranch);
+                    }
+
+                    try {
+                        await doRepoWrites(baseBranch);
+                    } catch (err) {
+                        const text = (err && err.message) ? err.message : String(err);
+                        if (text.includes('403')) {
+                            // Fallback: create a branch and open a PR
+                            const fbBranch = `news-${dateStr}-${slug}`.slice(0, 120);
+                            try {
+                                await ensureBranchExists(fbBranch, baseBranch, token);
+                                await doRepoWrites(fbBranch);
+                                await createPullRequest(`Add news: ${title}`, fbBranch, baseBranch, `Automated news addition for ${dateStr}.`, token);
+                                const flash = document.getElementById('flashMessages');
+                                if (flash) {
+                                    flash.innerHTML = '<div class="alert alert-info alert-dismissible fade show" role="alert">'
+                                        + '<i class="fas fa-info-circle me-1"></i>Created a pull request to add your news. Please review and merge it.'
+                                        + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'
+                                        + '</div>';
+                                }
+                            } catch (e2) {
+                                console.error('Fallback failed:', e2);
+                                alert('Repo update failed (including fallback): ' + ((e2 && e2.message) ? e2.message : String(e2)) + '. The item will be added locally only.');
+                            }
+                        } else {
+                            console.error(err);
+                            alert('Repo update failed: ' + text + '. The item will be added locally only.');
+                        }
+                    }
+                }
+
                 if (window.StaticData && typeof window.StaticData.addNewsItem === 'function') {
                     window.StaticData.addNewsItem(title, content, author || '', extra);
                 }
@@ -484,6 +562,115 @@
                 });
             }
 
+            function getGhToken() {
+                if (GH.TOKEN) return GH.TOKEN;
+                try { const saved = localStorage.getItem('dh_gh_token'); if (saved) return saved; } catch { }
+                return '';
+            }
+
+            async function uploadTextFileToRepo(path, text, token, branch) {
+                const base64 = btoa(unescape(encodeURIComponent(text)));
+                const apiUrl = `https://api.github.com/repos/${GH.OWNER}/${GH.REPO}/contents/${encodeURIComponent(path)}`;
+                const res = await fetch(apiUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/vnd.github+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: `Add ${path}`, content: base64, branch: branch || GH.BRANCH })
+                });
+                if (!res.ok) {
+                    const t = await res.text().catch(() => '');
+                    throw new Error(`Upload text failed: ${res.status} ${t}`);
+                }
+                return true;
+            }
+
+            async function fetchRepoFile(path, token, branch) {
+                const apiUrl = `https://api.github.com/repos/${GH.OWNER}/${GH.REPO}/contents/${encodeURIComponent(path)}?ref=${encodeURIComponent(branch || GH.BRANCH)}`;
+                const res = await fetch(apiUrl, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } });
+                if (!res.ok) throw new Error(`Fetch file failed: ${res.status}`);
+                const json = await res.json();
+                const content = atob(json.content.replace(/\n/g, ''));
+                return { text: content, sha: json.sha };
+            }
+
+            async function updateRepoFile(path, text, sha, token, branch) {
+                const base64 = btoa(unescape(encodeURIComponent(text)));
+                const apiUrl = `https://api.github.com/repos/${GH.OWNER}/${GH.REPO}/contents/${encodeURIComponent(path)}`;
+                const res = await fetch(apiUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/vnd.github+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: `Update ${path}`, content: base64, sha, branch: branch || GH.BRANCH })
+                });
+                if (!res.ok) {
+                    const t = await res.text().catch(() => '');
+                    throw new Error(`Update file failed: ${res.status} ${t}`);
+                }
+                return true;
+            }
+
+            async function appendNewsJson(newItem, token, branch) {
+                const path = 'data/news.json';
+                const maxRetries = 3;
+                let attempt = 0;
+                while (attempt < maxRetries) {
+                    attempt++;
+                    let current = [];
+                    let sha = undefined;
+                    try {
+                        const f = await fetchRepoFile(path, token, branch);
+                        sha = f.sha; current = JSON.parse(f.text || '[]');
+                    } catch {
+                        // File may not exist yet; start fresh
+                        current = [];
+                        sha = undefined;
+                    }
+                    // Append, de-dup by content_file+title to reduce duplicates on retries
+                    current.push(newItem);
+                    const seen = new Set();
+                    const deduped = current.filter(it => {
+                        const key = `${it.content_file || ''}|${it.title || ''}`;
+                        if (seen.has(key)) return false; seen.add(key); return true;
+                    });
+                    const updated = JSON.stringify(deduped, null, 2) + "\n";
+                    try {
+                        if (sha) {
+                            await updateRepoFile(path, updated, sha, token, branch);
+                        } else {
+                            await uploadTextFileToRepo(path, updated, token, branch);
+                        }
+                        return true; // success
+                    } catch (e) {
+                        const msg = (e && e.message) ? e.message : String(e);
+                        if (msg.includes('409') && attempt < maxRetries) {
+                            // Conflict; retry after short delay
+                            await new Promise(r => setTimeout(r, 400 * attempt));
+                            continue;
+                        }
+                        throw e;
+                    }
+                }
+            }
+
+            function slugify(str) {
+                return (str || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 80);
+            }
+
+            async function dataUrlToFile(dataUrl, filename) {
+                const arr = dataUrl.split(',');
+                const mime = arr[0].match(/:(.*?);/)[1];
+                const bstr = atob(arr[1]);
+                let n = bstr.length; const u8 = new Uint8Array(n);
+                while (n--) u8[n] = bstr.charCodeAt(n);
+                return new File([u8], filename, { type: mime });
+            }
+
             async function uploadFileToRepo(file, token, branch, folder) {
                 if (!token) throw new Error('Missing GitHub token');
                 // persist token locally if user agrees
@@ -520,6 +707,50 @@
                 // Construct raw URL
                 const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch || 'main'}/${path}`;
                 return rawUrl;
+            }
+
+            async function ensureBranchExists(newBranch, fromBranch, token) {
+                const owner = GH.OWNER; const repo = GH.REPO;
+                // Get base branch SHA
+                const refUrl = `https://api.github.com/repos/${owner}/${repo}/git/refs/heads/${encodeURIComponent(fromBranch)}`;
+                const refRes = await fetch(refUrl, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } });
+                if (!refRes.ok) {
+                    const t = await refRes.text().catch(() => '');
+                    throw new Error(`Get base ref failed: ${refRes.status} ${t}`);
+                }
+                const refJson = await refRes.json();
+                const baseSha = (refJson && refJson.object && refJson.object.sha) ? refJson.object.sha : refJson.sha;
+                if (!baseSha) throw new Error('Base SHA not found');
+                // Create new branch ref
+                const createUrl = `https://api.github.com/repos/${owner}/${repo}/git/refs`;
+                const createRes = await fetch(createUrl, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ref: `refs/heads/${newBranch}`, sha: baseSha })
+                });
+                if (!createRes.ok) {
+                    // 422 if already exists; treat as success
+                    if (createRes.status !== 422) {
+                        const t = await createRes.text().catch(() => '');
+                        throw new Error(`Create branch failed: ${createRes.status} ${t}`);
+                    }
+                }
+                return true;
+            }
+
+            async function createPullRequest(title, head, base, body, token) {
+                const owner = GH.OWNER; const repo = GH.REPO;
+                const prUrl = `https://api.github.com/repos/${owner}/${repo}/pulls`;
+                const res = await fetch(prUrl, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, head, base, body })
+                });
+                if (!res.ok) {
+                    const t = await res.text().catch(() => '');
+                    throw new Error(`Create PR failed: ${res.status} ${t}`);
+                }
+                return await res.json();
             }
         })();
     </script>
