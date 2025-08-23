@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - Delta-Hub Horizon Europe</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
@@ -12,6 +13,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="static/css/style.css">
 </head>
+
 <body>
     <!-- Header -->
     <header class="bg-eu-blue text-white sticky-top">
@@ -19,6 +21,9 @@
             <div class="row align-items-center py-3">
                 <div class="col-md-8">
                     <div class="d-flex align-items-center">
+                        <a href="index.html" class="me-3 d-flex align-items-center" aria-label="Delta-Hub Home">
+                            <img src="content/images/Deltahub logo.png" alt="Delta-Hub Logo" class="project-logo">
+                        </a>
                         <img src="static/images/eu-flag.svg" alt="European Union Flag" class="eu-flag me-3">
                         <div>
                             <h1 class="h4 mb-0">Delta-Hub Horizon Europe</h1>
@@ -27,12 +32,13 @@
                     </div>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
                         <i class="fas fa-bars text-white"></i>
                     </button>
                 </div>
             </div>
-            
+
             <!-- Navigation -->
             <nav class="navbar navbar-expand-md navbar-dark p-0">
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -93,9 +99,7 @@
                 <div class="row">
                     <div class="col-12 text-center mb-5">
                         <h1 class="display-4">Contact Us</h1>
-                        <p class="lead text-muted">
-                            Get in touch with the Delta-Hub team for questions, collaborations, or more information
-                        </p>
+                        <div class="lead text-muted" data-markdown="content/contact/intro.md"></div>
                     </div>
                 </div>
 
@@ -107,12 +111,13 @@
                                 <h3 class="card-title mb-4">
                                     <i class="fas fa-envelope me-2"></i>Send us a Message
                                 </h3>
-                                
+
                                 <form id="contactForm" novalidate>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                                                <label for="name" class="form-label">Full Name <span
+                                                        class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="name" name="name" required>
                                                 <div class="invalid-feedback">
                                                     Please provide your full name.
@@ -121,15 +126,17 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
-                                                <input type="email" class="form-control" id="email" name="email" required>
+                                                <label for="email" class="form-label">Email Address <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="email" class="form-control" id="email" name="email"
+                                                    required>
                                                 <div class="invalid-feedback">
                                                     Please provide a valid email address.
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="mb-3">
                                         <label for="subject" class="form-label">Subject</label>
                                         <select class="form-select" id="subject" name="subject">
@@ -142,23 +149,24 @@
                                             <option value="other">Other</option>
                                         </select>
                                     </div>
-                                    
+
                                     <div class="mb-3">
-                                        <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
-                                        <textarea class="form-control" id="message" name="message" rows="6" required 
-                                                  placeholder="Please describe your inquiry in detail..."></textarea>
+                                        <label for="message" class="form-label">Message <span
+                                                class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="message" name="message" rows="6" required
+                                            placeholder="Please describe your inquiry in detail..."></textarea>
                                         <div class="invalid-feedback">
                                             Please provide your message.
                                         </div>
                                     </div>
-                                    
+
                                     <div class="mb-3 form-check">
                                         <input type="checkbox" class="form-check-input" id="subscribe" name="subscribe">
                                         <label class="form-check-label" for="subscribe">
                                             I would like to receive updates about the Delta-Hub project
                                         </label>
                                     </div>
-                                    
+
                                     <button type="submit" class="btn btn-eu-blue btn-lg">
                                         <i class="fas fa-paper-plane me-2"></i>Send Message
                                     </button>
@@ -166,7 +174,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Contact Information -->
                     <div class="col-lg-4">
                         <div class="card shadow-sm mb-4">
@@ -184,7 +192,8 @@
                                     <div class="mb-3">
                                         <strong>Project Coordinator:</strong><br>
                                         <span class="text-muted">
-                                            Contact information will be provided upon request for official correspondence.
+                                            Contact information will be provided upon request for official
+                                            correspondence.
                                         </span>
                                     </div>
                                     <div class="mb-3">
@@ -222,7 +231,7 @@
                                     <i class="fas fa-users me-2"></i>For Researchers
                                 </h5>
                                 <p class="card-text">
-                                    Interested in collaboration, accessing our data, or learning more about 
+                                    Interested in collaboration, accessing our data, or learning more about
                                     our methodologies? We welcome inquiries from the research community.
                                 </p>
                                 <ul class="list-unstyled small">
@@ -244,8 +253,9 @@
                                 <i class="fas fa-map-marked-alt fa-4x text-muted mb-3"></i>
                                 <h4>Project Locations</h4>
                                 <p class="text-muted">
-                                    Delta-Hub partners are located across Europe, working together to advance 
-                                    sustainable delta management. Our consortium spans multiple countries and institutions.
+                                    Delta-Hub partners are located across Europe, working together to advance
+                                    sustainable delta management. Our consortium spans multiple countries and
+                                    institutions.
                                 </p>
                                 <a href="consortium.html" class="btn btn-outline-primary">
                                     <i class="fas fa-users me-2"></i>View Consortium
@@ -268,8 +278,8 @@
                         <span>Funded by the European Union</span>
                     </div>
                     <p class="small text-muted">
-                        Views and opinions expressed are however those of the author(s) only and do not necessarily 
-                        reflect those of the European Union or the European Commission. Neither the European Union 
+                        Views and opinions expressed are however those of the author(s) only and do not necessarily
+                        reflect those of the European Union or the European Commission. Neither the European Union
                         nor the granting authority can be held responsible for them.
                     </p>
                 </div>
@@ -295,5 +305,9 @@
     <!-- Custom JS -->
     <script src="static/js/main.js"></script>
     <script src="static/js/contact.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
+    <script src="static/js/markdown.js"></script>
 </body>
+
 </html>

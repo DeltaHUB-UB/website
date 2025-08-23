@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Delta-Hub Horizon Europe</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
@@ -12,6 +13,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="static/css/style.css">
 </head>
+
 <body>
     <!-- Header -->
     <header class="bg-eu-blue text-white sticky-top">
@@ -19,6 +21,9 @@
             <div class="row align-items-center py-3">
                 <div class="col-md-8">
                     <div class="d-flex align-items-center">
+                        <a href="index.html" class="me-3 d-flex align-items-center" aria-label="Delta-Hub Home">
+                            <img src="content/images/Deltahub logo.png" alt="Delta-Hub Logo" class="project-logo">
+                        </a>
                         <img src="static/images/eu-flag.svg" alt="European Union Flag" class="eu-flag me-3">
                         <div>
                             <h1 class="h4 mb-0">Delta-Hub Horizon Europe</h1>
@@ -27,12 +32,13 @@
                     </div>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
                         <i class="fas fa-bars text-white"></i>
                     </button>
                 </div>
             </div>
-            
+
             <!-- Navigation -->
             <nav class="navbar navbar-expand-md navbar-dark p-0">
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -98,7 +104,8 @@
                         </p>
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>
-                            <strong>GitHub Pages Mode:</strong> Changes will be saved locally. To publish, commit and push the updated JSON files to your GitHub repository.
+                            <strong>GitHub Pages Mode:</strong> Changes will be saved locally. To publish, commit and
+                            push the updated JSON files to your GitHub repository.
                         </div>
                     </div>
                 </div>
@@ -229,7 +236,8 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h6>Export Data</h6>
-                                        <p class="small text-muted">Download all content as JSON files for backup or GitHub commit.</p>
+                                        <p class="small text-muted">Download all content as JSON files for backup or
+                                            GitHub commit.</p>
                                         <button class="btn btn-primary" id="exportAllBtn">
                                             <i class="fas fa-download me-2"></i>Export All Data
                                         </button>
@@ -237,7 +245,8 @@
                                     <div class="col-md-6">
                                         <h6>Import Data</h6>
                                         <p class="small text-muted">Upload JSON files to restore content.</p>
-                                        <input type="file" class="form-control mb-2" id="importFile" accept=".json" multiple>
+                                        <input type="file" class="form-control mb-2" id="importFile" accept=".json"
+                                            multiple>
                                         <button class="btn btn-success" id="importBtn" disabled>
                                             <i class="fas fa-upload me-2"></i>Import Data
                                         </button>
@@ -280,10 +289,14 @@
                             <div class="card-body">
                                 <h5><i class="fas fa-info-circle me-2"></i>GitHub Pages Instructions</h5>
                                 <ul class="mb-0">
-                                    <li><strong>Local Changes:</strong> All content changes are saved to your browser's local storage.</li>
-                                    <li><strong>Publishing:</strong> Use the "Export All Data" button to download updated JSON files, then commit and push them to your GitHub repository.</li>
-                                    <li><strong>File Structure:</strong> Save the exported files in the <code>data/</code> directory of your repository.</li>
-                                    <li><strong>Auto-Deploy:</strong> GitHub Pages will automatically update your website when you push changes.</li>
+                                    <li><strong>Local Changes:</strong> All content changes are saved to your browser's
+                                        local storage.</li>
+                                    <li><strong>Publishing:</strong> Use the "Export All Data" button to download
+                                        updated JSON files, then commit and push them to your GitHub repository.</li>
+                                    <li><strong>File Structure:</strong> Save the exported files in the
+                                        <code>data/</code> directory of your repository.</li>
+                                    <li><strong>Auto-Deploy:</strong> GitHub Pages will automatically update your
+                                        website when you push changes.</li>
                                 </ul>
                             </div>
                         </div>
@@ -303,8 +316,8 @@
                         <span>Funded by the European Union</span>
                     </div>
                     <p class="small text-muted">
-                        Views and opinions expressed are however those of the author(s) only and do not necessarily 
-                        reflect those of the European Union or the European Commission. Neither the European Union 
+                        Views and opinions expressed are however those of the author(s) only and do not necessarily
+                        reflect those of the European Union or the European Commission. Neither the European Union
                         nor the granting authority can be held responsible for them.
                     </p>
                 </div>
@@ -331,4 +344,5 @@
     <script src="static/js/main.js"></script>
     <script src="static/js/static-admin.js"></script>
 </body>
+
 </html>
