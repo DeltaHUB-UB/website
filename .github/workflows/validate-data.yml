@@ -1,0 +1,38 @@
+name: Validate data JSON
+
+on:
+  push:
+    paths:
+      - 'data/**/*.json'
+      - '.github/workflows/validate-data.yml'
+  pull_request:
+    paths:
+      - 'data/**/*.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install ajv-cli
+        run: npm install -g ajv-cli
+
+      - name: Validate news.json
+        run: |
+          ajv validate -s data/schemas/news.schema.json -d data/news.json --strict=false
+      - name: Validate workshops.json
+        run: |
+          ajv validate -s data/schemas/workshops.schema.json -d data/workshops.json --strict=false || true
+      - name: Validate research.json
+        run: |
+          ajv validate -s data/schemas/research.schema.json -d data/research.json --strict=false || true
+      - name: Validate consortium.json
+        run: |
+          ajv validate -s data/schemas/consortium.schema.json -d data/consortium.json --strict=false || true

@@ -22,7 +22,7 @@ const STORAGE_KEYS = {
 /**
  * Initialize static data management
  */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     loadAllStaticData();
 });
 
@@ -33,20 +33,58 @@ async function loadAllStaticData() {
     try {
         // Try to load from localStorage first
         loadFromLocalStorage();
-        
+
         // If no data in localStorage, try to load from JSON files
         if (isDataEmpty()) {
             await loadFromJsonFiles();
         }
-        
+
+        // Resolve any markdown file references to content strings
+        await resolveMarkdownReferences();
+
         // Populate the page based on current page
         populateCurrentPage();
-        
+
     } catch (error) {
         console.error('Error loading static data:', error);
         // Initialize with empty arrays if all else fails
         initializeEmptyData();
     }
+}
+
+/**
+ * If any objects have *_file properties (e.g., content_file, description_file),
+ * fetch the Markdown, render to HTML, and set corresponding HTML field
+ */
+async function resolveMarkdownReferences() {
+    const fetchMd = async (path) => {
+        const res = await fetch(path);
+        if (!res.ok) throw new Error(`Failed to load ${path}`);
+        return await res.text();
+    };
+
+    // Helper to process an array of items
+    const processArray = async (arr, mappings) => {
+        if (!Array.isArray(arr)) return;
+        for (const item of arr) {
+            for (const [fileKey, htmlKey] of mappings) {
+                if (item && typeof item[fileKey] === 'string' && item[fileKey].endsWith('.md')) {
+                    try {
+                        const md = await fetchMd(item[fileKey]);
+                        const html = (window.Markdown?.renderMarkdown(md)) || '';
+                        item[htmlKey] = html;
+                    } catch (e) {
+                        console.warn('Markdown load failed:', item[fileKey], e);
+                    }
+                }
+            }
+        }
+    };
+
+    await processArray(staticData.news, [['content_file', 'content_html']]);
+    await processArray(staticData.research, [['description_file', 'description_html']]);
+    await processArray(staticData.workshops, [['description_file', 'description_html']]);
+    await processArray(staticData.consortium, [['description_file', 'description_html']]);
 }
 
 /**
@@ -63,10 +101,10 @@ function loadFromLocalStorage() {
  * Check if all data arrays are empty
  */
 function isDataEmpty() {
-    return staticData.news.length === 0 && 
-           staticData.workshops.length === 0 && 
-           staticData.research.length === 0 && 
-           staticData.consortium.length === 0;
+    return staticData.news.length === 0 &&
+        staticData.workshops.length === 0 &&
+        staticData.research.length === 0 &&
+        staticData.consortium.length === 0;
 }
 
 /**
@@ -79,7 +117,7 @@ async function loadFromJsonFiles() {
         { key: 'research', file: 'data/research.json' },
         { key: 'consortium', file: 'data/consortium.json' }
     ];
-    
+
     for (const { key, file } of dataFiles) {
         try {
             const response = await fetch(file);
@@ -119,7 +157,7 @@ function saveToLocalStorage() {
  */
 function populateCurrentPage() {
     const currentPage = getCurrentPageName();
-    
+
     switch (currentPage) {
         case 'index.html':
         case '':
@@ -167,11 +205,11 @@ function populateHomePage() {
 function populateLatestNews() {
     const container = document.getElementById('latestNews');
     if (!container) return;
-    
+
     const latestNews = staticData.news
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, 3);
-    
+
     if (latestNews.length === 0) {
         container.innerHTML = `
             <div class="text-center py-5">
@@ -181,14 +219,27 @@ function populateLatestNews() {
         `;
         return;
     }
-    
+
+    const toExcerpt = (item) => {
+        if (item.content_html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = item.content_html;
+            const txt = tmp.textContent || '';
+            const slice = txt.trim().substring(0, 200);
+            return `${escapeHtml(slice)}${txt.length > 200 ? '...' : ''}`;
+        }
+        const raw = (item.content || '').trim();
+        const slice = raw.substring(0, 200);
+        return `${escapeHtml(slice)}${raw.length > 200 ? '...' : ''}`;
+    };
+
     const newsHtml = latestNews.map(item => `
         <div class="card mb-3 shadow-sm">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <h5 class="card-title">${escapeHtml(item.title)}</h5>
-                        <p class="card-text">${escapeHtml(item.content.substring(0, 200))}${item.content.length > 200 ? '...' : ''}</p>
+                        <p class="card-text">${toExcerpt(item)}</p>
                         <small class="text-muted">
                             <i class="fas fa-calendar me-1"></i>${item.date}
                             <i class="fas fa-user ms-3 me-1"></i>${escapeHtml(item.author)}
@@ -198,7 +249,7 @@ function populateLatestNews() {
             </div>
         </div>
     `).join('');
-    
+
     container.innerHTML = newsHtml;
 }
 
@@ -208,13 +259,13 @@ function populateLatestNews() {
 function populateUpcomingWorkshops() {
     const container = document.getElementById('upcomingWorkshops');
     if (!container) return;
-    
+
     const currentDate = new Date().toISOString().split('T')[0];
     const upcomingWorkshops = staticData.workshops
         .filter(w => w.date >= currentDate)
         .sort((a, b) => new Date(a.date) - new Date(b.date))
         .slice(0, 2);
-    
+
     if (upcomingWorkshops.length === 0) {
         container.innerHTML = `
             <div class="text-center py-3">
@@ -224,7 +275,7 @@ function populateUpcomingWorkshops() {
         `;
         return;
     }
-    
+
     const workshopsHtml = upcomingWorkshops.map(workshop => `
         <div class="card mb-3 border-start border-4 border-eu-blue">
             <div class="card-body">
@@ -241,7 +292,7 @@ function populateUpcomingWorkshops() {
             </div>
         </div>
     `).join('');
-    
+
     container.innerHTML = workshopsHtml;
 }
 
@@ -251,10 +302,10 @@ function populateUpcomingWorkshops() {
 function populateNewsPage() {
     const container = document.getElementById('newsItemsContainer');
     if (!container) return;
-    
+
     const sortedNews = staticData.news
         .sort((a, b) => new Date(b.date) - new Date(a.date));
-    
+
     if (sortedNews.length === 0) {
         container.innerHTML = `
             <div class="text-center py-5">
@@ -276,7 +327,7 @@ function populateNewsPage() {
         `;
         return;
     }
-    
+
     const newsHtml = sortedNews.map(item => `
         <article class="card mb-4 shadow-sm">
             <div class="card-body p-4">
@@ -287,7 +338,7 @@ function populateNewsPage() {
                     </small>
                 </div>
                 <h2 class="h4 card-title mb-3">${escapeHtml(item.title)}</h2>
-                <p class="card-text">${escapeHtml(item.content)}</p>
+                <div class="card-text">${item.content_html ? item.content_html : escapeHtml(item.content || '')}</div>
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <small class="text-muted">
                         <i class="fas fa-user me-1"></i>${escapeHtml(item.author)}
@@ -305,7 +356,7 @@ function populateNewsPage() {
             </div>
         </article>
     `).join('');
-    
+
     container.innerHTML = newsHtml;
 }
 
@@ -315,17 +366,17 @@ function populateNewsPage() {
 function populateWorkshopsPage() {
     const upcomingContainer = document.getElementById('upcomingWorkshopsContainer');
     const pastContainer = document.getElementById('pastWorkshopsContainer');
-    
+
     const currentDate = new Date().toISOString().split('T')[0];
-    
+
     const upcoming = staticData.workshops
         .filter(w => w.date >= currentDate)
         .sort((a, b) => new Date(a.date) - new Date(b.date));
-    
+
     const past = staticData.workshops
         .filter(w => w.date < currentDate)
         .sort((a, b) => new Date(b.date) - new Date(a.date));
-    
+
     // Populate upcoming workshops
     if (upcomingContainer) {
         if (upcoming.length === 0) {
@@ -360,7 +411,7 @@ function populateWorkshopsPage() {
                                     <i class="fas fa-map-marker-alt me-1"></i>${escapeHtml(workshop.location)}
                                 </p>
                             ` : ''}
-                            ${workshop.description ? `<p class="card-text">${escapeHtml(workshop.description)}</p>` : ''}
+                            ${workshop.description_html ? `<div class="card-text">${workshop.description_html}</div>` : (workshop.description ? `<p class="card-text">${escapeHtml(workshop.description)}</p>` : '')}
                             ${workshop.registration_link ? `
                                 <div class="mt-3">
                                     <a href="${escapeHtml(workshop.registration_link)}" class="btn btn-success" target="_blank">
@@ -372,11 +423,11 @@ function populateWorkshopsPage() {
                     </div>
                 </div>
             `).join('');
-            
+
             upcomingContainer.innerHTML = `<div class="row g-4">${upcomingHtml}</div>`;
         }
     }
-    
+
     // Populate past workshops
     if (pastContainer) {
         if (past.length === 0) {
@@ -407,7 +458,7 @@ function populateWorkshopsPage() {
                                     <i class="fas fa-map-marker-alt me-1"></i>${escapeHtml(workshop.location)}
                                 </p>
                             ` : ''}
-                            ${workshop.description ? `<p class="card-text">${escapeHtml(workshop.description)}</p>` : ''}
+                            ${workshop.description_html ? `<div class="card-text">${workshop.description_html}</div>` : (workshop.description ? `<p class="card-text">${escapeHtml(workshop.description)}</p>` : '')}
                             ${workshop.materials_link ? `
                                 <div class="mt-3">
                                     <a href="${escapeHtml(workshop.materials_link)}" class="btn btn-outline-primary btn-sm" target="_blank">
@@ -419,7 +470,7 @@ function populateWorkshopsPage() {
                     </div>
                 </div>
             `).join('');
-            
+
             pastContainer.innerHTML = `<div class="row g-4">${pastHtml}</div>`;
         }
     }
@@ -431,16 +482,16 @@ function populateWorkshopsPage() {
 function populateResearchPage() {
     const container = document.getElementById('researchItemsContainer');
     if (!container) return;
-    
+
     if (staticData.research.length === 0) {
         // Keep the default content that's already in the HTML
         return;
     }
-    
+
     const researchHtml = staticData.research.map(item => {
-        const badgeClass = item.type === 'publication' ? 'primary' : 
-                          item.type === 'report' ? 'success' : 'warning';
-        
+        const badgeClass = item.type === 'publication' ? 'primary' :
+            item.type === 'report' ? 'success' : 'warning';
+
         return `
             <div class="col-lg-6 mb-4">
                 <div class="card h-100 shadow-sm">
@@ -452,7 +503,7 @@ function populateResearchPage() {
                             <small class="text-muted">${item.date}</small>
                         </div>
                         <h5 class="card-title">${escapeHtml(item.title)}</h5>
-                        <p class="card-text">${escapeHtml(item.description)}</p>
+                        ${item.description_html ? `<div class="card-text">${item.description_html}</div>` : (item.description ? `<p class="card-text">${escapeHtml(item.description)}</p>` : '')}
                         ${item.authors ? `
                             <p class="text-muted small">
                                 <i class="fas fa-users me-1"></i>${escapeHtml(item.authors)}
@@ -475,7 +526,7 @@ function populateResearchPage() {
             </div>
         `;
     }).join('');
-    
+
     container.innerHTML = `<div class="row">${researchHtml}</div>`;
 }
 
@@ -485,12 +536,12 @@ function populateResearchPage() {
 function populateConsortiumPage() {
     const container = document.getElementById('partnersContainer');
     if (!container) return;
-    
+
     if (staticData.consortium.length === 0) {
         // Keep the default content that's already in the HTML
         return;
     }
-    
+
     const partnersHtml = staticData.consortium.map(partner => `
         <div class="col-lg-4 col-md-6">
             <div class="card h-100 shadow-sm hover-card">
@@ -511,7 +562,7 @@ function populateConsortiumPage() {
             </div>
         </div>
     `).join('');
-    
+
     container.innerHTML = `<div class="row g-4">${partnersHtml}</div>`;
 }
 
@@ -520,7 +571,7 @@ function populateConsortiumPage() {
  */
 function escapeHtml(unsafe) {
     if (typeof unsafe !== 'string') return unsafe;
-    
+
     return unsafe
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
@@ -540,17 +591,17 @@ function addNewsItem(title, content, author = 'Admin') {
         author: author,
         date: new Date().toISOString().split('T')[0]
     };
-    
+
     staticData.news.unshift(newItem);
     saveToLocalStorage();
-    
+
     // Refresh current page if needed
     if (getCurrentPageName() === 'index.html' || getCurrentPageName() === '' || getCurrentPageName() === '/') {
         populateLatestNews();
     } else if (getCurrentPageName() === 'news.html') {
         populateNewsPage();
     }
-    
+
     return newItem;
 }
 
@@ -567,17 +618,17 @@ function addWorkshop(workshopData) {
         registration_link: workshopData.registration_link || '',
         materials_link: workshopData.materials_link || ''
     };
-    
+
     staticData.workshops.push(newWorkshop);
     saveToLocalStorage();
-    
+
     // Refresh current page if needed
     if (getCurrentPageName() === 'index.html' || getCurrentPageName() === '' || getCurrentPageName() === '/') {
         populateUpcomingWorkshops();
     } else if (getCurrentPageName() === 'workshops.html') {
         populateWorkshopsPage();
     }
-    
+
     return newWorkshop;
 }
 
@@ -601,7 +652,7 @@ function importData(data) {
     if (data.workshops) staticData.workshops = data.workshops;
     if (data.research) staticData.research = data.research;
     if (data.consortium) staticData.consortium = data.consortium;
-    
+
     saveToLocalStorage();
     populateCurrentPage();
 }

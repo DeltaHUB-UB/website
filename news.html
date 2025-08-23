@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News - Delta-Hub Horizon Europe</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
@@ -12,6 +13,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="static/css/style.css">
 </head>
+
 <body>
     <!-- Header -->
     <header class="bg-eu-blue text-white sticky-top">
@@ -27,12 +29,13 @@
                     </div>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
                         <i class="fas fa-bars text-white"></i>
                     </button>
                 </div>
             </div>
-            
+
             <!-- Navigation -->
             <nav class="navbar navbar-expand-md navbar-dark p-0">
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -109,7 +112,7 @@
                                     News updates and announcements will be posted here as they become available.
                                 </p>
                                 <p class="text-muted">
-                                    Check back regularly for the latest information about the Delta-Hub project, 
+                                    Check back regularly for the latest information about the Delta-Hub project,
                                     research developments, and upcoming events.
                                 </p>
                                 <div class="mt-4">
@@ -136,7 +139,8 @@
                                 <div class="row justify-content-center">
                                     <div class="col-md-8">
                                         <div class="input-group">
-                                            <input type="email" class="form-control" placeholder="Enter your email address" id="subscriptionEmail">
+                                            <input type="email" class="form-control"
+                                                placeholder="Enter your email address" id="subscriptionEmail">
                                             <button class="btn btn-light" type="button" id="subscribeBtn">
                                                 <i class="fas fa-bell me-1"></i>Subscribe
                                             </button>
@@ -201,8 +205,8 @@
                         <span>Funded by the European Union</span>
                     </div>
                     <p class="small text-muted">
-                        Views and opinions expressed are however those of the author(s) only and do not necessarily 
-                        reflect those of the European Union or the European Commission. Neither the European Union 
+                        Views and opinions expressed are however those of the author(s) only and do not necessarily
+                        reflect those of the European Union or the European Commission. Neither the European Union
                         nor the granting authority can be held responsible for them.
                     </p>
                 </div>
@@ -227,18 +231,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="static/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
+    <script src="static/js/markdown.js"></script>
     <script src="static/js/static-data.js"></script>
     <script>
-    function shareOnTwitter(title) {
-        const url = encodeURIComponent(window.location.href);
-        const text = encodeURIComponent(title + ' - Delta-Hub Horizon Europe');
-        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=600,height=400');
-    }
+        function shareOnTwitter(title) {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent(title + ' - Delta-Hub Horizon Europe');
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=600,height=400');
+        }
 
-    function shareOnLinkedIn(title) {
-        const url = encodeURIComponent(window.location.href);
-        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=600,height=400');
-    }
+        function shareOnLinkedIn(title) {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=600,height=400');
+        }
     </script>
 </body>
+
 </html>

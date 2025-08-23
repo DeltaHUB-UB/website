@@ -1,0 +1,34 @@
+{
+    "editor.formatOnSave": true,
+    "files.eol": "\r\n",
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/data/news.json",
+                "data/news.json"
+            ],
+            "url": "./data/schemas/news.schema.json"
+        },
+        {
+            "fileMatch": [
+                "/data/workshops.json",
+                "data/workshops.json"
+            ],
+            "url": "./data/schemas/workshops.schema.json"
+        },
+        {
+            "fileMatch": [
+                "/data/research.json",
+                "data/research.json"
+            ],
+            "url": "./data/schemas/research.schema.json"
+        },
+        {
+            "fileMatch": [
+                "/data/consortium.json",
+                "data/consortium.json"
+            ],
+            "url": "./data/schemas/consortium.schema.json"
+        }
+    ]
+}
