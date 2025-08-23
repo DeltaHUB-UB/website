@@ -222,7 +222,14 @@
                         </div>
                         <div class="mb-3">
                             <label for="newsContent" class="form-label">Content</label>
-                            <textarea class="form-control" id="newsContent" rows="5" <hr>
+                            <textarea class="form-control" id="newsContent" rows="5"
+                                placeholder="Write a short summary..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newsAuthor" class="form-label">Author</label>
+                            <input type="text" class="form-control" id="newsAuthor" placeholder="Your name">
+                        </div>
+                        <hr>
                         <div class="mb-3">
                             <label for="newsMediaType" class="form-label">Media (optional)</label>
                             <select id="newsMediaType" class="form-select">
@@ -233,23 +240,52 @@
                         </div>
                         <div id="imageInputs" class="mb-3 d-none">
                             <label class="form-label">Image source</label>
-                            <input type="url" class="form-control mb-2" id="newsImageUrl" placeholder="https://... or static/images/example.jpg">
+                            <input type="url" class="form-control mb-2" id="newsImageUrl"
+                                placeholder="https://... or static/images/example.jpg">
                             <div class="text-center text-muted my-1">— or —</div>
-                            <input type="file" class="form-control" id="newsImageFile" accept="image/*">
-                            <small class="text-muted">Tip: A URL in your repo (e.g., static/images/...) is best for sharing.</small>
+                            <input type="file" class="form-control mb-2" id="newsImageFile" accept="image/*">
+                            <div id="imageDropZone" class="rounded text-center p-3 mb-2"
+                                style="border:2px dashed #ced4da; background:#f8f9fa; cursor: pointer;">
+                                <i class="fas fa-cloud-upload-alt me-1"></i> Drag & drop an image here
+                            </div>
+                            <div id="imagePreview" class="mt-2 d-none">
+                                <img id="imagePreviewImg" class="img-fluid rounded" alt="Preview">
+                            </div>
+                            <small class="text-muted">Tip: A URL in your repo (e.g., static/images/...) is best for
+                                sharing.</small>
                         </div>
                         <div id="videoInputs" class="mb-3 d-none">
                             <label class="form-label">Video source</label>
-                            <input type="url" class="form-control mb-2" id="newsVideoUrl" placeholder="https://... or content/videos/example.mp4">
+                            <input type="url" class="form-control mb-2" id="newsVideoUrl"
+                                placeholder="https://... or content/videos/example.mp4">
                             <div class="text-center text-muted my-1">— or —</div>
                             <input type="file" class="form-control" id="newsVideoFile" accept="video/*">
                             <small class="text-muted">Large files as uploads will only stay on this device.</small>
                         </div>
-                                placeholder="Write a short summary..."></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="newsAuthor" class="form-label">Author</label>
-                            <input type="text" class="form-control" id="newsAuthor" placeholder="Your name">
+                        <div id="repoUploadOptions" class="border rounded p-3 mb-3 d-none">
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="uploadToRepo">
+                                <label class="form-check-label" for="uploadToRepo">Upload selected file to GitHub
+                                    repository</label>
+                            </div>
+                            <div class="row g-2 align-items-end">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="ghToken">GitHub Token</label>
+                                    <input type="password" class="form-control" id="ghToken"
+                                        placeholder="Paste a token (repo scope)">
+                                    <small class="text-muted">Stored only in this browser. Don’t share it.</small>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label" for="ghBranch">Branch</label>
+                                    <input type="text" class="form-control" id="ghBranch" value="main">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label" for="ghFolder">Folder</label>
+                                    <input type="text" class="form-control" id="ghFolder" value="static/uploads">
+                                </div>
+                            </div>
+                            <small class="text-muted d-block mt-2">Owner/Repo are set to DeltaHUB-UB/website. Change in
+                                code if you fork.</small>
                         </div>
                         <small class="text-muted">Note: Items added here are saved to this browser only
                             (localStorage).</small>
@@ -313,6 +349,16 @@
             const mediaTypeEl = document.getElementById('newsMediaType');
             const imageInputs = document.getElementById('imageInputs');
             const videoInputs = document.getElementById('videoInputs');
+            const repoOptions = document.getElementById('repoUploadOptions');
+            const uploadToRepoEl = document.getElementById('uploadToRepo');
+            const ghTokenEl = document.getElementById('ghToken');
+            const ghBranchEl = document.getElementById('ghBranch');
+            const ghFolderEl = document.getElementById('ghFolder');
+            const imgFileEl = document.getElementById('newsImageFile');
+            const imgUrlEl = document.getElementById('newsImageUrl');
+            const imgDrop = document.getElementById('imageDropZone');
+            const imgPreviewWrap = document.getElementById('imagePreview');
+            const imgPreview = document.getElementById('imagePreviewImg');
 
             function isAdmin() { return localStorage.getItem(ADMIN_KEY) === '1'; }
             function showBar() { if (bar) bar.classList.remove('d-none'); }
@@ -322,6 +368,7 @@
                 const v = mediaTypeEl ? mediaTypeEl.value : 'none';
                 if (imageInputs) imageInputs.classList.toggle('d-none', v !== 'image');
                 if (videoInputs) videoInputs.classList.toggle('d-none', v !== 'video');
+                if (repoOptions) repoOptions.classList.toggle('d-none', v === 'none');
             }
             if (mediaTypeEl) mediaTypeEl.addEventListener('change', toggleMediaInputs);
             toggleMediaInputs();
@@ -361,14 +408,26 @@
                     const f = document.getElementById('newsImageFile').files[0];
                     const u = document.getElementById('newsImageUrl').value.trim();
                     let url = '';
-                    if (f) url = await readAsDataURL(f).catch(() => '');
+                    if (f) {
+                        if (uploadToRepoEl && uploadToRepoEl.checked) {
+                            url = await uploadFileToRepo(f, ghTokenEl?.value || '', ghBranchEl?.value || 'main', ghFolderEl?.value || 'static/uploads').catch(() => '');
+                        } else {
+                            url = await readAsDataURL(f).catch(() => '');
+                        }
+                    }
                     else if (u) url = u;
                     if (url) extra.media = { type: 'image', url };
                 } else if (mediaType === 'video') {
                     const f = document.getElementById('newsVideoFile').files[0];
                     const u = document.getElementById('newsVideoUrl').value.trim();
                     let url = '';
-                    if (f) url = await readAsDataURL(f).catch(() => '');
+                    if (f) {
+                        if (uploadToRepoEl && uploadToRepoEl.checked) {
+                            url = await uploadFileToRepo(f, ghTokenEl?.value || '', ghBranchEl?.value || 'main', ghFolderEl?.value || 'static/uploads').catch(() => '');
+                        } else {
+                            url = await readAsDataURL(f).catch(() => '');
+                        }
+                    }
                     else if (u) url = u;
                     if (url) extra.media = { type: 'video', url };
                 }
@@ -392,7 +451,29 @@
                 }
                 form.reset();
                 toggleMediaInputs();
+                clearPreview();
             });
+
+            // Drag & drop and preview handlers
+            function clearPreview() { if (imgPreviewWrap) imgPreviewWrap.classList.add('d-none'); if (imgPreview) imgPreview.src = ''; }
+            function showPreview(src) { if (imgPreview) imgPreview.src = src; if (imgPreviewWrap) imgPreviewWrap.classList.remove('d-none'); }
+            function isImage(file) { return file && file.type && file.type.startsWith('image/'); }
+            if (imgFileEl) imgFileEl.addEventListener('change', async (e) => {
+                const f = e.target.files[0];
+                if (isImage(f)) { const data = await readAsDataURL(f).catch(() => ''); if (data) showPreview(data); }
+            });
+            if (imgUrlEl) imgUrlEl.addEventListener('input', () => { const u = imgUrlEl.value.trim(); if (u) showPreview(u); else clearPreview(); });
+            if (imgDrop) {
+                ['dragenter', 'dragover'].forEach(evt => imgDrop.addEventListener(evt, (e) => { e.preventDefault(); e.stopPropagation(); imgDrop.style.background = '#eef5ff'; }));
+                ['dragleave', 'drop'].forEach(evt => imgDrop.addEventListener(evt, (e) => { e.preventDefault(); e.stopPropagation(); imgDrop.style.background = '#f8f9fa'; }));
+                imgDrop.addEventListener('drop', async (e) => {
+                    const f = e.dataTransfer.files[0];
+                    if (isImage(f)) {
+                        if (imgFileEl) { const dt = new DataTransfer(); dt.items.add(f); imgFileEl.files = dt.files; }
+                        const data = await readAsDataURL(f).catch(() => ''); if (data) showPreview(data);
+                    }
+                });
+            }
 
             function readAsDataURL(file) {
                 return new Promise((resolve, reject) => {
@@ -401,6 +482,44 @@
                     reader.onerror = reject;
                     reader.readAsDataURL(file);
                 });
+            }
+
+            async function uploadFileToRepo(file, token, branch, folder) {
+                if (!token) throw new Error('Missing GitHub token');
+                // persist token locally if user agrees
+                try { if (token) localStorage.setItem('dh_gh_token_present', '1'); } catch { }
+                const owner = 'DeltaHUB-UB';
+                const repo = 'website';
+                const now = new Date();
+                const yyyy = now.getFullYear();
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+                const safeName = (file.name || 'upload.bin').replace(/[^a-zA-Z0-9._-]/g, '_');
+                const path = `${folder.replace(/\/$/, '')}/${yyyy}/${mm}/${Date.now()}-${safeName}`;
+
+                const dataUrl = await readAsDataURL(file);
+                const base64 = String(dataUrl).split(',')[1];
+
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`;
+                const res = await fetch(apiUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/vnd.github+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `Add upload ${safeName}`,
+                        content: base64,
+                        branch: branch || 'main'
+                    })
+                });
+                if (!res.ok) {
+                    const msg = await res.text().catch(() => res.statusText);
+                    throw new Error(`Upload failed: ${res.status} ${msg}`);
+                }
+                // Construct raw URL
+                const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch || 'main'}/${path}`;
+                return rawUrl;
             }
         })();
     </script>
