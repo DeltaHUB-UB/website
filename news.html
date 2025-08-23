@@ -102,6 +102,16 @@
                     </div>
                 </div>
 
+                <!-- Quick Add News (no-code) -->
+                <div class="row mb-3 d-none" id="adminAddNewsBar">
+                    <div class="col-12 text-end">
+                        <button class="btn btn-eu-blue" data-bs-toggle="modal" data-bs-target="#addNewsModal">
+                            <i class="fas fa-plus me-1"></i>Add News
+                        </button>
+                        <small class="text-muted ms-2">Saved locally in this browser</small>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
                         <div id="newsItemsContainer">
@@ -195,6 +205,64 @@
         </section>
     </main>
 
+    <!-- Add News Modal -->
+    <div class="modal fade" id="addNewsModal" tabindex="-1" aria-labelledby="addNewsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="addNewsForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addNewsModalLabel"><i class="fas fa-newspaper me-2"></i>Add News
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="newsTitle" class="form-label">Title<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="newsTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newsContent" class="form-label">Content</label>
+                            <textarea class="form-control" id="newsContent" rows="5" <hr>
+                        <div class="mb-3">
+                            <label for="newsMediaType" class="form-label">Media (optional)</label>
+                            <select id="newsMediaType" class="form-select">
+                                <option value="none" selected>None</option>
+                                <option value="image">Image</option>
+                                <option value="video">Video</option>
+                            </select>
+                        </div>
+                        <div id="imageInputs" class="mb-3 d-none">
+                            <label class="form-label">Image source</label>
+                            <input type="url" class="form-control mb-2" id="newsImageUrl" placeholder="https://... or static/images/example.jpg">
+                            <div class="text-center text-muted my-1">— or —</div>
+                            <input type="file" class="form-control" id="newsImageFile" accept="image/*">
+                            <small class="text-muted">Tip: A URL in your repo (e.g., static/images/...) is best for sharing.</small>
+                        </div>
+                        <div id="videoInputs" class="mb-3 d-none">
+                            <label class="form-label">Video source</label>
+                            <input type="url" class="form-control mb-2" id="newsVideoUrl" placeholder="https://... or content/videos/example.mp4">
+                            <div class="text-center text-muted my-1">— or —</div>
+                            <input type="file" class="form-control" id="newsVideoFile" accept="video/*">
+                            <small class="text-muted">Large files as uploads will only stay on this device.</small>
+                        </div>
+                                placeholder="Write a short summary..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newsAuthor" class="form-label">Author</label>
+                            <input type="text" class="form-control" id="newsAuthor" placeholder="Your name">
+                        </div>
+                        <small class="text-muted">Note: Items added here are saved to this browser only
+                            (localStorage).</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-eu-blue">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-dark text-white mt-5">
         <div class="container py-4">
@@ -235,6 +303,107 @@
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
     <script src="static/js/markdown.js"></script>
     <script src="static/js/static-data.js"></script>
+    <script>
+        (function () {
+            const ADMIN_KEY = 'dh_is_admin';
+            const ADMIN_PASS = 'changeme'; // TODO: change this passcode
+            const params = new URLSearchParams(window.location.search);
+            const bar = document.getElementById('adminAddNewsBar');
+            const form = document.getElementById('addNewsForm');
+            const mediaTypeEl = document.getElementById('newsMediaType');
+            const imageInputs = document.getElementById('imageInputs');
+            const videoInputs = document.getElementById('videoInputs');
+
+            function isAdmin() { return localStorage.getItem(ADMIN_KEY) === '1'; }
+            function showBar() { if (bar) bar.classList.remove('d-none'); }
+            function hideBar() { if (bar) bar.classList.add('d-none'); }
+
+            function toggleMediaInputs() {
+                const v = mediaTypeEl ? mediaTypeEl.value : 'none';
+                if (imageInputs) imageInputs.classList.toggle('d-none', v !== 'image');
+                if (videoInputs) videoInputs.classList.toggle('d-none', v !== 'video');
+            }
+            if (mediaTypeEl) mediaTypeEl.addEventListener('change', toggleMediaInputs);
+            toggleMediaInputs();
+
+            // Enable/disable admin via URL params
+            const adminParam = params.get('admin');
+            if (adminParam === '1') {
+                const input = prompt('Enter admin passcode:');
+                if (input && input === ADMIN_PASS) {
+                    localStorage.setItem(ADMIN_KEY, '1');
+                    showBar();
+                } else {
+                    alert('Incorrect passcode.');
+                    hideBar();
+                }
+            } else if (adminParam === 'logout') {
+                localStorage.removeItem(ADMIN_KEY);
+                hideBar();
+            }
+
+            // Show if already admin
+            if (isAdmin()) showBar();
+
+            if (!form) return;
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                if (!isAdmin()) {
+                    alert('Admins only. Enable admin mode with ?admin=1');
+                    return;
+                }
+                const title = document.getElementById('newsTitle').value.trim();
+                const content = document.getElementById('newsContent').value.trim();
+                const author = document.getElementById('newsAuthor').value.trim();
+                const mediaType = mediaTypeEl ? mediaTypeEl.value : 'none';
+                let extra = {};
+                if (mediaType === 'image') {
+                    const f = document.getElementById('newsImageFile').files[0];
+                    const u = document.getElementById('newsImageUrl').value.trim();
+                    let url = '';
+                    if (f) url = await readAsDataURL(f).catch(() => '');
+                    else if (u) url = u;
+                    if (url) extra.media = { type: 'image', url };
+                } else if (mediaType === 'video') {
+                    const f = document.getElementById('newsVideoFile').files[0];
+                    const u = document.getElementById('newsVideoUrl').value.trim();
+                    let url = '';
+                    if (f) url = await readAsDataURL(f).catch(() => '');
+                    else if (u) url = u;
+                    if (url) extra.media = { type: 'video', url };
+                }
+                if (!title) return;
+                if (window.StaticData && typeof window.StaticData.addNewsItem === 'function') {
+                    window.StaticData.addNewsItem(title, content, author || '', extra);
+                }
+                // Close modal
+                const modalEl = document.getElementById('addNewsModal');
+                if (modalEl) {
+                    const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                    modal.hide();
+                }
+                // Flash message
+                const flash = document.getElementById('flashMessages');
+                if (flash) {
+                    flash.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                        '<i class="fas fa-check-circle me-1"></i>News added locally. It will appear in the list below.' +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                        '</div>';
+                }
+                form.reset();
+                toggleMediaInputs();
+            });
+
+            function readAsDataURL(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
+        })();
+    </script>
     <script>
         function shareOnTwitter(title) {
             const url = encodeURIComponent(window.location.href);

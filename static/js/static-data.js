@@ -398,6 +398,7 @@ function populateNewsPage() {
                     </small>
                 </div>
                 <h2 class="h4 card-title mb-3">${escapeHtml(item.title)}</h2>
+                ${renderMedia(item)}
                 <div class="card-text">${item.content_html ? item.content_html : escapeHtml(item.content || '')}</div>
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <small class="text-muted">
@@ -418,6 +419,23 @@ function populateNewsPage() {
     `).join('');
 
     container.innerHTML = newsHtml;
+}
+
+function renderMedia(item) {
+    const m = item.media;
+    if (!m || !m.url || !m.type) return '';
+    if (m.type === 'image') {
+        return `<div class="mb-3"><img src="${escapeHtml(m.url)}" alt="${escapeHtml(item.title)}" class="img-fluid rounded"></div>`;
+    }
+    if (m.type === 'video') {
+        const isYouTube = /youtube\.com|youtu\.be/.test(m.url);
+        if (isYouTube) {
+            // naive embed replacement
+            return `<div class="ratio ratio-16x9 mb-3"><iframe src="${escapeHtml(m.url)}" title="Video" allowfullscreen loading="lazy"></iframe></div>`;
+        }
+        return `<div class="mb-3"><video controls preload="metadata" class="w-100 rounded"><source src="${escapeHtml(m.url)}"></video></div>`;
+    }
+    return '';
 }
 
 /**
@@ -915,7 +933,7 @@ function escapeHtml(unsafe) {
 /**
  * Add new news item
  */
-function addNewsItem(title, content, author = 'Admin') {
+function addNewsItem(title, content, author = 'Admin', extra = {}) {
     const newItem = {
         id: Date.now(),
         title: title,
@@ -923,6 +941,10 @@ function addNewsItem(title, content, author = 'Admin') {
         author: author,
         date: new Date().toISOString().split('T')[0]
     };
+
+    if (extra && extra.media) {
+        newItem.media = extra.media;
+    }
 
     staticData.news.unshift(newItem);
     saveToLocalStorage();
