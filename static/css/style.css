@@ -1,3 +1,144 @@
+/* Modern & Elegant News Card Enhancements */
+.news-content img {
+    max-width: 100%;
+    border-radius: 1rem;
+    margin: 1.2rem 0;
+    box-shadow: 0 4px 24px rgba(0, 51, 153, 0.07);
+    transition: transform 0.2s;
+}
+
+.news-content img:hover {
+    transform: scale(1.03) rotate(-1deg);
+    box-shadow: 0 8px 32px rgba(0, 51, 153, 0.13);
+}
+
+.news-content video {
+    display: block;
+    margin: 1.2rem auto;
+    border-radius: 1rem;
+    box-shadow: 0 4px 24px rgba(0, 51, 153, 0.07);
+    max-width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+}
+
+.card.news-elegant {
+    border: none;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 51, 153, 0.10), 0 1.5px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    background: linear-gradient(135deg, #fff 80%, var(--eu-blue-light) 100%);
+    position: relative;
+    margin-bottom: 2.5rem;
+    transition: box-shadow 0.2s;
+}
+
+.card.news-elegant:hover {
+    box-shadow: 0 16px 48px rgba(0, 51, 153, 0.18), 0 2px 12px rgba(0, 0, 0, 0.07);
+}
+
+.card.news-elegant .card-body {
+    padding: 2.2rem 2rem 2rem 2rem;
+}
+
+.card.news-elegant .card-title {
+    color: var(--eu-blue);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 1.2rem;
+}
+
+.card.news-elegant .news-meta {
+    font-size: 1em;
+    color: var(--gray-600);
+    margin-bottom: 0.7rem;
+}
+
+.card.news-elegant .badge.bg-eu-blue {
+    font-size: 1em;
+    padding: 0.6em 1.1em;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--eu-blue) 0%, var(--eu-blue-light) 100%);
+    box-shadow: 0 2px 8px rgba(0, 51, 153, 0.09);
+}
+
+.card.news-elegant .text-muted.small {
+    font-size: 1em;
+    margin-left: 0.7em;
+}
+
+.card.news-elegant .news-content {
+    font-size: 1.13rem;
+    color: var(--gray-800);
+    line-height: 1.7;
+}
+
+@media (max-width: 576px) {
+    .card.news-elegant .card-body {
+        padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+    }
+
+    .card.news-elegant .card-title {
+        font-size: 1.1rem;
+    }
+
+    .card.news-elegant .news-content {
+        font-size: 1rem;
+    }
+}
+
+/* Modern News Page Styles */
+.news-content img {
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 1rem 0;
+}
+
+.news-meta,
+.card .news-meta {
+    font-size: 0.95em;
+    color: var(--gray-600);
+    margin-bottom: 0.5rem;
+}
+
+.news-block,
+.card.news-block {
+    margin-bottom: 2rem;
+}
+
+.card.fade-in {
+    animation: fadeIn 0.7s cubic-bezier(.4, 0, .2, 1);
+}
+
+.card .card-title {
+    color: var(--eu-blue);
+    font-weight: 600;
+}
+
+.card .badge.bg-eu-blue {
+    background: linear-gradient(90deg, var(--eu-blue) 0%, var(--eu-blue-light) 100%);
+    color: #fff;
+    font-size: 0.95em;
+    border-radius: 4px;
+    padding: 0.5em 0.9em;
+    box-shadow: 0 2px 8px rgba(0, 51, 153, 0.07);
+}
+
+.card .text-muted.small {
+    font-size: 0.95em;
+    margin-left: 0.5em;
+}
+
+@media (max-width: 576px) {
+    .card .card-title {
+        font-size: 1.1rem;
+    }
+
+    .news-content {
+        font-size: 1rem;
+    }
+}
+
 /* Delta-Hub Horizon Europe Website Styles */
 
 /* CSS Custom Properties for EU Branding */
