@@ -121,7 +121,7 @@
     font-size: 0.95em;
     border-radius: 4px;
     padding: 0.5em 0.9em;
-    box-shadow: 0 2px 8px rgba(0, 51, 153, 0.07);
+    box-shadow: 0 2px 8px rgba(24, 77, 58, 0.07);
 }
 
 .card .text-muted.small {
@@ -143,9 +143,10 @@
 
 /* CSS Custom Properties for EU Branding */
 :root {
-    --eu-blue: #003399;
-    --eu-blue-dark: #002266;
-    --eu-blue-light: #0044cc;
+    --eu-blue: #184d3a;
+    /* dark green from logo */
+    --eu-blue-dark: #133c2c;
+    --eu-blue-light: #2e6b4a;
     --eu-yellow: #ffdd00;
     --white: #ffffff;
     --gray-100: #f8f9fa;
