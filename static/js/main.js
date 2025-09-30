@@ -7,7 +7,7 @@
 let isLoading = false;
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeWebsite();
 });
 
@@ -17,19 +17,19 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeWebsite() {
     // Initialize smooth scrolling
     initSmoothScrolling();
-    
+
     // Initialize navigation
     initNavigation();
-    
+
     // Initialize form handling
     initFormHandling();
-    
+
     // Initialize accessibility features
     initAccessibility();
-    
+
     // Initialize animations
     initAnimations();
-    
+
     console.log('Delta-Hub website initialized successfully');
 }
 
@@ -42,11 +42,11 @@ function initSmoothScrolling() {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
-            
+
             if (target) {
                 const headerHeight = document.querySelector('header').offsetHeight;
                 const targetPosition = target.offsetTop - headerHeight - 20;
-                
+
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
@@ -62,7 +62,7 @@ function initSmoothScrolling() {
 function initNavigation() {
     const navbar = document.querySelector('.navbar-collapse');
     const navbarToggler = document.querySelector('.navbar-toggler');
-    
+
     // Close mobile menu when clicking on a link
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
@@ -71,10 +71,10 @@ function initNavigation() {
             }
         });
     });
-    
+
     // Highlight active navigation item based on current page
     highlightActiveNavItem();
-    
+
     // Handle scroll effects on navigation
     initScrollEffects();
 }
@@ -85,7 +85,7 @@ function initNavigation() {
 function highlightActiveNavItem() {
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll('.nav-link');
-    
+
     navLinks.forEach(link => {
         const linkPath = new URL(link.href).pathname;
         if (linkPath === currentPath || (currentPath === '/' && link.textContent.trim() === 'Home')) {
@@ -102,17 +102,20 @@ function highlightActiveNavItem() {
 function initScrollEffects() {
     let lastScrollTop = 0;
     const header = document.querySelector('header');
-    
+    // Read primary RGB from CSS variables for consistent theming
+    const styles = getComputedStyle(document.documentElement);
+    const primaryRgb = styles.getPropertyValue('--eu-primary-rgb').trim() || '31, 111, 84';
+
     window.addEventListener('scroll', () => {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
+
         // Add shadow to header when scrolling
         if (scrollTop > 10) {
-            header.style.boxShadow = '0 2px 20px rgba(0, 51, 153, 0.15)';
+            header.style.boxShadow = `0 2px 20px rgba(${primaryRgb}, 0.15)`;
         } else {
-            header.style.boxShadow = '0 2px 10px rgba(0, 51, 153, 0.1)';
+            header.style.boxShadow = `0 2px 10px rgba(${primaryRgb}, 0.1)`;
         }
-        
+
         lastScrollTop = scrollTop;
     });
 }
@@ -126,7 +129,7 @@ function initFormHandling() {
     if (contactForm) {
         contactForm.addEventListener('submit', handleContactForm);
     }
-    
+
     // Newsletter subscription handling
     const newsletterButtons = document.querySelectorAll('button[type="button"]');
     newsletterButtons.forEach(button => {
@@ -142,32 +145,32 @@ function initFormHandling() {
 function handleContactForm(event) {
     const form = event.target;
     const formData = new FormData(form);
-    
+
     // Basic form validation
     const name = formData.get('name');
     const email = formData.get('email');
     const message = formData.get('message');
-    
+
     if (!name || !email || !message) {
         event.preventDefault();
         showMessage('Please fill in all required fields.', 'error');
         return false;
     }
-    
+
     // Email validation
     if (!isValidEmail(email)) {
         event.preventDefault();
         showMessage('Please enter a valid email address.', 'error');
         return false;
     }
-    
+
     // Show loading state
     const submitButton = form.querySelector('button[type="submit"]');
     if (submitButton) {
         submitButton.disabled = true;
         submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
     }
-    
+
     return true;
 }
 
@@ -178,30 +181,30 @@ function handleNewsletterSubscription(event) {
     const button = event.target;
     const input = button.closest('.input-group').querySelector('input[type="email"]');
     const email = input.value.trim();
-    
+
     if (!email) {
         showMessage('Please enter your email address.', 'error');
         input.focus();
         return;
     }
-    
+
     if (!isValidEmail(email)) {
         showMessage('Please enter a valid email address.', 'error');
         input.focus();
         return;
     }
-    
+
     // Simulate subscription process
     button.disabled = true;
     button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Subscribing...';
-    
+
     setTimeout(() => {
         button.innerHTML = '<i class="fas fa-check me-1"></i>Subscribed!';
         button.classList.remove('btn-light');
         button.classList.add('btn-success');
         input.value = '';
         showMessage('Thank you for subscribing to our newsletter!', 'success');
-        
+
         setTimeout(() => {
             button.disabled = false;
             button.innerHTML = '<i class="fas fa-bell me-1"></i>Subscribe';
@@ -226,25 +229,25 @@ function showMessage(message, type = 'info') {
     // Remove existing messages
     const existingMessages = document.querySelectorAll('.alert.auto-dismiss');
     existingMessages.forEach(msg => msg.remove());
-    
+
     // Create new message
-    const alertClass = type === 'error' ? 'alert-danger' : 
-                      type === 'success' ? 'alert-success' : 
-                      'alert-info';
-    
+    const alertClass = type === 'error' ? 'alert-danger' :
+        type === 'success' ? 'alert-success' :
+            'alert-info';
+
     const messageEl = document.createElement('div');
     messageEl.className = `alert ${alertClass} alert-dismissible fade show auto-dismiss`;
     messageEl.innerHTML = `
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
-    
+
     // Insert message at the top of the main content
     const main = document.querySelector('main');
     if (main) {
         main.insertBefore(messageEl, main.firstChild);
     }
-    
+
     // Auto-dismiss after 5 seconds
     setTimeout(() => {
         if (messageEl.parentNode) {
@@ -259,13 +262,13 @@ function showMessage(message, type = 'info') {
 function initAccessibility() {
     // Skip to main content link
     addSkipLink();
-    
+
     // Keyboard navigation for cards
     initKeyboardNavigation();
-    
+
     // ARIA labels for interactive elements
     addAriaLabels();
-    
+
     // Focus management
     initFocusManagement();
 }
@@ -281,17 +284,17 @@ function addSkipLink() {
     skipLink.style.top = '10px';
     skipLink.style.left = '10px';
     skipLink.style.zIndex = '9999';
-    
-    skipLink.addEventListener('focus', function() {
+
+    skipLink.addEventListener('focus', function () {
         this.classList.remove('sr-only');
     });
-    
-    skipLink.addEventListener('blur', function() {
+
+    skipLink.addEventListener('blur', function () {
         this.classList.add('sr-only');
     });
-    
+
     document.body.insertBefore(skipLink, document.body.firstChild);
-    
+
     // Add main content ID if it doesn't exist
     const main = document.querySelector('main');
     if (main && !main.id) {
@@ -305,18 +308,18 @@ function addSkipLink() {
  */
 function initKeyboardNavigation() {
     const cards = document.querySelectorAll('.hover-card');
-    
+
     cards.forEach(card => {
         // Make cards focusable
         if (!card.tabIndex) {
             card.tabIndex = 0;
         }
-        
+
         // Add keyboard event listeners
-        card.addEventListener('keydown', function(event) {
+        card.addEventListener('keydown', function (event) {
             if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
-                
+
                 // Find the first link in the card and click it
                 const link = this.querySelector('a');
                 if (link) {
@@ -343,7 +346,7 @@ function addAriaLabels() {
             }
         }
     });
-    
+
     // Form buttons
     const buttons = document.querySelectorAll('button[type="submit"]');
     buttons.forEach(button => {
@@ -358,7 +361,7 @@ function addAriaLabels() {
  */
 function initFocusManagement() {
     // Trap focus in modals
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown', function (event) {
         if (event.key === 'Tab') {
             const modal = document.querySelector('.modal.show');
             if (modal) {
@@ -375,10 +378,10 @@ function trapFocus(event, element) {
     const focusableElements = element.querySelectorAll(
         'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'
     );
-    
+
     const firstFocusableElement = focusableElements[0];
     const lastFocusableElement = focusableElements[focusableElements.length - 1];
-    
+
     if (event.shiftKey) {
         if (document.activeElement === firstFocusableElement) {
             lastFocusableElement.focus();
@@ -401,8 +404,8 @@ function initAnimations() {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
-    
-    const observer = new IntersectionObserver(function(entries) {
+
+    const observer = new IntersectionObserver(function (entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('fade-in');
@@ -410,7 +413,7 @@ function initAnimations() {
             }
         });
     }, observerOptions);
-    
+
     // Observe all cards and sections
     const animatableElements = document.querySelectorAll('.card, .section-title, .hero-section');
     animatableElements.forEach(element => {
@@ -422,10 +425,10 @@ function initAnimations() {
  * Utility function to format dates
  */
 function formatDate(dateString) {
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+    const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
     };
     return new Date(dateString).toLocaleDateString('en-US', options);
 }
@@ -452,9 +455,9 @@ function debounce(func, wait, immediate) {
  */
 function initResponsiveImages() {
     const images = document.querySelectorAll('img[data-src]');
-    
+
     if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver(function(entries, observer) {
+        const imageObserver = new IntersectionObserver(function (entries, observer) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const img = entry.target;
@@ -464,7 +467,7 @@ function initResponsiveImages() {
                 }
             });
         });
-        
+
         images.forEach(img => imageObserver.observe(img));
     } else {
         // Fallback for browsers that don't support IntersectionObserver
@@ -478,9 +481,9 @@ function initResponsiveImages() {
 /**
  * Error handling
  */
-window.addEventListener('error', function(event) {
+window.addEventListener('error', function (event) {
     console.error('Website error:', event.error);
-    
+
     // Show user-friendly error message for critical errors
     if (event.error && event.error.message && event.error.message.includes('fetch')) {
         showMessage('Connection error. Please check your internet connection and try again.', 'error');
@@ -490,11 +493,11 @@ window.addEventListener('error', function(event) {
 /**
  * Handle offline/online status
  */
-window.addEventListener('offline', function() {
+window.addEventListener('offline', function () {
     showMessage('You are currently offline. Some features may not be available.', 'warning');
 });
 
-window.addEventListener('online', function() {
+window.addEventListener('online', function () {
     showMessage('Connection restored.', 'success');
 });
 

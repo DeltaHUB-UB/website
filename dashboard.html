@@ -22,28 +22,14 @@
     <!-- Header -->
     <header class="bg-eu-blue text-white sticky-top">
         <div class="container">
-            <div class="row align-items-center py-3">
-                <div class="col-md-8">
-                    <div class="d-flex align-items-center">
-                        <a href="index.html" class="me-3 d-flex align-items-center" aria-label="Delta-Hub Home">
-                            <img src="content/images/Deltahub logo.jpg" alt="Delta-Hub Logo" class="project-logo">
-                        </a>
-                        <div>
-                            <small class="text-light">Funded by the European Union</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav">
-                        <i class="fas fa-bars text-white"></i>
-                    </button>
-                </div>
-            </div>
             <!-- Navigation -->
-            <nav class="navbar navbar-expand-md navbar-dark p-0">
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav w-100">
+            <nav class="navbar navbar-expand-md navbar-dark py-2 p-0">
+                <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                    <i class="fas fa-bars text-white"></i>
+                </button>
+                <div class="collapse navbar-collapse me-auto" id="navbarNav">
+                    <ul class="navbar-nav">
                         <ul class="navbar-nav w-100">
                             <li class="nav-item">
                                 <a class="nav-link" href="index.html">
@@ -86,6 +72,10 @@
                                 </a>
                             </li>
                         </ul>
+                </div>
+                <a href="index.html" class="navbar-brand d-none d-md-block ms-auto" aria-label="Delta-Hub Home">
+                    <img src="content/images/Delta-HubWebsite1.png" alt="Delta-Hub Logo" class="project-logo">
+                </a>
             </nav>
         </div>
     </header>
