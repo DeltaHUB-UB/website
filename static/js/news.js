@@ -4,11 +4,8 @@
 
 // List of markdown files to use as news posts
 
-const NEWS_MARKDOWN_FILES = [
-    'content/news/intro.md',
-    'content/news/first-workshop.md',
-    'content/news/placeholder.md'
-];
+// Temporarily disabled: no news items will be rendered
+const NEWS_MARKDOWN_FILES = [];
 
 // Supported media extensions
 const IMAGE_EXTS = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
@@ -65,7 +62,7 @@ async function renderNews() {
     const container = document.getElementById('news-container');
     container.innerHTML = '';
     if (!NEWS_MARKDOWN_FILES.length) {
-        container.innerHTML = '<div class="col-12"><div class="alert alert-info text-center">No news available.</div></div>';
+        container.innerHTML = '<div class="col-12"><div class="alert alert-info text-center">News will return soon.</div></div>';
         return;
     }
     for (const file of NEWS_MARKDOWN_FILES) {

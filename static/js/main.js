@@ -124,11 +124,12 @@ function initScrollEffects() {
  * Initialize form handling
  */
 function initFormHandling() {
-    // Contact form handling
-    const contactForm = document.querySelector('#contactForm, form[method="POST"]');
-    if (contactForm) {
-        contactForm.addEventListener('submit', handleContactForm);
-    }
+    // Contact form handling (skip forms that opt out)
+    const contactForms = document.querySelectorAll('#contactForm, form[method="POST"]');
+    contactForms.forEach(form => {
+        if (form.dataset && form.dataset.skipGlobalHandler === 'true') return;
+        form.addEventListener('submit', handleContactForm);
+    });
 
     // Newsletter subscription handling
     const newsletterButtons = document.querySelectorAll('button[type="button"]');

@@ -2,19 +2,32 @@
     "$schema": "./schemas/team.schema.json",
     "team": [
         {
-            "name": "Alexandra Popescu",
-            "position": "Project Coordinator",
-            "description": "Hydrologist focusing on Danube Delta restoration and stakeholder engagement.",
-            "linkedin": "https://www.linkedin.com/",
-            "researchgate": "https://www.researchgate.net/",
-            "website": "https://example.org/"
+            "name": "Edward Anthony",
+            "position": "ERA Chair"
         },
         {
-            "name": "Mihai Ionescu",
-            "position": "Field Researcher",
-            "description": "Monitors water quality and sediment transport; UAV mapping enthusiast.",
-            "linkedin": "https://www.linkedin.com/",
-            "researchgate": "https://www.researchgate.net/"
+            "name": "Florin Tatui",
+            "position": "Project Coordinator"
+        },
+        {
+            "name": "Florin Zainescu",
+            "position": "Junior Scientist - Delta Digitalization"
+        },
+        {
+            "name": "Alfred Vespremeanu-Stroe",
+            "position": "Senior Scientist"
+        },
+        {
+            "name": "Luminita Preoteasa",
+            "position": "Senior Scientist"
+        },
+        {
+            "name": "Florin Miron",
+            "position": "Junior Scientist"
+        },
+        {
+            "name": "Alexandra Zidariu",
+            "position": "Communication Manager"
         }
     ]
 }
