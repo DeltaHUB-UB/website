@@ -98,7 +98,8 @@
                                     <i class="fas fa-envelope me-2"></i>Send us a Message
                                 </h3>
 
-                                <form id="contactForm" novalidate data-skip-global-handler="true">
+                                <form id="contactForm" action="https://formspree.io/f/xanpoavb" method="POST"
+                                    data-skip-global-handler="true">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
@@ -114,7 +115,7 @@
                                             <div class="mb-3">
                                                 <label for="email" class="form-label">Email Address <span
                                                         class="text-danger">*</span></label>
-                                                <input type="email" class="form-control" id="email" name="email"
+                                                <input type="email" class="form-control" id="email" name="_replyto"
                                                     required>
                                                 <div class="invalid-feedback">
                                                     Please provide a valid email address.
@@ -125,14 +126,18 @@
 
                                     <div class="mb-3">
                                         <label for="subject" class="form-label">Subject</label>
-                                        <select class="form-select" id="subject" name="subject">
+                                        <select class="form-select" id="subject" name="_subject">
                                             <option value="">Select a topic...</option>
-                                            <option value="general">General Information</option>
-                                            <option value="collaboration">Research Collaboration</option>
-                                            <option value="workshops">Workshops & Events</option>
-                                            <option value="publications">Publications & Data</option>
-                                            <option value="media">Media & Press</option>
-                                            <option value="other">Other</option>
+                                            <option value="General Information - Delta-Hub Contact">General Information
+                                            </option>
+                                            <option value="Research Collaboration - Delta-Hub Contact">Research
+                                                Collaboration</option>
+                                            <option value="Workshops & Events - Delta-Hub Contact">Workshops & Events
+                                            </option>
+                                            <option value="Publications & Data - Delta-Hub Contact">Publications & Data
+                                            </option>
+                                            <option value="Media & Press - Delta-Hub Contact">Media & Press</option>
+                                            <option value="Other - Delta-Hub Contact">Other</option>
                                         </select>
                                     </div>
 
@@ -147,11 +152,17 @@
                                     </div>
 
                                     <div class="mb-3 form-check">
-                                        <input type="checkbox" class="form-check-input" id="subscribe" name="subscribe">
+                                        <input type="checkbox" class="form-check-input" id="subscribe" name="subscribe"
+                                            value="yes">
                                         <label class="form-check-label" for="subscribe">
                                             I would like to receive updates about the Delta-Hub project
                                         </label>
                                     </div>
+
+                                    <!-- Hidden Formspree fields -->
+                                    <input type="hidden" name="_next"
+                                        value="https://deltahub-ub.github.io/website/contact.html?success=1">
+                                    <input type="text" name="_gotcha" style="display:none" tabindex="-1">
 
                                     <button type="submit" class="btn btn-eu-blue btn-lg">
                                         <i class="fas fa-paper-plane me-2"></i>Send Message
@@ -174,13 +185,6 @@
                                         <a href="mailto:delta.hub@geo.unibuc.ro" class="text-decoration-none">
                                             <i class="fas fa-envelope me-1"></i>delta.hub@geo.unibuc.ro
                                         </a>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Project Coordinator:</strong><br>
-                                        <span class="text-muted">
-                                            Contact information will be provided upon request for official
-                                            correspondence.
-                                        </span>
                                     </div>
                                     <div class="mb-3">
                                         <strong>Response Time:</strong><br>

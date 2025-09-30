@@ -1,9 +1,10 @@
 /**
- * Contact Form Handler for Static Site
+ * Contact Form Handler for Formspree Integration
  */
 
 document.addEventListener('DOMContentLoaded', function () {
     initializeContactForm();
+    checkForSuccessMessage();
 });
 
 /**
@@ -23,9 +24,21 @@ function initializeContactForm() {
 }
 
 /**
+ * Check for success message from Formspree redirect
+ */
+function checkForSuccessMessage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === '1') {
+        showMessage('Thank you for your message! We have received your inquiry and will respond within 2-3 business days.', 'success');
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+}
+
+/**
  * Handle contact form submission
  */
-function handleContactFormSubmission(event) {
+async function handleContactFormSubmission(event) {
     event.preventDefault();
 
     const form = event.target;
@@ -54,48 +67,38 @@ function handleContactFormSubmission(event) {
     submitButton.disabled = true;
     submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
 
-    // Simulate form processing
-    setTimeout(() => {
-        // In a real static site, you might:
-        // 1. Use a service like Formspree, Netlify Forms, or EmailJS
-        // 2. Send to a serverless function
-        // 3. Use mailto: link
-
-        // For now, create a mailto link
-        const mailtoLink = createMailtoLink(name, email, subject, message);
-
-        // Try to open email client
-        const link = document.createElement('a');
-        link.href = mailtoLink;
-        link.click();
-
-        // Show success message
-        showMessage('Thank you for your message! Your email client should open with the pre-filled message.', 'success');
-
-        // Reset form
-        form.reset();
-
-        // Log to console for development
-        console.log('Contact form submission:', {
-            name, email, subject, message, subscribe
+    try {
+        // Submit to Formspree
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
         });
 
+        if (response.ok) {
+            showMessage('Thank you for your message! We will get back to you soon.', 'success');
+            form.reset();
+        } else {
+            const data = await response.json();
+            if (data.errors) {
+                showMessage(data.errors.map(error => error.message).join(', '), 'error');
+            } else {
+                showMessage('There was a problem sending your message. Please try again.', 'error');
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showMessage('There was a problem sending your message. Please try again.', 'error');
+    } finally {
         // Restore button
         submitButton.disabled = false;
         submitButton.innerHTML = originalText;
-    }, 1000);
+    }
 }
 
-/**
- * Create mailto link
- */
-function createMailtoLink(name, email, subject, message) {
-    const to = 'delta.hub@geo.unibuc.ro';
-    const subjectLine = subject ? `${subject} - Contact from ${name}` : `Contact from ${name}`;
-    const body = `From: ${name} <${email}>\n\nMessage:\n${message}`;
 
-    return `mailto:${to}?subject=${encodeURIComponent(subjectLine)}&body=${encodeURIComponent(body)}`;
-}
 
 /**
  * Handle newsletter subscription
