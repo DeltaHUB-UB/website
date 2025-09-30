@@ -15,12 +15,6 @@ function initializeContactForm() {
     if (contactForm) {
         contactForm.addEventListener('submit', handleContactFormSubmission);
     }
-
-    // Newsletter subscription
-    const subscribeBtn = document.getElementById('subscribeBtn');
-    if (subscribeBtn) {
-        subscribeBtn.addEventListener('click', handleNewsletterSubscription);
-    }
 }
 
 /**
@@ -45,10 +39,9 @@ async function handleContactFormSubmission(event) {
     const formData = new FormData(form);
 
     const name = formData.get('name')?.trim();
-    const email = formData.get('email')?.trim();
-    const subject = formData.get('subject');
+    const email = formData.get('_replyto')?.trim();
+    const subject = formData.get('_subject');
     const message = formData.get('message')?.trim();
-    const subscribe = formData.get('subscribe');
 
     // Validation
     if (!name || !email || !message) {
@@ -96,58 +89,6 @@ async function handleContactFormSubmission(event) {
         submitButton.disabled = false;
         submitButton.innerHTML = originalText;
     }
-}
-
-
-
-/**
- * Handle newsletter subscription
- */
-function handleNewsletterSubscription(event) {
-    const email = document.getElementById('subscriptionEmail')?.value.trim();
-
-    if (!email) {
-        showMessage('Please enter your email address.', 'error');
-        return;
-    }
-
-    if (!isValidEmail(email)) {
-        showMessage('Please enter a valid email address.', 'error');
-        return;
-    }
-
-    const button = event.target;
-    const originalText = button.innerHTML;
-
-    // Show loading state
-    button.disabled = true;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Subscribing...';
-
-    // Simulate subscription process
-    setTimeout(() => {
-        // In a real implementation, you might use:
-        // - Mailchimp API
-        // - ConvertKit
-        // - EmailJS
-        // - A serverless function
-
-        button.innerHTML = '<i class="fas fa-check me-1"></i>Subscribed!';
-        button.classList.remove('btn-light');
-        button.classList.add('btn-success');
-
-        document.getElementById('subscriptionEmail').value = '';
-        showMessage('Thank you for subscribing to our newsletter!', 'success');
-
-        // Log for development
-        console.log('Newsletter subscription:', email);
-
-        setTimeout(() => {
-            button.disabled = false;
-            button.innerHTML = originalText;
-            button.classList.remove('btn-success');
-            button.classList.add('btn-light');
-        }, 3000);
-    }, 1000);
 }
 
 /**
