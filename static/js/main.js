@@ -400,25 +400,129 @@ function trapFocus(event, element) {
  * Initialize animations
  */
 function initAnimations() {
-    // Intersection Observer for fade-in animations
+    // Scroll reveal animations
+    initScrollRevealAnimations();
+
+    // Parallax effects
+    initParallaxEffects();
+
+    // Lazy loading for images and videos
+    initLazyLoading();
+
+    // Add floating animation to icons
+    initFloatingIcons();
+}
+
+/**
+ * Initialize scroll reveal animations
+ */
+function initScrollRevealAnimations() {
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.15,
+        rootMargin: '0px 0px -100px 0px'
     };
 
     const observer = new IntersectionObserver(function (entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('fade-in');
+                entry.target.classList.add('active');
                 observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
-    // Observe all cards and sections
-    const animatableElements = document.querySelectorAll('.card, .section-title, .hero-section');
-    animatableElements.forEach(element => {
-        observer.observe(element);
+    // Add scroll-reveal classes to elements
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        // Alternate between left and right animations
+        if (index % 2 === 0) {
+            card.classList.add('scroll-reveal-left');
+        } else {
+            card.classList.add('scroll-reveal-right');
+        }
+        observer.observe(card);
+    });
+
+    // Section titles with fade-up
+    const sectionTitles = document.querySelectorAll('.section-title, h2, h3');
+    sectionTitles.forEach(title => {
+        title.classList.add('scroll-reveal');
+        observer.observe(title);
+    });
+}
+
+/**
+ * Initialize parallax scrolling effects
+ */
+function initParallaxEffects() {
+    const parallaxElements = document.querySelectorAll('.hero-video, .parallax');
+
+    if (parallaxElements.length === 0) return;
+
+    const handleParallax = debounce(() => {
+        const scrolled = window.pageYOffset;
+
+        parallaxElements.forEach(element => {
+            const speed = element.dataset.parallaxSpeed || 0.5;
+            const yPos = -(scrolled * speed);
+            element.style.transform = `translate3d(0, ${yPos}px, 0)`;
+        });
+    }, 10);
+
+    window.addEventListener('scroll', handleParallax);
+}
+
+/**
+ * Initialize lazy loading for images and videos
+ */
+function initLazyLoading() {
+    // Lazy load images
+    const lazyImages = document.querySelectorAll('img[data-src]');
+    const lazyVideos = document.querySelectorAll('video[data-src]');
+
+    const lazyLoadOptions = {
+        threshold: 0,
+        rootMargin: '50px'
+    };
+
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.add('fade-in');
+                img.removeAttribute('data-src');
+                observer.unobserve(img);
+            }
+        });
+    }, lazyLoadOptions);
+
+    const videoObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const video = entry.target;
+                video.src = video.dataset.src;
+                video.load();
+                video.classList.add('fade-in');
+                video.removeAttribute('data-src');
+                observer.unobserve(video);
+            }
+        });
+    }, lazyLoadOptions);
+
+    lazyImages.forEach(img => imageObserver.observe(img));
+    lazyVideos.forEach(video => videoObserver.observe(video));
+}
+
+/**
+ * Initialize floating animation for icons
+ */
+function initFloatingIcons() {
+    const icons = document.querySelectorAll('.card-body i.fa-3x, .hover-card i.fa-3x');
+    icons.forEach((icon, index) => {
+        icon.classList.add('float-animation');
+        // Stagger the animation delay
+        icon.style.animationDelay = `${index * 0.2}s`;
     });
 }
 
