@@ -667,6 +667,12 @@ footer a:hover {
     color: white;
 }
 
+/* EU Funding Text - White color for visibility */
+footer .small,
+footer span {
+    color: white !important;
+}
+
 /* Flash messages spacing: hide when empty, no top gap */
 #flashMessages {
     margin-top: 0 !important;
