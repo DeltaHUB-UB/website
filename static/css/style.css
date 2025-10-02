@@ -166,7 +166,8 @@
     --white: #ffffff;
     --gray-100: #f8f9fa;
     --gray-200: #e9ecef;
-    --gray-600: #6c757d;
+    --gray-600: #495057;
+    --gray-700: #495057;
     --gray-800: #343a40;
     --gray-900: #212529;
     --success: #198754;
@@ -307,11 +308,47 @@ header.sticky-top {
 }
 
 .hero-section h1 {
-    text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.3);
+    text-shadow:
+        2px 4px 16px rgba(0, 0, 0, 0.8),
+        1px 2px 4px rgba(0, 0, 0, 0.6),
+        0 0 30px rgba(0, 0, 0, 0.4);
+    font-weight: 700;
 }
 
 .hero-section .lead {
-    text-shadow: 1px 2px 8px rgba(0, 0, 0, 0.2);
+    text-shadow:
+        1px 2px 12px rgba(0, 0, 0, 0.8),
+        0 1px 4px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(0, 0, 0, 0.3);
+    font-weight: 500;
+}
+
+/* Ensure all hero text is highly visible */
+.hero-section p,
+.hero-section .btn {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Utility class for high contrast text on any background */
+.text-high-contrast {
+    text-shadow:
+        1px 2px 8px rgba(0, 0, 0, 0.9),
+        0 1px 3px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Enhanced contrast for backgrounds with images/videos */
+.bg-overlay-dark::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.bg-overlay-dark > * {
+    position: relative;
+    z-index: 2;
 }
 
 .hero-section .hero-video {
@@ -328,13 +365,14 @@ header.sticky-top {
     filter: saturate(110%) contrast(105%);
 }
 
-/* Overlay to enhance text readability */
+/* Overlay to enhance text readability - BALANCED */
 .hero-section::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.12) 40%, rgba(0, 0, 0, 0.25) 100%),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.08));
+    background:
+        linear-gradient(to right, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.25) 50%, rgba(0, 0, 0, 0.15) 100%),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.15) 100%);
     z-index: 1;
     pointer-events: none;
 }
@@ -343,12 +381,10 @@ header.sticky-top {
 .hero-section::before {
     content: '';
     position: absolute;
-    inset: -10% -10%;
-    background: radial-gradient(circle at 0% 50%, rgba(0, 0, 0, 0.24), transparent 45%),
-        radial-gradient(circle at 100% 50%, rgba(0, 0, 0, 0.24), transparent 45%),
-        radial-gradient(circle at 50% 0%, rgba(0, 0, 0, 0.16), transparent 45%),
-        radial-gradient(circle at 50% 100%, rgba(0, 0, 0, 0.16), transparent 45%);
-    backdrop-filter: blur(1px);
+    inset: 0;
+    background:
+        radial-gradient(circle at 0% 50%, rgba(0, 0, 0, 0.2), transparent 60%),
+        radial-gradient(circle at 100% 50%, rgba(0, 0, 0, 0.1), transparent 60%);
     z-index: 2;
     pointer-events: none;
 }
@@ -368,7 +404,7 @@ header.sticky-top {
 .hover-card {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid var(--gray-200);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+    background: #ffffff;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 }
@@ -380,7 +416,22 @@ header.sticky-top {
         0 0 0 1px rgba(var(--eu-primary-rgb), 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.6);
     border-color: var(--eu-blue-light);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 100%);
+    background: #ffffff;
+}
+
+/* Ensure card text has good contrast */
+.hover-card .card-body h5,
+.hover-card .card-body h6 {
+    color: var(--gray-900);
+    font-weight: 600;
+}
+
+.hover-card .card-body p {
+    color: var(--gray-700);
+}
+
+.hover-card .card-body .text-muted {
+    color: var(--gray-600) !important;
 }
 
 /* Glass Card Variant */
@@ -893,10 +944,9 @@ button:focus,
     }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
+/* Dark Mode Support - Disabled for now to maintain design consistency */
+/* @media (prefers-color-scheme: dark) {
 
-    /* This can be expanded for full dark mode support */
     .card {
         background-color: var(--gray-900);
         color: white;
@@ -905,7 +955,7 @@ button:focus,
     .text-muted {
         color: var(--gray-200) !important;
     }
-}
+} */
 
 /* Advanced Animation Classes */
 .fade-in {

@@ -455,7 +455,9 @@ function initScrollRevealAnimations() {
  * Initialize parallax scrolling effects
  */
 function initParallaxEffects() {
-    const parallaxElements = document.querySelectorAll('.hero-video, .parallax');
+    // Disable parallax for hero video to prevent positioning issues
+    // Only apply to elements explicitly marked with .parallax class
+    const parallaxElements = document.querySelectorAll('.parallax:not(.hero-video)');
 
     if (parallaxElements.length === 0) return;
 
