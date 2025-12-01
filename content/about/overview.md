@@ -43,8 +43,8 @@ Additional institutional support for the DELTA-HUB project (327.120 EUR) is prov
 
 This support involves the following activities:
 
-- scholarship programme dedicated to students and Post-Docs;
-- mobility programme dedicated to young scientists and promoted by IAB members;
-- development of long-term collaboration with private sector;
-- development of DELTA-HUB Laboratory for Data Visualization and Science Communication with a fixed component (dedicated to data storage, visualization and analysis) and a mobile module (dedicated to dissemination and science popularization);
-- development of a web platform for 3D model visualization and immersive content sharing to the wide public.
+- -scholarship programme dedicated to students and Post-Docs;
+- -mobility programme dedicated to young scientists and promoted by IAB members;
+- -development of long-term collaboration with private sector;
+- -development of DELTA-HUB Laboratory for Data Visualization and Science Communication with a fixed component (dedicated to data storage, visualization and analysis) and a mobile module (dedicated to dissemination and science popularization);
+- -development of a web platform for 3D model visualization and immersive content sharing to the wide public.
