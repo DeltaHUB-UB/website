@@ -3,27 +3,33 @@
     "team": [
         {
             "name": "Edward Anthony",
-            "position": "ERA Chair"
+            "position": "ERA Chair",
+            "photo": "content/images/Photos_people/Edward_Anthony_bw.jpg"
         },
         {
             "name": "Florin Tatui",
-            "position": "Project Coordinator"
+            "position": "Project Coordinator",
+            "photo": "content/images/Photos_people/Florin_Tatui_bw.jpg"
         },
         {
             "name": "Florin Zainescu",
-            "position": "Junior Scientist - Delta Digitalization"
+            "position": "Junior Scientist - Delta Digitalization",
+            "photo": "content/images/Photos_people/Florin_Zainescu_bw.jpg"
         },
         {
             "name": "Alfred Vespremeanu-Stroe",
-            "position": "Senior Scientist"
+            "position": "Senior Scientist",
+            "photo": "content/images/Photos_people/Alfred_Vespremeanu-Stroe_bw.jpg"
         },
         {
             "name": "Luminita Preoteasa",
-            "position": "Senior Scientist"
+            "position": "Senior Scientist",
+            "photo": "content/images/Photos_people/Luminita_Preoteasa_bw.jpg"
         },
         {
             "name": "Florin Miron",
-            "position": "Junior Scientist"
+            "position": "Junior Scientist",
+            "photo": "content/images/Photos_people/Florin_Miron_bw.jpg"
         },
         {
             "name": "Alexandra Zidariu",
