@@ -4,36 +4,43 @@
         {
             "name": "Edward Anthony",
             "position": "ERA Chair",
-            "photo": "content/images/Photos_people/Edward_Anthony_bw.jpg"
+            "photo": "content/images/Photos_people/Edward_Anthony_bw.jpg",
+            "researchgate": ""
         },
         {
             "name": "Florin Tatui",
             "position": "Project Coordinator",
-            "photo": "content/images/Photos_people/Florin_Tatui_bw.jpg"
+            "photo": "content/images/Photos_people/Florin_Tatui_bw.jpg",
+            "researchgate": ""
         },
         {
             "name": "Florin Zainescu",
             "position": "Junior Scientist - Delta Digitalization",
-            "photo": "content/images/Photos_people/Florin_Zainescu_bw.jpg"
+            "photo": "content/images/Photos_people/Florin_Zainescu_bw.jpg",
+            "researchgate": "https://www.researchgate.net/profile/Florin-Zainescu/"
         },
         {
             "name": "Alfred Vespremeanu-Stroe",
             "position": "Senior Scientist",
-            "photo": "content/images/Photos_people/Alfred_Vespremeanu-Stroe_bw.jpg"
+            "photo": "content/images/Photos_people/Alfred_Vespremeanu-Stroe_bw.jpg",
+            "researchgate": ""
         },
         {
             "name": "Luminita Preoteasa",
             "position": "Senior Scientist",
-            "photo": "content/images/Photos_people/Luminita_Preoteasa_bw.jpg"
+            "photo": "content/images/Photos_people/Luminita_Preoteasa_bw.jpg",
+            "researchgate": ""
         },
         {
             "name": "Florin Miron",
             "position": "Junior Scientist",
-            "photo": "content/images/Photos_people/Florin_Miron_bw.jpg"
+            "photo": "content/images/Photos_people/Florin_Miron_bw.jpg",
+            "researchgate": ""
         },
         {
             "name": "Alexandra Zidariu",
-            "position": "Communication Manager"
+            "position": "Communication Manager",
+            "researchgate": ""
         }
     ]
 }
