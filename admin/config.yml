@@ -1,0 +1,22 @@
+backend:
+  name: git-gateway
+  branch: main # Your main branch name
+
+# Optional: Use this for local development
+# local_backend: true
+
+media_folder: "content/images/news" # Where to store uploaded images
+public_folder: "content/images/news" # Path used in the markdown files
+
+collections:
+  - name: "news" # Used in routes
+    label: "News" # Used in the UI
+    folder: "content/news" # The path to the folder where news articles are stored
+    create: true # Allow users to create new documents
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template
+    fields: # The fields for each document
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Featured Image", name: "image", widget: "image", required: false}
+      - {label: "Summary", name: "summary", widget: "text", hint: "Short summary for homepage preview"}
+      - {label: "Body", name: "body", widget: "markdown"}
