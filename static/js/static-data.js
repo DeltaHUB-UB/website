@@ -300,8 +300,12 @@ function populateHomePage() {
 
 /**
  * Populate latest news section on homepage
+ * NOTE: Disabled - now using markdown-based news system (homepage-news.js)
  */
 function populateLatestNews() {
+    // Disabled - news now loaded from markdown files via homepage-news.js
+    return;
+
     const container = document.getElementById('latestNews');
     if (!container) return;
 
