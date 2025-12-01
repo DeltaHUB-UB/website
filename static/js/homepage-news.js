@@ -6,9 +6,22 @@ async function loadHomePageNews() {
     if (!container) return;
 
     try {
-        // Use same files list from news.js
-        if (typeof NEWS_MARKDOWN_FILES === 'undefined' || !NEWS_MARKDOWN_FILES.length) {
+        // Wait for news.js to load
+        if (typeof NEWS_MARKDOWN_FILES === 'undefined') {
+            console.error('NEWS_MARKDOWN_FILES not defined - news.js may not be loaded');
+            container.innerHTML = '<div class="alert alert-warning">Unable to load news. Please refresh the page.</div>';
+            return;
+        }
+
+        if (!NEWS_MARKDOWN_FILES.length) {
             container.innerHTML = '<div class="alert alert-info">News coming soon!</div>';
+            return;
+        }
+
+        // Check if required functions exist
+        if (typeof extractTitleAndDate === 'undefined' || typeof formatDate === 'undefined') {
+            console.error('Required functions not available from news.js');
+            container.innerHTML = '<div class="alert alert-warning">Unable to load news. Please refresh the page.</div>';
             return;
         }
 
