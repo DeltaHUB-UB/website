@@ -2,7 +2,7 @@
 title: Welcome to DELTA-HUB
 date: 2025-08-01T10:00:00.000Z
 image: content/images/Deltahub logo.jpg
-summary: We are excited to launch the DELTA-HUB project website, your gateway to cutting-edge research on the Danube Delta ecosystem.
+summary: We are excited to launch the DELTA-HUB project website, your gateway to cutting-edge research on the Danube Delta.
 ---
 
 ## Welcome to DELTA-HUB
