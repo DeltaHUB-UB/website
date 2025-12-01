@@ -165,21 +165,25 @@ async function renderNews() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderNews().then(() => {
-        // If there's a hash in the URL, scroll to that article
-        if (window.location.hash) {
-            const targetId = window.location.hash.substring(1);
-            const targetElement = document.getElementById(targetId);
-            if (targetElement) {
-                setTimeout(() => {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    // Add a highlight effect
-                    targetElement.classList.add('highlight-article');
+    // Only run renderNews if we're on the news page
+    const newsContainer = document.getElementById('news-container');
+    if (newsContainer) {
+        renderNews().then(() => {
+            // If there's a hash in the URL, scroll to that article
+            if (window.location.hash) {
+                const targetId = window.location.hash.substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
                     setTimeout(() => {
-                        targetElement.classList.remove('highlight-article');
-                    }, 2000);
-                }, 300);
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // Add a highlight effect
+                        targetElement.classList.add('highlight-article');
+                        setTimeout(() => {
+                            targetElement.classList.remove('highlight-article');
+                        }, 2000);
+                    }, 300);
+                }
             }
-        }
-    });
+        });
+    }
 });
