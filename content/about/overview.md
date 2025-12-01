@@ -23,16 +23,28 @@ To ensure a sustainable future, the delta's management must be guided by rigorou
 
 Our project is built on three core pillars to address these complex challenges:
 
-1. **Cutting-edge technology** 🛰️  
-   We are creating a “digital twin” of the Danube Delta—a highly detailed virtual model built on the Mike21 platform. By combining advanced satellite data with on-site acoustic and optical sensors, this model will allow us to simulate the impacts of climate change and test management solutions before they are implemented.
+1. **Cutting-edge technology**
+   We are creating a "digital twin" of the Danube Delta—a highly detailed virtual model built on the Mike21 platform. By combining advanced satellite data with on-site acoustic and optical sensors, this model will allow us to simulate the impacts of climate change and test management solutions before they are implemented.
 
-2. **A new generation of experts** 🎓  
+2. **A new generation of experts**
    Romania currently lacks specialists who can effectively work with complex satellite and modeling data. DELTA-HUB is addressing this gap by:
-   - Launching a new Master’s program at the University of Bucharest focused on coastal and deltaic management.
+   - Launching a new Master's program at the University of Bucharest focused on coastal and deltaic management.
    - Organizing summer schools, field trips, and practical courses to train the next generation of delta experts.
 
-3. **Collaboration and open science** 🤝  
+3. **Collaboration and open science**
    We believe that data and knowledge should be shared. DELTA-HUB is committed to:
    - Strengthening connections between the University of Bucharest and the world's leading delta experts.
    - Making our research data and results accessible to all interested parties.
    - Translating our findings into practical, science-based recommendations for policymakers and delta managers.
+
+## Additional Institutional Support
+
+Additional institutional support for the DELTA-HUB project (327.120 EUR) is provided between July 2025 and December 2027 by a grant of the Romanian Ministry of Research, Innovation and Digitization, CNCS/CCCDI - UEFISCDI, project number PN-IV-P8-8.1-PRE-HE-ORG-2025-0283, grant number 118PHE, within PNCDI IV.
+
+This support involves the following activities:
+
+- scholarship programme dedicated to students and Post-Docs;
+- mobility programme dedicated to young scientists and promoted by IAB members;
+- development of long-term collaboration with private sector;
+- development of DELTA-HUB Laboratory for Data Visualization and Science Communication with a fixed component (dedicated to data storage, visualization and analysis) and a mobile module (dedicated to dissemination and science popularization);
+- development of a web platform for 3D model visualization and immersive content sharing to the wide public.
