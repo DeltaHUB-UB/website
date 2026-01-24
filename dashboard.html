@@ -102,11 +102,7 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="card-title mb-0"><i class="fas fa-water me-2"></i>Measurements</h5>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <span id="measurementsStatus" class="small text-muted"></span>
-                                        <select id="measurementStation" class="form-select form-select-sm"
-                                            style="width:auto"></select>
-                                    </div>
+                                    <span id="measurementsStatus" class="small text-muted"></span>
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-lg-6">
@@ -115,8 +111,10 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div style="height: 380px;">
-                                            <canvas id="measurementsChart"></canvas>
+                                        <div style="height: 380px; display: flex; align-items: center; justify-content: center; padding: 2rem;" class="border rounded">
+                                            <p class="text-muted">
+                                                Expected data that will be available for download: Water level, current velocity and turbidity form the Monitoring Station at Sfantu Gheorghe; Remote sensing and Model data.
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

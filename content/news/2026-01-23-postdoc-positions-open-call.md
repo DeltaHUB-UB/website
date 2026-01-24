@@ -1,7 +1,7 @@
 ---
 title: "Open Call: Two Postdoctoral Researcher Positions in Delta Science at DELTA-HUB"
 date: 2026-01-23T10:00:00.000Z
-image: content/images/Deltahub logo.jpg
+image: content/news/media/opencall_dh.jpg
 summary: Join the DELTA-HUB team at the University of Bucharest. Two 2-year postdoctoral positions available in satellite remote sensing and field data analysis.
 ---
 
