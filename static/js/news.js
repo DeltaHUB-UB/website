@@ -3,6 +3,7 @@
 
 // List of markdown files to use as news posts
 const NEWS_MARKDOWN_FILES = [
+    'content/news/2026-03-02-postdoc-extended-deadline.md',
     'content/news/2026-01-23-postdoc-positions-open-call.md',
     'content/news/2025-12-01-new-publication-7000-year-human-legacy.md',
     'content/news/2025-08-01-welcome-to-delta-hub.md'
