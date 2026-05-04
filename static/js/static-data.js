@@ -3,6 +3,28 @@
  * Handles loading and managing JSON data without server-side API
  */
 
+// Workshops are hardcoded here so they always appear regardless of fetch or localStorage state
+const BUILTIN_WORKSHOPS = [
+    {
+        id: 'data-science-workshop-2026',
+        title: 'Data Science & AI-Assisted Coding for the Danube Delta',
+        date: '2026-05-22',
+        location: 'Faculty of Geography, University of Bucharest',
+        image: 'content/workshops/Poster data science.jpeg',
+        poster_link: 'content/workshops/Poster data science mai.pdf',
+        registration_email: 'delta.hub@geo.unibuc.ro',
+        description_html: '<p>DELTA-Hub is hosting a two-day practical workshop on climate change in deltaic, coastal, and marine environments, with a central focus on the Danube Delta and the Black Sea.</p><p>Participants will learn how to access global open datasets (Copernicus CDS, satellite imagery, climate reanalyses), use Python for environmental data analysis, work effectively with AI coding assistants, and apply basic statistical methods. The programme features an invited lecture by Prof. Edward Anthony (CEREGE, Aix-Marseille Université) — <em>How River Deltas Work: Physical Processes and the Forces that Shape Them</em>.</p><p>You can bring your own dataset or research question, provided it relates to deltaic, coastal, marine, or fluvial environments.</p><p><strong>Programme</strong></p><ul><li>Friday 22 May — training modules and guided work on data</li><li>Saturday 23 May (morning) — project work</li><li>Saturday (afternoon) — 3-minute project pitches</li></ul><p>Two €100 prizes will be awarded for the best results, and selected projects will be published on the DELTA-Hub website. Lunch is provided on both days.</p><p><strong>Who can apply</strong></p><p>Open to students from any related field — including geography, geology, environmental sciences, oceanography, engineering, and informatics — who are able to attend in person at the Faculty of Geography in Bucharest. No prior coding experience required; just bring your laptop.</p><p><strong>How to apply</strong></p><p>20 places, allocated by selection. Send a 5-line email to <a href="mailto:delta.hub@geo.unibuc.ro">delta.hub@geo.unibuc.ro</a> describing your relevant experience and why you\'d like to take part.</p><p><strong>Deadline: 15 May 2026</strong></p><p>More information at <a href="https://delta-hub.unibuc.ro/" target="_blank" rel="noopener">delta-hub.unibuc.ro</a></p><p><em>Organised by Iulian-Florin Zăinescu, Florin Miron, Florin Tătui, and Alexandru Berbecariu within the DELTA-Hub Horizon Europe ERA Chairs project at the University of Bucharest.</em></p>'
+    },
+    {
+        id: 'stakeholder-workshop-1',
+        title: 'First Stakeholder Workshop – Sediment Management & Modelling',
+        date: '2026-04-16',
+        location: 'Mila 23, Danube Delta',
+        image: 'content/workshops/Stakeholder_workshop1.jpg',
+        description_html: '<p>Between 16 and 18 April 2026, we met in Mila 23, in the Danube Delta, for the DELTA-HUB Sediment Management and Modelling Stakeholder Workshop.</p><p>The workshop brought together representatives from ARBDD, INCD-DD, GeoEcoMar, ADI ITI Delta Dunării, WWF Romania, the DALA Foundation, and AFDJ for focused discussions on sediment management, hydrodynamics, dredging and canal interventions, climate change scenarios, and data needs for improving the Digital Twin numerical model of the Danube Delta.</p><p>Working with stakeholders showed how important local knowledge, institutional experience, and field data are for building models that can support real decisions in complex delta systems. The discussions also opened up future directions for public engagement and the communication of DELTA-HUB results. 📣</p><p>Many thanks to all participants for their contributions, and to the Ivan Patzaichin Association, Mila 23, for the partnership in organizing the workshop together with the University of Bucharest.</p>'
+    }
+];
+
 // Data cache
 const staticData = {
     news: [],
@@ -155,7 +177,11 @@ async function resolveMarkdownReferences() {
  */
 function loadFromLocalStorage() {
     staticData.news = JSON.parse(localStorage.getItem(STORAGE_KEYS.news) || '[]');
-    staticData.workshops = JSON.parse(localStorage.getItem(STORAGE_KEYS.workshops) || '[]');
+    // Always keep builtins; append any user-added workshops from localStorage that aren't builtins
+    const cached = JSON.parse(localStorage.getItem(STORAGE_KEYS.workshops) || '[]');
+    const builtinIds = new Set(BUILTIN_WORKSHOPS.map(w => w.id));
+    const userAdded = cached.filter(w => !builtinIds.has(w.id));
+    staticData.workshops = [...BUILTIN_WORKSHOPS, ...userAdded];
     staticData.research = JSON.parse(localStorage.getItem(STORAGE_KEYS.research) || '[]');
     staticData.consortium = JSON.parse(localStorage.getItem(STORAGE_KEYS.consortium) || '[]');
     staticData.measurements = JSON.parse(localStorage.getItem(STORAGE_KEYS.measurements) || '{"stations": []}');
@@ -380,20 +406,18 @@ function populateUpcomingWorkshops() {
     }
 
     const workshopsHtml = upcomingWorkshops.map(workshop => `
-        <div class="card mb-3 border-start border-4 border-eu-blue">
-            <div class="card-body">
-                <h6 class="card-title">${escapeHtml(workshop.title)}</h6>
-                <p class="card-text small">
-                    <i class="fas fa-calendar me-1"></i>${workshop.date}
-                    ${workshop.location ? `<br><i class="fas fa-map-marker-alt me-1"></i>${escapeHtml(workshop.location)}` : ''}
-                </p>
-                ${workshop.registration_link ? `
-                    <a href="${escapeHtml(workshop.registration_link)}" class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-external-link-alt me-1"></i>Register
-                    </a>
-                ` : ''}
+        <a href="workshops.html" class="text-decoration-none">
+            <div class="card mb-3 border-start border-4 border-eu-blue" style="cursor: pointer;">
+                ${workshop.image ? `<img src="${escapeHtml(workshop.image)}" alt="${escapeHtml(workshop.title)}" class="card-img-top w-100">` : ''}
+                <div class="card-body">
+                    <h6 class="card-title text-dark">${escapeHtml(workshop.title)}</h6>
+                    <p class="card-text small text-muted">
+                        <i class="fas fa-calendar me-1"></i>${workshop.date}
+                        ${workshop.location ? `<br><i class="fas fa-map-marker-alt me-1"></i>${escapeHtml(workshop.location)}` : ''}
+                    </p>
+                </div>
             </div>
-        </div>
+        </a>
     `).join('');
 
     container.innerHTML = workshopsHtml;
@@ -520,34 +544,43 @@ function populateWorkshopsPage() {
                 </div>
             `;
         } else {
-            const upcomingHtml = upcoming.map(workshop => `
-                <div class="col-lg-6">
-                    <div class="card h-100 shadow-sm border-start border-4 border-success">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <span class="badge bg-success">Upcoming</span>
-                                <small class="text-muted">
-                                    <i class="fas fa-calendar me-1"></i>${workshop.date}
-                                </small>
+            const upcomingButtons = (workshop) => `
+                <div class="mt-3 d-flex flex-wrap gap-2">
+                    ${workshop.poster_link ? `<a href="${escapeHtml(workshop.poster_link)}" class="btn btn-outline-secondary btn-sm" target="_blank"><i class="fas fa-file-pdf me-2"></i>View Poster</a>` : ''}
+                    ${workshop.registration_link ? `<a href="${escapeHtml(workshop.registration_link)}" class="btn btn-success btn-sm" target="_blank"><i class="fas fa-user-plus me-2"></i>Register Now</a>` : ''}
+                    ${workshop.registration_email ? `<a href="mailto:${escapeHtml(workshop.registration_email)}" class="btn btn-success btn-sm"><i class="fas fa-envelope me-2"></i>Apply by Email</a>` : ''}
+                </div>`;
+            const upcomingHtml = upcoming.map(workshop => {
+                const header = `
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-success">Upcoming</span>
+                        <small class="text-muted"><i class="fas fa-calendar me-1"></i>${workshop.date}</small>
+                    </div>
+                    <h5 class="card-title">${escapeHtml(workshop.title)}</h5>
+                    ${workshop.location ? `<p class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>${escapeHtml(workshop.location)}</p>` : ''}`;
+                const body = workshop.description_html ? `<div class="card-text">${workshop.description_html}</div>` : (workshop.description ? `<p class="card-text">${escapeHtml(workshop.description)}</p>` : '');
+                if (workshop.image) {
+                    return `
+                <div class="col-12">
+                    <div class="card shadow-sm border-start border-4 border-success">
+                        <div class="row g-0">
+                            <div class="col-md-4 col-lg-3">
+                                <img src="${escapeHtml(workshop.image)}" alt="${escapeHtml(workshop.title)}" class="img-fluid rounded-start h-100" style="object-fit: cover; max-height: 500px;">
                             </div>
-                            <h5 class="card-title">${escapeHtml(workshop.title)}</h5>
-                            ${workshop.location ? `
-                                <p class="text-muted">
-                                    <i class="fas fa-map-marker-alt me-1"></i>${escapeHtml(workshop.location)}
-                                </p>
-                            ` : ''}
-                            ${workshop.description_html ? `<div class="card-text">${workshop.description_html}</div>` : (workshop.description ? `<p class="card-text">${escapeHtml(workshop.description)}</p>` : '')}
-                            ${workshop.registration_link ? `
-                                <div class="mt-3">
-                                    <a href="${escapeHtml(workshop.registration_link)}" class="btn btn-success" target="_blank">
-                                        <i class="fas fa-user-plus me-2"></i>Register Now
-                                    </a>
-                                </div>
-                            ` : ''}
+                            <div class="col-md-8 col-lg-9">
+                                <div class="card-body">${header}${body}${upcomingButtons(workshop)}</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+                }
+                return `
+                <div class="col-12">
+                    <div class="card shadow-sm border-start border-4 border-success">
+                        <div class="card-body">${header}${body}${upcomingButtons(workshop)}</div>
+                    </div>
+                </div>`;
+            }).join('');
 
             upcomingContainer.innerHTML = `<div class="row g-4">${upcomingHtml}</div>`;
         }
@@ -567,34 +600,52 @@ function populateWorkshopsPage() {
                 </div>
             `;
         } else {
-            const pastHtml = past.map(workshop => `
+            const renderPastDescription = (workshop) => {
+                if (workshop.description_html) return `<div class="card-text">${workshop.description_html}</div>`;
+                if (workshop.description) return workshop.description.split('\n\n').map(p => `<p class="card-text">${escapeHtml(p.trim())}</p>`).join('');
+                return '';
+            };
+            const pastHtml = past.map(workshop => {
+                if (workshop.image) {
+                    return `
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="row g-0">
+                            <div class="col-md-5">
+                                <img src="${escapeHtml(workshop.image)}" alt="${escapeHtml(workshop.title)}" class="img-fluid rounded-start h-100" style="object-fit: cover; max-height: 420px;">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <span class="badge bg-secondary">Completed</span>
+                                        <small class="text-muted"><i class="fas fa-calendar me-1"></i>${workshop.date}</small>
+                                    </div>
+                                    <h5 class="card-title">${escapeHtml(workshop.title)}</h5>
+                                    ${workshop.location ? `<p class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>${escapeHtml(workshop.location)}</p>` : ''}
+                                    ${renderPastDescription(workshop)}
+                                    ${workshop.materials_link ? `<div class="mt-3"><a href="${escapeHtml(workshop.materials_link)}" class="btn btn-outline-primary btn-sm" target="_blank"><i class="fas fa-download me-2"></i>Materials &amp; Recordings</a></div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                }
+                return `
                 <div class="col-lg-6">
                     <div class="card h-100 shadow-sm">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <span class="badge bg-secondary">Completed</span>
-                                <small class="text-muted">
-                                    <i class="fas fa-calendar me-1"></i>${workshop.date}
-                                </small>
+                                <small class="text-muted"><i class="fas fa-calendar me-1"></i>${workshop.date}</small>
                             </div>
                             <h5 class="card-title">${escapeHtml(workshop.title)}</h5>
-                            ${workshop.location ? `
-                                <p class="text-muted">
-                                    <i class="fas fa-map-marker-alt me-1"></i>${escapeHtml(workshop.location)}
-                                </p>
-                            ` : ''}
-                            ${workshop.description_html ? `<div class="card-text">${workshop.description_html}</div>` : (workshop.description ? `<p class="card-text">${escapeHtml(workshop.description)}</p>` : '')}
-                            ${workshop.materials_link ? `
-                                <div class="mt-3">
-                                    <a href="${escapeHtml(workshop.materials_link)}" class="btn btn-outline-primary btn-sm" target="_blank">
-                                        <i class="fas fa-download me-2"></i>Materials & Recordings
-                                    </a>
-                                </div>
-                            ` : ''}
+                            ${workshop.location ? `<p class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>${escapeHtml(workshop.location)}</p>` : ''}
+                            ${renderPastDescription(workshop)}
+                            ${workshop.materials_link ? `<div class="mt-3"><a href="${escapeHtml(workshop.materials_link)}" class="btn btn-outline-primary btn-sm" target="_blank"><i class="fas fa-download me-2"></i>Materials &amp; Recordings</a></div>` : ''}
                         </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
 
             pastContainer.innerHTML = `<div class="row g-4">${pastHtml}</div>`;
         }

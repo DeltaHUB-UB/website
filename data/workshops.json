@@ -1,0 +1,20 @@
+[
+  {
+    "id": "data-science-workshop-2026",
+    "title": "Data Science & AI-Assisted Coding for the Danube Delta",
+    "date": "2026-05-22",
+    "location": "Faculty of Geography, University of Bucharest",
+    "image": "content/workshops/Poster data science.jpeg",
+    "description_file": "content/workshops/data-science-workshop-2026.md",
+    "poster_link": "content/workshops/Poster data science mai.pdf",
+    "registration_email": "delta.hub@geo.unibuc.ro"
+  },
+  {
+    "id": "stakeholder-workshop-1",
+    "title": "First Stakeholder Workshop – Sediment Management & Modelling",
+    "date": "2026-04-16",
+    "location": "Mila 23, Danube Delta",
+    "image": "content/workshops/Stakeholder_workshop1.jpg",
+    "description": "Between 16 and 18 April 2026, we met in Mila 23, in the Danube Delta, for the DELTA-HUB Sediment Management and Modelling Stakeholder Workshop.\n\nThe workshop brought together representatives from ARBDD, INCD-DD, GeoEcoMar, ADI ITI Delta Dunării, WWF Romania, the DALA Foundation, and AFDJ for focused discussions on sediment management, hydrodynamics, dredging and canal interventions, climate change scenarios, and data needs for improving the Digital Twin numerical model of the Danube Delta.\n\nWorking with stakeholders showed how important local knowledge, institutional experience, and field data are for building models that can support real decisions in complex delta systems. The discussions also opened up future directions for public engagement and the communication of DELTA-HUB results. 📣\n\nMany thanks to all participants for their contributions, and to the Ivan Patzaichin Association, Mila 23, for the partnership in organizing the workshop together with the University of Bucharest."
+  }
+]
