@@ -12,6 +12,7 @@ const BUILTIN_WORKSHOPS = [
         location: 'Faculty of Geography, University of Bucharest',
         image: 'content/workshops/Poster data science.jpeg',
         poster_link: 'content/workshops/Poster data science mai.pdf',
+        programme_link: 'content/workshops/DELTA-Hub_Program_Workshop_22-23_mai_2026.pdf',
         registration_email: 'delta.hub@geo.unibuc.ro',
         description_html: '<p>DELTA-Hub is hosting a two-day practical workshop on climate change in deltaic, coastal, and marine environments, with a central focus on the Danube Delta and the Black Sea.</p><p>Participants will learn how to access global open datasets (Copernicus CDS, satellite imagery, climate reanalyses), use Python for environmental data analysis, work effectively with AI coding assistants, and apply basic statistical methods. The programme features an invited lecture by Prof. Edward Anthony (CEREGE, Aix-Marseille Université) — <em>How River Deltas Work: Physical Processes and the Forces that Shape Them</em>.</p><p>You can bring your own dataset or research question, provided it relates to deltaic, coastal, marine, or fluvial environments.</p><p><strong>Programme</strong></p><ul><li>Friday 22 May — training modules and guided work on data</li><li>Saturday 23 May (morning) — project work</li><li>Saturday (afternoon) — 3-minute project pitches</li></ul><p>Two €100 prizes will be awarded for the best results, and selected projects will be published on the DELTA-Hub website. Lunch is provided on both days.</p><p><strong>Who can apply</strong></p><p>Open to students from any related field — including geography, geology, environmental sciences, oceanography, engineering, and informatics — who are able to attend in person at the Faculty of Geography in Bucharest. No prior coding experience required; just bring your laptop.</p><p><strong>How to apply</strong></p><p>20 places, allocated by selection. Send a 5-line email to <a href="mailto:delta.hub@geo.unibuc.ro">delta.hub@geo.unibuc.ro</a> describing your relevant experience and why you\'d like to take part.</p><p><strong>Deadline: 15 May 2026</strong></p><p>More information at <a href="https://delta-hub.unibuc.ro/" target="_blank" rel="noopener">delta-hub.unibuc.ro</a></p><p><em>Organised by Iulian-Florin Zăinescu, Florin Miron, Florin Tătui, and Alexandru Berbecariu within the DELTA-Hub Horizon Europe ERA Chairs project at the University of Bucharest.</em></p>'
     },
@@ -409,6 +410,7 @@ function populateUpcomingWorkshops() {
         <a href="workshops.html" class="text-decoration-none">
             <div class="card mb-3 border-start border-4 border-eu-blue" style="cursor: pointer;">
                 ${workshop.image ? `<img src="${escapeHtml(workshop.image)}" alt="${escapeHtml(workshop.title)}" class="card-img-top w-100">` : ''}
+                ${workshop.programme_link ? `<div class="px-3 pt-3"><a href="${escapeHtml(workshop.programme_link)}" class="btn btn-outline-primary btn-sm w-100" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-list-alt me-2"></i>Programme</a></div>` : ''}
                 <div class="card-body">
                     <h6 class="card-title text-dark">${escapeHtml(workshop.title)}</h6>
                     <p class="card-text small text-muted">
@@ -546,6 +548,7 @@ function populateWorkshopsPage() {
         } else {
             const upcomingButtons = (workshop) => `
                 <div class="mt-3 d-flex flex-wrap gap-2">
+                    ${workshop.programme_link ? `<a href="${escapeHtml(workshop.programme_link)}" class="btn btn-outline-primary btn-sm" target="_blank"><i class="fas fa-list-alt me-2"></i>Programme</a>` : ''}
                     ${workshop.poster_link ? `<a href="${escapeHtml(workshop.poster_link)}" class="btn btn-outline-secondary btn-sm" target="_blank"><i class="fas fa-file-pdf me-2"></i>View Poster</a>` : ''}
                     ${workshop.registration_link ? `<a href="${escapeHtml(workshop.registration_link)}" class="btn btn-success btn-sm" target="_blank"><i class="fas fa-user-plus me-2"></i>Register Now</a>` : ''}
                     ${workshop.registration_email ? `<a href="mailto:${escapeHtml(workshop.registration_email)}" class="btn btn-success btn-sm"><i class="fas fa-envelope me-2"></i>Apply by Email</a>` : ''}
