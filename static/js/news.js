@@ -3,6 +3,7 @@
 
 // List of markdown files to use as news posts
 const NEWS_MARKDOWN_FILES = [
+    'content/news/2026-06-01-delta-dunarii-istorie-in-imagini.md',
     'content/news/2026-05-25-delta-hub-lecture-river-deltas-crossroads.md',
     'content/news/2026-05-07-phd-position-sediment-dynamics.md',
     'content/news/2026-03-02-postdoc-extended-deadline.md',
