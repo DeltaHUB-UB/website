@@ -10,7 +10,7 @@ But this ecosystem is now under immense pressure.
 
 The Danube Delta faces existential challenges driven by human intervention and climate change:
 
-- **Channelisation and human intervention** — A century of dredging, canal-cutting, and embankment has reshaped how water and sediment move through the delta, redirecting flow away from areas that depend on it and amplifying erosion and habitat loss.
+- **Channelisation and human intervention** — A century of dredging, canal-cutting, and embankment has reshaped how water and sediment move through the delta, redirecting flow away from areas that depend on it and amplifying erosion and habitat degradation.
 - **Sediment starvation** — Dams on the Danube, above all the Iron Gates I and II, have sharply cut the supply of sediment that naturally builds the delta and offsets erosion. Starved of this sediment, the coast erodes faster and ecosystems degrade.
 - **Rising sea levels** — The Black Sea is projected to rise by as much as one metre by 2100, threatening to permanently flood large areas of a delta whose average elevation is just 60 cm.
 
