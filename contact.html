@@ -63,11 +63,11 @@
                                 <i class="fas fa-newspaper me-1"></i> News
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="visualization.html">
                                 <i class="fas fa-cube me-1"></i> Visualization
                             </a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <a class="nav-link" href="dashboard.html">
                                 <i class="fas fa-gauge-high me-1"></i> Dashboard
@@ -101,132 +101,55 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <!-- Contact Form -->
-                    <div class="col-lg-8">
-                        <div class="card shadow-sm">
-                            <div class="card-body p-4">
-                                <h3 class="card-title mb-4">
-                                    <i class="fas fa-envelope me-2"></i>Send us a Message
-                                </h3>
-
-                                <form id="contactForm" action="https://formspree.io/f/xanpoavb" method="POST"
-                                    data-skip-global-handler="true">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="name" class="form-label">Full Name <span
-                                                        class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="name" name="name" required>
-                                                <div class="invalid-feedback">
-                                                    Please provide your full name.
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="email" class="form-label">Email Address <span
-                                                        class="text-danger">*</span></label>
-                                                <input type="email" class="form-control" id="email" name="_replyto"
-                                                    required>
-                                                <div class="invalid-feedback">
-                                                    Please provide a valid email address.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="subject" class="form-label">Subject</label>
-                                        <select class="form-select" id="subject" name="_subject">
-                                            <option value="">Select a topic...</option>
-                                            <option value="General Information - Delta-Hub Contact">General Information
-                                            </option>
-                                            <option value="Research Collaboration - Delta-Hub Contact">Research
-                                                Collaboration</option>
-                                            <option value="Workshops & Events - Delta-Hub Contact">Workshops & Events
-                                            </option>
-                                            <option value="Publications & Data - Delta-Hub Contact">Publications & Data
-                                            </option>
-                                            <option value="Media & Press - Delta-Hub Contact">Media & Press</option>
-                                            <option value="Other - Delta-Hub Contact">Other</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="message" class="form-label">Message <span
-                                                class="text-danger">*</span></label>
-                                        <textarea class="form-control" id="message" name="message" rows="6" required
-                                            placeholder="Please describe your inquiry in detail..."></textarea>
-                                        <div class="invalid-feedback">
-                                            Please provide your message.
-                                        </div>
-                                    </div>
-
-                                    <!-- Hidden Formspree fields -->
-                                    <input type="hidden" name="_next"
-                                        value="https://deltahub-ub.github.io/website/contact.html?success=1">
-                                    <input type="text" name="_gotcha" style="display:none" tabindex="-1">
-
-                                    <button type="submit" class="btn btn-eu-blue btn-lg">
-                                        <i class="fas fa-paper-plane me-2"></i>Send Message
-                                    </button>
-                                </form>
+                <div class="row justify-content-center g-4">
+                    <!-- Send us a message -->
+                    <div class="col-lg-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body text-center p-4 p-md-5">
+                                <i class="fas fa-envelope fa-3x text-eu-blue mb-3"></i>
+                                <h3 class="card-title h4 mb-3">Send us a message</h3>
+                                <p class="text-muted mb-4">
+                                    Have a question, an idea, or want to collaborate? Email us directly and
+                                    we'll get back to you.
+                                </p>
+                                <a href="mailto:delta.hub@geo.unibuc.ro" class="btn btn-eu-blue btn-lg mb-0">
+                                    <i class="fas fa-paper-plane me-2"></i>delta.hub@geo.unibuc.ro
+                                </a>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Contact Information -->
-                    <div class="col-lg-4">
-                        <div class="card shadow-sm mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="fas fa-info-circle me-2"></i>Project Information
-                                </h5>
-                                <div class="contact-info">
-                                    <div class="mb-3">
-                                        <strong>Project Email:</strong><br>
-                                        <a href="mailto:delta.hub@geo.unibuc.ro" class="text-decoration-none">
-                                            <i class="fas fa-envelope me-1"></i>delta.hub@geo.unibuc.ro
-                                        </a>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Response Time:</strong><br>
-                                        <span class="text-muted">
-                                            We typically respond within 2-3 business days.
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card shadow-sm mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="fas fa-share-alt me-2"></i>Connect With Us
-                                </h5>
-                                <div class="d-flex gap-3 flex-wrap">
+                    <!-- Connect With Us -->
+                    <div class="col-lg-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body text-center p-4 p-md-5">
+                                <i class="fas fa-share-alt fa-3x text-eu-blue mb-3"></i>
+                                <h3 class="card-title h4 mb-3">Connect With Us</h3>
+                                <p class="text-muted mb-4">
+                                    Follow us for regular updates on project developments, publications, and events.
+                                </p>
+                                <div class="d-flex justify-content-center gap-3 flex-wrap">
                                     <a href="https://www.linkedin.com/company/delta-hub-river-delta-science-education-and-modeling-hub/"
                                         class="btn btn-outline-primary" target="_blank" rel="noopener">
-                                        <i class="fab fa-linkedin"></i> LinkedIn
+                                        <i class="fab fa-linkedin me-1"></i>LinkedIn
                                     </a>
                                     <a href="https://www.facebook.com/DeltaHubUniBuc/"
                                         class="btn btn-outline-primary" target="_blank" rel="noopener">
-                                        <i class="fab fa-facebook"></i> Facebook
+                                        <i class="fab fa-facebook me-1"></i>Facebook
                                     </a>
                                     <a href="https://www.instagram.com/deltahub2025"
                                         class="btn btn-outline-primary" target="_blank" rel="noopener">
-                                        <i class="fab fa-instagram"></i> Instagram
+                                        <i class="fab fa-instagram me-1"></i>Instagram
                                     </a>
                                 </div>
-                                <p class="text-muted small mt-3">
-                                    Follow us for regular updates on project developments, publications, and events.
-                                </p>
                             </div>
                         </div>
+                    </div>
 
+                    <!-- For Researchers -->
+                    <div class="col-lg-12">
                         <div class="card shadow-sm">
-                            <div class="card-body">
+                            <div class="card-body p-4">
                                 <h5 class="card-title">
                                     <i class="fas fa-users me-2"></i>For Researchers
                                 </h5>
@@ -234,7 +157,7 @@
                                     Interested in collaboration, accessing our data, or learning more about
                                     our methodologies? We welcome inquiries from the research community.
                                 </p>
-                                <ul class="list-unstyled small">
+                                <ul class="list-unstyled small mb-0">
                                     <li><i class="fas fa-check text-success me-2"></i>Data sharing requests</li>
                                     <li><i class="fas fa-check text-success me-2"></i>Research collaboration</li>
                                     <li><i class="fas fa-check text-success me-2"></i>Workshop participation</li>
@@ -312,8 +235,6 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
     <script src="static/js/markdown.js"></script>
-    <!-- Contact Form Handler -->
-    <script src="static/js/contact.js"></script>
     <!-- Custom JS -->
     <script src="static/js/main.js"></script>
     <!-- GoatCounter Analytics -->

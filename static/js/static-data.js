@@ -555,14 +555,8 @@ function populateWorkshopsPage() {
             upcomingContainer.innerHTML = `
                 <div class="text-center py-5">
                     <i class="fas fa-calendar-plus fa-4x text-muted mb-3"></i>
-                    <h4>No Upcoming Workshops</h4>
                     <p class="text-muted">
-                        Workshop schedules are currently being finalized. Check back soon for updates 
-                        on our upcoming events and training opportunities.
-                    </p>
-                    <p class="text-muted">
-                        <i class="fas fa-envelope me-1"></i>
-                        Sign up for our newsletter to be notified of new workshop announcements.
+                        Check back soon for updates on our upcoming events and training opportunities.
                     </p>
                 </div>
             `;
