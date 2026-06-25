@@ -1,1 +1,1 @@
-Delta-Hub is an innovative Horizon Europe project focused on advancing sustainable delta management through cutting-edge research, collaboration, and knowledge sharing across European river deltas.
+DELTA-Hub is a Horizon Europe project that brings together research, collaboration, and shared knowledge to support sustainable management of river deltas.

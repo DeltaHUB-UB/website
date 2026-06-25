@@ -397,11 +397,32 @@ function populateUpcomingWorkshops() {
         .slice(0, 2);
 
     if (upcomingWorkshops.length === 0) {
+        // No upcoming workshops — invite visitors back and briefly show the most recent past one
+        const lastWorkshop = staticData.workshops
+            .filter(w => w.date < currentDate)
+            .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+
+        const lastWorkshopHtml = lastWorkshop ? `
+            <a href="workshops.html" class="text-decoration-none">
+                <div class="card border-start border-4 border-secondary" style="cursor: pointer;">
+                    <div class="card-body py-2">
+                        <p class="text-uppercase text-muted small mb-1" style="font-size: 0.7rem; letter-spacing: 0.05em;">Most recent</p>
+                        <h6 class="card-title text-dark mb-1">${escapeHtml(lastWorkshop.title)}</h6>
+                        <p class="card-text small text-muted mb-0">
+                            <i class="fas fa-calendar me-1"></i>${lastWorkshop.date}
+                            ${lastWorkshop.location ? `<br><i class="fas fa-map-marker-alt me-1"></i>${escapeHtml(lastWorkshop.location)}` : ''}
+                        </p>
+                    </div>
+                </div>
+            </a>
+        ` : '';
+
         container.innerHTML = `
             <div class="text-center py-3">
                 <i class="fas fa-calendar fa-2x text-muted mb-2"></i>
-                <p class="text-muted small">No upcoming workshops scheduled.</p>
+                <p class="text-muted small mb-0">Stay tuned for upcoming workshops.</p>
             </div>
+            ${lastWorkshopHtml}
         `;
         return;
     }
