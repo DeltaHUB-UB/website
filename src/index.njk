@@ -1,0 +1,124 @@
+---
+title: Delta-Hub Horizon Europe
+active: home
+permalink: index.html
+---
+{% extends "base.njk" %}
+
+{% block main %}
+<section class="hero">
+    <video class="hero-video" autoplay muted loop playsinline preload="metadata"
+        poster="static/images/hero-poster.jpg" aria-hidden="true">
+        <source src="content/images/Sfantu_mouth_video_least.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="container">
+        <h1>Welcome to Delta-Hub</h1>
+        <div class="lead">{{ "content/index/hero.md" | mdfile | safe }}</div>
+        <div class="hero-actions">
+            <a href="about.html" class="btn btn-light btn-lg">Learn More</a>
+            <a href="research.html" class="btn btn-outline-light btn-lg">Our Research</a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2 class="section-title center">Project Highlights</h2>
+        <div class="grid grid-3">
+            <div class="card hover-card feature-card">
+                <div class="card-body">
+                    <div class="feature-icon">{% icon "globe" %}</div>
+                    <h5>Pan-European Collaboration</h5>
+                    <p class="text-muted">Connecting researchers and stakeholders across European river deltas</p>
+                </div>
+            </div>
+            <div class="card hover-card feature-card">
+                <div class="card-body">
+                    <div class="feature-icon">{% icon "leaf" %}</div>
+                    <h5>Sustainable Solutions</h5>
+                    <div class="ratio-16x9 mb-2">
+                        <video src="content/images/MikeModel1.mp4" autoplay muted loop playsinline
+                            preload="metadata" poster="static/images/model-poster.jpg"
+                            aria-label="Hydrodynamic model preview"></video>
+                    </div>
+                    <p class="text-muted small">Developing innovative approaches for climate-resilient delta management</p>
+                    <a href="research.html#mikemodel" class="btn btn-sm btn-outline">{% icon "play" %} See the model</a>
+                </div>
+            </div>
+            <div class="card hover-card feature-card">
+                <div class="card-body">
+                    <div class="feature-icon">{% icon "database" %}</div>
+                    <h5>Open Data Platform</h5>
+                    <p class="text-muted">Sharing research data and findings with the global scientific community</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section alt">
+    <div class="container">
+        <div class="split">
+            <div>
+                <h2 class="section-title">Latest News</h2>
+                {% for post in news | batch(3) | first %}
+                <div class="card hover-card mb-2">
+                    <div class="card-body news-teaser">
+                        {% if post.image %}
+                        <img src="{{ post.image }}" alt="{{ post.title }}" class="thumb" loading="lazy" decoding="async">
+                        {% endif %}
+                        <div>
+                            <h5>{{ post.title }}</h5>
+                            <p class="text-muted small mb-2">{% icon "calendar" %} {{ post.date | niceDate }}</p>
+                            <p class="small">{{ post.excerpt }}</p>
+                            <a href="news/{{ post.slug }}.html" class="btn btn-sm btn-outline">Read more {% icon "arrow-right" %}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="center mt-2">
+                    <a href="news.html" class="btn btn-primary">{% icon "newspaper" %} View All News</a>
+                </div>
+            </div>
+            <div>
+                <h2 class="section-title">Workshops</h2>
+                {% if workshops.upcoming.length %}
+                    {% for w in workshops.upcoming | batch(2) | first %}
+                    <a href="workshops.html" class="card hover-card side-card mb-2" style="display:block">
+                        {% if w.image %}<img src="{{ w.image }}" alt="{{ w.title }}">{% endif %}
+                        <div class="card-body">
+                            <h5 style="margin:0 0 .3rem">{{ w.title }}</h5>
+                            <p class="small text-muted" style="margin:0">
+                                {% icon "calendar" %} {{ w.date }}
+                                {% if w.location %}<br>{% icon "map-pin" %} {{ w.location }}{% endif %}
+                            </p>
+                        </div>
+                    </a>
+                    {% endfor %}
+                {% else %}
+                    <div class="center" style="padding:1rem 0">
+                        <p class="text-muted small">Stay tuned for upcoming workshops.</p>
+                    </div>
+                    {% if workshops.past.length %}
+                    {% set last = workshops.past | first %}
+                    <a href="workshops.html" class="card hover-card side-card muted mb-2" style="display:block">
+                        <div class="card-body">
+                            <p class="eyebrow">Most recent</p>
+                            <h5 style="margin:0 0 .3rem">{{ last.title }}</h5>
+                            <p class="small text-muted" style="margin:0">
+                                {% icon "calendar" %} {{ last.date }}
+                                {% if last.location %}<br>{% icon "map-pin" %} {{ last.location }}{% endif %}
+                            </p>
+                        </div>
+                    </a>
+                    {% endif %}
+                {% endif %}
+                <div class="center mt-2">
+                    <a href="workshops.html" class="btn btn-sm btn-outline">{% icon "calendar" %} View All Workshops</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

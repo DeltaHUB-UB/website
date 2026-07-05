@@ -1,0 +1,66 @@
+---
+title: Contact - Delta-Hub Horizon Europe
+active: contact
+permalink: contact.html
+---
+{% extends "base.njk" %}
+
+{% block main %}
+<section class="section">
+    <div class="container">
+        <div class="page-head">
+            <h1>Contact Us</h1>
+            <div class="lead">{{ "content/contact/intro.md" | mdfile | safe }}</div>
+        </div>
+
+        <div class="grid grid-2 mb-3">
+            <div class="card hover-card feature-card">
+                <div class="card-body roomy">
+                    <div class="feature-icon">{% icon "mail" %}</div>
+                    <h3 style="font-size:1.2rem;margin:0 0 .75rem">Send us a message</h3>
+                    <p class="text-muted mb-2">Have a question, an idea, or want to collaborate? Email us directly and
+                        we'll get back to you.</p>
+                    <a href="mailto:{{ site.email }}" class="btn btn-primary btn-lg">{% icon "send" %} {{ site.email }}</a>
+                </div>
+            </div>
+            <div class="card hover-card feature-card">
+                <div class="card-body roomy">
+                    <div class="feature-icon">{% icon "share" %}</div>
+                    <h3 style="font-size:1.2rem;margin:0 0 .75rem">Connect With Us</h3>
+                    <p class="text-muted mb-2">Follow us for regular updates on project developments, publications, and events.</p>
+                    <div style="display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap">
+                        <a href="{{ site.social.linkedin }}" class="btn btn-outline" target="_blank" rel="noopener">{% icon "linkedin" %} LinkedIn</a>
+                        <a href="{{ site.social.facebook }}" class="btn btn-outline" target="_blank" rel="noopener">{% icon "facebook" %} Facebook</a>
+                        <a href="{{ site.social.instagram }}" class="btn btn-outline" target="_blank" rel="noopener">{% icon "instagram" %} Instagram</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body roomy">
+                <h5>{% icon "users" %} For Researchers</h5>
+                <p>Interested in collaboration, accessing our data, or learning more about
+                    our methodologies? We welcome inquiries from the research community.</p>
+                <ul class="checklist small">
+                    <li>{% icon "check" %} Data sharing requests</li>
+                    <li>{% icon "check" %} Research collaboration</li>
+                    <li>{% icon "check" %} Workshop participation</li>
+                    <li>{% icon "check" %} Publication opportunities</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card feature-card">
+            <div class="card-body roomy">
+                <div class="feature-icon">{% icon "map" %}</div>
+                <h4 style="margin:0 0 .5rem">Project Locations</h4>
+                <p class="text-muted">Delta-Hub partners are located across Europe, working together to advance
+                    sustainable delta management. Our consortium spans multiple countries and
+                    institutions.</p>
+                <a href="team.html" class="btn btn-outline">{% icon "users" %} Meet Our Team</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,39 @@
+---
+title: News | DeltaHub
+active: news
+permalink: news.html
+---
+{% extends "base.njk" %}
+
+{% block main %}
+<section class="section alt" style="min-height:70vh">
+    <div class="container">
+        <div class="page-head">
+            <h1>News</h1>
+            <p class="lead">Latest updates, events, and announcements from DeltaHub.</p>
+        </div>
+
+        <div class="news-grid">
+            {% for post in news %}
+            <article class="card hover-card news-card" id="{{ post.slug }}">
+                {% if post.image %}
+                <a href="news/{{ post.slug }}.html" tabindex="-1" aria-hidden="true">
+                    <img src="{{ post.image }}" alt="" class="news-card-img" loading="lazy" decoding="async">
+                </a>
+                {% elif post.media and post.media.type == "image" %}
+                <a href="news/{{ post.slug }}.html" tabindex="-1" aria-hidden="true">
+                    <img src="{{ post.media.url }}" alt="" class="news-card-img" loading="lazy" decoding="async">
+                </a>
+                {% endif %}
+                <div class="card-body">
+                    <span class="badge badge-brand">{% icon "calendar" %} {{ post.date | niceDate }}</span>
+                    <h2><a href="news/{{ post.slug }}.html">{{ post.title }}</a></h2>
+                    <p class="small text-muted">{{ post.excerpt }}</p>
+                    <a href="news/{{ post.slug }}.html" class="btn btn-sm btn-outline">Read more {% icon "arrow-right" %}</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

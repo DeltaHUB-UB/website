@@ -1,22 +1,119 @@
+# Decap CMS configuration — edit the site at /admin
+#
+# LOCAL editing works out of the box (no login setup needed):
+#   1) npm run dev          (serves the site at http://localhost:8080)
+#   2) npx decap-server     (in a second terminal)
+#   3) open http://localhost:8080/admin/
+#
+# LIVE editing on delta-hub.unibuc.ro uses the OAuth proxy below
+# (see CMS_SETUP.md in the project root).
+
 backend:
-  name: git-gateway
-  branch: main # Your main branch name
+  name: github
+  repo: DeltaHUB-UB/website
+  branch: main
+  base_url: https://sveltia-cms-auth.zaiflorin.workers.dev
 
-# Optional: Use this for local development
-# local_backend: true
+local_backend: true
+publish_mode: simple
 
-media_folder: "content/images/news" # Where to store uploaded images
-public_folder: "content/images/news" # Path used in the markdown files
+media_folder: "content/images/News"
+public_folder: "content/images/News"
 
 collections:
-  - name: "news" # Used in routes
-    label: "News" # Used in the UI
-    folder: "content/news" # The path to the folder where news articles are stored
-    create: true # Allow users to create new documents
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template
-    fields: # The fields for each document
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Publish Date", name: "date", widget: "datetime"}
-      - {label: "Featured Image", name: "image", widget: "image", required: false}
-      - {label: "Summary", name: "summary", widget: "text", hint: "Short summary for homepage preview"}
-      - {label: "Body", name: "body", widget: "markdown"}
+  # ------------------------------------------------------------------ NEWS
+  - name: "news"
+    label: "News"
+    folder: "content/news"
+    create: true
+    extension: "md"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    sortable_fields: ["date", "title"]
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Featured Image", name: "image", widget: "image", required: false }
+      - { label: "Summary", name: "summary", widget: "text", hint: "Shown on the news card and homepage preview (~200 characters)" }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  # ------------------------------------------------------------ PAGE TEXTS
+  - name: "pages"
+    label: "Page texts"
+    files:
+      - label: "Homepage — hero text"
+        name: "hero"
+        file: "content/index/hero.md"
+        fields: [{ label: "Text", name: "body", widget: "markdown" }]
+      - label: "About — overview"
+        name: "about_overview"
+        file: "content/about/overview.md"
+        fields: [{ label: "Text", name: "body", widget: "markdown" }]
+      - label: "Research — intro line"
+        name: "research_intro"
+        file: "content/research/intro.md"
+        fields: [{ label: "Text", name: "body", widget: "markdown" }]
+      - label: "Research — digital twin section"
+        name: "research_mikemodel"
+        file: "content/research/mikemodel.md"
+        fields: [{ label: "Text", name: "body", widget: "markdown" }]
+      - label: "Workshops — intro line"
+        name: "workshops_intro"
+        file: "content/workshops/intro.md"
+        fields: [{ label: "Text", name: "body", widget: "markdown" }]
+      - label: "Team — intro line"
+        name: "team_intro"
+        file: "content/consortium/intro.md"
+        fields: [{ label: "Text", name: "body", widget: "markdown" }]
+      - label: "Contact — intro line"
+        name: "contact_intro"
+        file: "content/contact/intro.md"
+        fields: [{ label: "Text", name: "body", widget: "markdown" }]
+
+  # -------------------------------------------------------------- SITE DATA
+  - name: "data"
+    label: "Team & workshops"
+    files:
+      - label: "Team members"
+        name: "team"
+        file: "data/team.json"
+        fields:
+          - label: "Team"
+            name: "team"
+            widget: "list"
+            summary: "{{fields.name}} — {{fields.position}}"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Position", name: "position", widget: "string" }
+              - label: "Photo"
+                name: "photo"
+                widget: "image"
+                required: false
+                media_folder: "/content/images/Photos_people"
+                public_folder: "content/images/Photos_people"
+              - { label: "ResearchGate URL", name: "researchgate", widget: "string", required: false }
+      - label: "Workshops"
+        name: "workshops"
+        file: "data/workshops.json"
+        fields:
+          - label: "Workshops"
+            name: "workshops"
+            widget: "list"
+            summary: "{{fields.title}} ({{fields.date}})"
+            fields:
+              - { label: "ID (unique, no spaces)", name: "id", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Date (YYYY-MM-DD)", name: "date", widget: "string", pattern: ["^\\d{4}-\\d{2}-\\d{2}$", "Use YYYY-MM-DD"] }
+              - { label: "Location", name: "location", widget: "string", required: false }
+              - label: "Image / poster"
+                name: "image"
+                widget: "image"
+                required: false
+                media_folder: "/content/workshops"
+                public_folder: "content/workshops"
+              - { label: "Description (markdown)", name: "description", widget: "text", required: false }
+              - { label: "Description file (advanced — path to a .md file)", name: "description_file", widget: "string", required: false }
+              - { label: "Poster PDF link", name: "poster_link", widget: "string", required: false }
+              - { label: "Programme PDF link", name: "programme_link", widget: "string", required: false }
+              - { label: "Registration email", name: "registration_email", widget: "string", required: false }
+              - { label: "Registration link", name: "registration_link", widget: "string", required: false }
+              - { label: "Materials link", name: "materials_link", widget: "string", required: false }

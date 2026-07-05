@@ -1,0 +1,16 @@
+{
+  "name": "delta-hub-website",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DELTA-Hub Horizon Europe project website (Eleventy)",
+  "scripts": {
+    "dev": "eleventy --serve",
+    "build": "eleventy"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "gray-matter": "^4.0.3",
+    "markdown-it": "^14.1.0"
+  }
+}

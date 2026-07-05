@@ -1,0 +1,54 @@
+---
+pagination:
+  data: news
+  size: 1
+  alias: post
+permalink: "news/{{ post.slug }}.html"
+active: news
+root: "../"
+eleventyComputed:
+  title: "{{ post.title }} | DeltaHub"
+---
+{% extends "base.njk" %}
+
+{% block main %}
+<section class="section alt">
+    <div class="container post-container">
+        <p class="mb-2"><a href="{{ root }}news.html" class="btn btn-sm btn-outline">{% icon "arrow-left" %} All news</a></p>
+
+        <article class="card news-article">
+            <div class="card-body roomy">
+                {% if post.date %}
+                <span class="badge badge-brand">{% icon "calendar" %} {{ post.date | niceDate }}</span>
+                {% endif %}
+                <h1 class="post-title">{{ post.title }}</h1>
+                {% if post.image %}
+                <img src="{{ root }}{{ post.image }}" alt="{{ post.title }}" class="news-image" decoding="async">
+                {% elif post.media %}
+                    {% if post.media.type == "image" %}
+                    <img src="{{ root }}{{ post.media.url }}" alt="{{ post.title }}" class="news-image" decoding="async">
+                    {% else %}
+                    <video src="{{ root }}{{ post.media.url }}" controls class="news-image" style="width:100%"></video>
+                    {% endif %}
+                {% endif %}
+                <div class="prose">{{ post.html | rebase(root) | safe }}</div>
+            </div>
+        </article>
+
+        {% set newer = news[pagination.pageNumber - 1] %}
+        {% set older = news[pagination.pageNumber + 1] %}
+        <nav class="post-nav" aria-label="More news">
+            <div>
+                {% if newer %}
+                <a href="{{ newer.slug }}.html" class="btn btn-sm btn-outline">{% icon "arrow-left" %} {{ newer.title | truncate(40) }}</a>
+                {% endif %}
+            </div>
+            <div>
+                {% if older %}
+                <a href="{{ older.slug }}.html" class="btn btn-sm btn-outline">{{ older.title | truncate(40) }} {% icon "arrow-right" %}</a>
+                {% endif %}
+            </div>
+        </nav>
+    </div>
+</section>
+{% endblock %}

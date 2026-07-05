@@ -1,85 +1,55 @@
-# Delta-Hub Website
+# DELTA-Hub website (redesign)
 
-Human-editable static website powered by HTML/CSS/JS with JSON data files.
+Redesigned, modernised version of the DELTA-Hub Horizon Europe project website,
+built with [Eleventy](https://www.11ty.dev/). The **content is identical** to the
+previous site — `content/` and `data/` are verbatim copies of the old folders and
+remain the single source of truth. Only the templates and styling changed.
 
-## Edit content
+## What changed vs. the old site
 
-Most page content lives in the JSON files under `data/`:
+- Pages are generated at build time from `content/*.md` and `data/*.json`
+  (the old site assembled them in the browser with JavaScript).
+- No more Bootstrap, Font Awesome, marked, or DOMPurify — one small custom
+  stylesheet and inline SVG icons. Pages are much lighter and work without JS.
+- News posts are picked up **automatically** from `content/news/*.md`
+  (dated files `YYYY-MM-DD-*.md`). No more manual list in `news.js`.
+- Same URLs as before (`about.html`, `news.html#post-slug`, …) so existing
+  links and bookmarks keep working. Decap CMS at `/admin` is unchanged.
 
-- `data/news.json` – list of news items
-- `data/workshops.json` – upcoming and past workshops/events
-- `data/research.json` – research outputs (publications, reports, datasets)
-- `data/consortium.json` – consortium partners
+## Local development
 
-This repo includes JSON Schemas for validation and editor IntelliSense:
-
-- `data/schemas/*.schema.json` – field definitions and requirements
-- `.vscode/settings.json` – associates schemas with the data files
-
-When you open a JSON file in VS Code, you’ll get auto-complete, validation, and inline errors to prevent mistakes (e.g., wrong date formats or missing fields).
-
-Tips:
-
-- Dates must be in `YYYY-MM-DD` format.
-- Keep titles and descriptions concise and plain text (no HTML).
-- Optional fields (e.g., links) can be omitted or left as empty strings.
-
-## Preview locally
-
-Open a simple HTTP server at the repository root so JSON fetches work:
-
-```powershell
-# From the repo root
-python -m http.server 5500
-# then open http://localhost:5500/
+```bash
+npm install
+npm run dev      # serves at http://localhost:8080 with live reload
+npm run build    # writes the final site to _site/
 ```
 
-Alternatively (requires Node):
+## Content editing (same as before)
 
-```powershell
-npx http-server -p 5500
-```
-
-## Use Markdown for longer text
-
-You can keep long text in separate `.md` files and reference them from JSON:
-
-- Place files under `content/` (e.g., `content/news/2025-08-welcome.md`).
-- In JSON, use one of these fields instead of the plain text:
-	- News: `content_file`
-	- Research: `description_file`
-	- Workshops: `description_file`
-	- Consortium: `description_file`
-
-Example (`data/news.json`):
-
-[
-	{
-		"title": "Project Kickoff",
-		"date": "2025-09-01",
-		"author": "Team",
-		"content_file": "content/news/2025-09-kickoff.md"
-	}
-]
-
-At runtime, the site fetches the `.md` file, renders it to HTML, and displays it. If you provide both the text and the `*_file`, the file takes precedence.
+| What | Where |
+|---|---|
+| News posts | `content/news/YYYY-MM-DD-slug.md` (or Decap CMS at `/admin`) |
+| Homepage hero text | `content/index/hero.md` |
+| About page | `content/about/overview.md` |
+| Page intros | `content/{research,workshops,contact,consortium}/intro.md` |
+| Team members | `data/team.json` |
+| Workshops | `data/workshops.json` (+ optional `description_file` markdown) |
+| Dashboard stations | `data/measurements.json` |
 
 Notes:
-- Markdown is rendered by `marked` (CDN) with a small built-in fallback, and sanitized by DOMPurify.
 
-<!-- Admin page section removed -->
+- Two old posts (`2025-08-22-masuratori-baliza.md`, `2025-08-23-infoclima-delta-hub.md`)
+  are hidden, exactly as on the old site. To publish them, remove their names from
+  the `HIDDEN` list in `src/_data/news.js`.
+- "Upcoming vs past" for workshops is decided at **build time**. The site rebuilds
+  on every push; push any change (e.g. a news post) to refresh it.
 
-## Project structure
+## Deployment (GitHub Pages)
 
-- `index.html`, `news.html`, `workshops.html`, etc. – static pages for GitHub Pages
-- `templates/` – Jinja-style templates used if you render the site with a server or a static site generator (not used by GitHub Pages directly)
-- `static/` – CSS, JavaScript, and images
-- `data/` – JSON content files
+The included workflow (`.github/workflows/deploy.yml`) builds the site and
+deploys `_site/` on every push to `main`.
 
-## Suggested improvements (next steps)
-
-- Consolidate templates: adopt a static site generator (e.g., Eleventy with Nunjucks) to render `templates/` into the root pages, eliminating header/footer duplication.
-- SEO: add per-page `<meta name="description">`, Open Graph tags, `sitemap.xml`, and `robots.txt`.
-- Accessibility: ensure all icons/images have meaningful labels/alt text; current skip-link/focus styles are in place.
-- Performance: add `rel="preload"` for the main CSS, add Subresource Integrity (SRI) to CDN links, and defer non-critical JS.
-- Content workflow: add a GitHub Action to validate `data/*.json` against the schemas on every PR.
+One-time setup after pushing this project to the repository:
+GitHub repo → **Settings → Pages → Build and deployment → Source: GitHub Actions**
+(the old site used "Deploy from a branch"). `CNAME` is preserved, so
+`delta-hub.unibuc.ro` keeps working.

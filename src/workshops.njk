@@ -1,0 +1,78 @@
+---
+title: Workshops - Delta-Hub Horizon Europe
+active: workshops
+permalink: workshops.html
+---
+{% extends "base.njk" %}
+
+{% block main %}
+<section class="section">
+    <div class="container">
+        <div class="page-head">
+            <h1>Workshops &amp; Events</h1>
+            <div class="lead">{{ "content/workshops/intro.md" | mdfile | safe }}</div>
+        </div>
+
+        <h2 class="section-title">Upcoming Workshops</h2>
+        {% if workshops.upcoming.length %}
+        <div class="grid" style="margin-bottom:3rem">
+            {% for w in workshops.upcoming %}
+            <div class="card workshop-card {% if not w.image %}no-image{% endif %}" style="border-left:4px solid #14724a">
+                {% if w.image %}<img class="poster" src="{{ w.image }}" alt="{{ w.title }}" loading="lazy" decoding="async">{% endif %}
+                <div class="card-body">
+                    <div class="meta-row">
+                        <span class="badge badge-success">Upcoming</span>
+                        <span class="small text-muted">{% icon "calendar" %} {{ w.date }}</span>
+                    </div>
+                    <h5>{{ w.title }}</h5>
+                    {% if w.location %}<p class="text-muted">{% icon "map-pin" %} {{ w.location }}</p>{% endif %}
+                    {% if w.description_html %}<div class="prose">{{ w.description_html | safe }}</div>{% endif %}
+                    <div class="workshop-actions">
+                        {% if w.programme_link %}<a href="{{ w.programme_link }}" class="btn btn-sm btn-outline" target="_blank">{% icon "file-text" %} Programme</a>{% endif %}
+                        {% if w.poster_link %}<a href="{{ w.poster_link }}" class="btn btn-sm btn-outline" target="_blank">{% icon "download" %} View Poster</a>{% endif %}
+                        {% if w.registration_link %}<a href="{{ w.registration_link }}" class="btn btn-sm btn-primary" target="_blank">{% icon "users" %} Register Now</a>{% endif %}
+                        {% if w.registration_email %}<a href="mailto:{{ w.registration_email }}" class="btn btn-sm btn-primary">{% icon "mail" %} Apply by Email</a>{% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="center" style="padding:2.5rem 0 3.5rem">
+            <p class="text-muted">Check back soon for updates on our upcoming events and training opportunities.</p>
+        </div>
+        {% endif %}
+
+        <h2 class="section-title">Past Workshops</h2>
+        {% if workshops.past.length %}
+        <div class="grid">
+            {% for w in workshops.past %}
+            <div class="card workshop-card {% if not w.image %}no-image{% endif %}">
+                {% if w.image %}<img class="poster" src="{{ w.image }}" alt="{{ w.title }}" loading="lazy" decoding="async">{% endif %}
+                <div class="card-body">
+                    <div class="meta-row">
+                        <span class="badge badge-neutral">Completed</span>
+                        <span class="small text-muted">{% icon "calendar" %} {{ w.date }}</span>
+                    </div>
+                    <h5>{{ w.title }}</h5>
+                    {% if w.location %}<p class="text-muted">{% icon "map-pin" %} {{ w.location }}</p>{% endif %}
+                    {% if w.description_html %}<div class="prose">{{ w.description_html | safe }}</div>{% endif %}
+                    <div class="workshop-actions">
+                        {% if w.programme_link %}<a href="{{ w.programme_link }}" class="btn btn-sm btn-outline" target="_blank">{% icon "file-text" %} Programme</a>{% endif %}
+                        {% if w.poster_link %}<a href="{{ w.poster_link }}" class="btn btn-sm btn-outline" target="_blank">{% icon "download" %} View Poster</a>{% endif %}
+                        {% if w.materials_link %}<a href="{{ w.materials_link }}" class="btn btn-sm btn-outline" target="_blank">{% icon "download" %} Materials &amp; Recordings</a>{% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="center" style="padding:2.5rem 0">
+            <h4>No Past Workshops Yet</h4>
+            <p class="text-muted">As workshops are completed, materials including presentations, recordings,
+                and summary reports will be made available here.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,55 @@
+---
+title: About - Delta-Hub Horizon Europe
+active: about
+permalink: about.html
+---
+{% extends "base.njk" %}
+
+{% block main %}
+<section class="section">
+    <div class="container" style="max-width: 900px">
+        <div class="page-head">
+            <h1>About DELTA-HUB</h1>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body roomy prose">
+                {{ "content/about/overview.md" | mdfile | safe }}
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body roomy">
+                <h2 id="work-packages" class="section-title" style="font-size:1.3rem">How the work is organized</h2>
+                <figure class="figure">
+                    <img src="content/images/DeltaHub_WorkPackages.jpg" loading="lazy" decoding="async"
+                        alt="Delta-Hub work packages across Education, Engagement and Research: WP1–2 coordination & management, WP3 recruitment, WP4 scientific advances, WP5 academic programs, WP6 ERA capacity, WP7–8 policy and dissemination.">
+                    <figcaption>
+                        Work packages overview: WP1–WP2 coordinate and manage the project; WP3 builds
+                        the team; WP4 drives scientific advances in delta digitalization; WP5 develops
+                        new academic programs; WP6 strengthens ERA integration; WP7–WP8 bridge research
+                        with policy and dissemination — all framed by Education, Engagement, and
+                        Research.
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body roomy">
+                <h2 id="governance" class="section-title" style="font-size:1.3rem">Project governance</h2>
+                <figure class="figure">
+                    <img src="content/images/Figura_Project_management.jpg" loading="lazy" decoding="async"
+                        alt="Governance diagram: PMO at the center with Project Coordinator and ERA Chair holder, coordinating WP Leaders and Team Leaders, and interfacing with UniBuc Administration and the International Advisory Board.">
+                    <figcaption>
+                        Governance at a glance: a central Project Management Office (PMO) works with the
+                        Project Coordinator and the ERA Chair holder, coordinating WP Leaders and Team
+                        Leaders. The structure interfaces bidirectionally with UniBuc Administration and
+                        the International Advisory Board to ensure oversight and continuous feedback.
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

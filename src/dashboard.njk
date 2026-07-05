@@ -1,0 +1,37 @@
+---
+title: Dashboard - Delta-Hub Horizon Europe
+active: dashboard
+permalink: dashboard.html
+---
+{% extends "base.njk" %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+{% endblock %}
+
+{% block main %}
+<section class="section">
+    <div class="container">
+        <div class="card">
+            <div class="card-body roomy">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+                    <h5 style="margin:0">{% icon "droplet" %} Measurements</h5>
+                    <span id="measurementsStatus" class="small text-muted"></span>
+                </div>
+                <div class="grid grid-2">
+                    <div id="measurementsMap" class="map-panel"></div>
+                    <div class="map-note">
+                        <p>Expected data that will be available for download: Water level, current velocity and
+                            turbidity form the Monitoring Station at Sfantu Gheorghe; Remote sensing and Model data.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="static/js/dashboard.js"></script>
+{% endblock %}

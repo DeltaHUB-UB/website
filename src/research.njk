@@ -1,0 +1,122 @@
+---
+title: Research - Delta-Hub Horizon Europe
+active: research
+permalink: research.html
+---
+{% extends "base.njk" %}
+
+{% block main %}
+<section class="section">
+    <div class="container">
+        <div class="page-head">
+            <h1>Research &amp; Results</h1>
+            <div class="lead">{{ "content/research/intro.md" | mdfile | safe }}</div>
+        </div>
+
+        <div class="grid grid-3 mb-3">
+            <div class="card hover-card feature-card">
+                <div class="card-body">
+                    <div class="feature-icon">{% icon "file-text" %}</div>
+                    <h5>Publications</h5>
+                    <p class="text-muted">Peer-reviewed articles and conference papers</p>
+                </div>
+            </div>
+            <div class="card hover-card feature-card">
+                <div class="card-body">
+                    <div class="feature-icon">{% icon "bar-chart" %}</div>
+                    <h5>Reports</h5>
+                    <p class="text-muted">Technical reports and policy briefs</p>
+                </div>
+            </div>
+            <div class="card hover-card feature-card">
+                <div class="card-body">
+                    <div class="feature-icon">{% icon "database" %}</div>
+                    <h5>Datasets</h5>
+                    <p class="text-muted">Open research data and monitoring records</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="mikemodel" class="card mb-3">
+            <div class="card-body roomy">
+                <div class="prose mb-2">
+                    {{ "content/research/mikemodel.md" | mdfile | safe }}
+                </div>
+                <div class="ratio-16x9">
+                    <video src="content/images/MikeModel1.mp4" autoplay muted loop playsinline controls
+                        preload="metadata" aria-label="Hydrodynamic model animation preview"></video>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="card hover-card">
+                <div class="card-body">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+                        <span class="badge badge-brand">Publication</span>
+                        <span class="small text-muted">2025</span>
+                    </div>
+                    <h5>A 7000-year record of human influence on Global River Deltas: Geomorphology, stratigraphy, the Anthropocene overprint and future</h5>
+                    <p class="text-muted small">{% icon "users" %} Anthony et al. &middot; <em>Earth-Science Reviews</em>, 2025</p>
+                    <a href="https://doi.org/10.1016/j.earscirev.2025.105302" class="btn btn-sm btn-outline"
+                        target="_blank" rel="noopener noreferrer">{% icon "external-link" %} Read article</a>
+                </div>
+            </div>
+            <div class="card hover-card">
+                <div class="card-body">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+                        <span class="badge badge-info">Coming Soon</span>
+                        <span class="small text-muted">2025</span>
+                    </div>
+                    <h5>Technical Reports</h5>
+                    <p>Comprehensive technical reports documenting our methodologies, findings,
+                        and recommendations will be published as they become available.</p>
+                    <p class="text-muted small">{% icon "file-text" %} Regular updates and deliverables</p>
+                </div>
+            </div>
+            <div class="card hover-card">
+                <div class="card-body">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+                        <span class="badge badge-info">Coming Soon</span>
+                        <span class="small text-muted">2025</span>
+                    </div>
+                    <h5>Open Datasets</h5>
+                    <p>Research datasets collected through the project will be made freely
+                        available to the scientific community following data management protocols.</p>
+                    <p class="text-muted small">{% icon "database" %} FAIR data principles compliance</p>
+                </div>
+            </div>
+            <div class="card hover-card">
+                <div class="card-body">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+                        <span class="badge badge-info">Coming Soon</span>
+                        <span class="small text-muted">2025</span>
+                    </div>
+                    <h5>Policy Briefs</h5>
+                    <p>Policy-oriented summaries will translate research findings into
+                        actionable recommendations for delta management authorities.</p>
+                    <p class="text-muted small">{% icon "check" %} Evidence-based policy support</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="impact-band mt-3">
+            <h3>Research Impact</h3>
+            <div class="grid grid-3">
+                <div>
+                    <h4>Open Science</h4>
+                    <p>All publications will be made available through open access channels</p>
+                </div>
+                <div>
+                    <h4>Data Sharing</h4>
+                    <p>Research data will be shared following FAIR principles</p>
+                </div>
+                <div>
+                    <h4>Policy Impact</h4>
+                    <p>Findings will inform EU and national delta management policies</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

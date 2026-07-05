@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="icon" type="image/png" href="{{ root }}content/images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ root }}static/css/style.css">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="{{ root }}index.html" class="brand" aria-label="Delta-Hub Home">
+                <img src="{{ root }}content/images/Delta-HubWebsite1.png" alt="Delta-Hub Logo">
+            </a>
+            <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="siteNav">
+                <span></span><span></span><span></span>
+            </button>
+            <nav class="site-nav" id="siteNav">
+                {% for item in site.nav %}
+                <a href="{{ root }}{{ item.href }}" {% if active == item.key %}class="active" aria-current="page"{% endif %}>{{ item.label }}</a>
+                {% endfor %}
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        {% block main %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-funding">
+                        <img src="{{ root }}static/images/eu-flag.svg" alt="European Union Flag" class="eu-flag">
+                        <span>Funded by the European Union</span>
+                    </div>
+                    <p class="footer-disclaimer">
+                        Views and opinions expressed are however those of the author(s) only and do not necessarily
+                        reflect those of the European Union or the European Commission. Neither the European Union
+                        nor the granting authority can be held responsible for them.
+                    </p>
+                </div>
+                <div class="footer-social">
+                    <h6>Follow Us</h6>
+                    <div class="social-row">
+                        <a href="{{ site.social.linkedin }}" aria-label="LinkedIn" target="_blank" rel="noopener">{% icon "linkedin" %}</a>
+                        <a href="{{ site.social.facebook }}" aria-label="Facebook" target="_blank" rel="noopener">{% icon "facebook" %}</a>
+                        <a href="{{ site.social.instagram }}" aria-label="Instagram" target="_blank" rel="noopener">{% icon "instagram" %}</a>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <p class="footer-copy">&copy; 2025 Delta-Hub Horizon Europe Project. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            var btn = document.querySelector('.nav-toggle');
+            var nav = document.getElementById('siteNav');
+            btn.addEventListener('click', function () {
+                var open = nav.classList.toggle('open');
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelectorAll('video[autoplay]').forEach(function (v) {
+                    v.removeAttribute('autoplay');
+                    v.pause();
+                });
+            }
+        })();
+    </script>
+    {% block scripts %}{% endblock %}
+    <script data-goatcounter="https://delta-hub.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

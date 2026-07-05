@@ -1,0 +1,45 @@
+---
+title: Team - Delta-Hub Horizon Europe
+active: team
+permalink: team.html
+---
+{% extends "base.njk" %}
+
+{% block main %}
+<section class="section">
+    <div class="container">
+        <div class="page-head">
+            <h1>Our Team</h1>
+            <div class="lead">{{ "content/consortium/intro.md" | mdfile | safe }}</div>
+        </div>
+
+        <div class="team-grid">
+            {% for member in team %}
+            <div class="card hover-card team-card">
+                <div class="card-body">
+                    {% if member.photo %}
+                    <img class="team-photo" src="{{ member.photo }}" alt="{{ member.name }} photo" loading="lazy" decoding="async">
+                    {% endif %}
+                    <h5>{{ member.name }}</h5>
+                    <p class="role">{{ member.position }}</p>
+                    <div class="links">
+                        {% if member.researchgate %}
+                        <a href="{{ member.researchgate }}" target="_blank" rel="noopener"
+                            aria-label="{{ member.name }} on ResearchGate"><span class="rg-badge">RG</span></a>
+                        {% endif %}
+                        {% if member.linkedin %}
+                        <a href="{{ member.linkedin }}" target="_blank" rel="noopener"
+                            aria-label="{{ member.name }} on LinkedIn">{% icon "linkedin" %}</a>
+                        {% endif %}
+                        {% if member.website %}
+                        <a href="{{ member.website }}" target="_blank" rel="noopener"
+                            aria-label="{{ member.name }} website">{% icon "globe" %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
