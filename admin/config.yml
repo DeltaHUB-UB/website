@@ -56,6 +56,10 @@ collections:
         name: "research_mikemodel"
         file: "content/research/mikemodel.md"
         fields: [{ label: "Text", name: "body", widget: "markdown" }]
+      - label: "3D Experience — description"
+        name: "experience_intro"
+        file: "content/experience/intro.md"
+        fields: [{ label: "Text", name: "body", widget: "markdown" }]
       - label: "Workshops — intro line"
         name: "workshops_intro"
         file: "content/workshops/intro.md"

@@ -12,6 +12,7 @@ export default {
     { key: "about", label: "About", href: "about.html" },
     { key: "team", label: "Team", href: "team.html" },
     { key: "research", label: "Research", href: "research.html" },
+    { key: "experience", label: "3D Experience", href: "experience.html" },
     { key: "workshops", label: "Workshops", href: "workshops.html" },
     { key: "news", label: "News", href: "news.html" },
     { key: "dashboard", label: "Dashboard", href: "dashboard.html" },

@@ -1,0 +1,39 @@
+---
+title: 3D Experience - Delta-Hub Horizon Europe
+active: experience
+permalink: experience.html
+launch: 3d/index.html?lang=en
+---
+{% extends "base.njk" %}
+
+{% block main %}
+<section class="section">
+    <div class="container">
+        <div class="page-head">
+            <h1>The Danube Delta in 3D</h1>
+            <p class="lead">An interactive journey through the delta: how it was born, how it breathes with the
+                Danube's waters and how its coast moves.</p>
+        </div>
+
+        <div class="split xp-split">
+            <a href="{{ launch }}" class="xp-preview" target="_blank" rel="noopener" aria-label="Launch the 3D experience">
+                <div class="ratio-16x9">
+                    <video src="content/images/experience_preview.mp4" autoplay muted loop playsinline
+                        preload="metadata" poster="static/images/experience-poster.jpg"
+                        aria-label="Preview of the 3D experience main screen"></video>
+                </div>
+                <span class="xp-play">{% icon "play" %} Launch</span>
+            </a>
+
+            <div>
+                <div class="prose">{{ "content/experience/intro.md" | mdfile | safe }}</div>
+                <p class="mt-3">
+                    <a href="{{ launch }}" class="btn btn-primary btn-lg" target="_blank" rel="noopener">{% icon "play" %} Launch the experience</a>
+                </p>
+                <p class="text-muted small">Opens in a new tab. Best on a laptop or desktop computer with a recent
+                    browser; some stories load up to 70 MB of data.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
