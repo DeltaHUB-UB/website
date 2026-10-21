@@ -83,15 +83,23 @@ body.on #about{opacity:1}
 #qr canvas{width:calc(var(--u)*6.5);height:auto;border-radius:8px;display:block}
 #err{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);color:var(--ink3);font-size:calc(var(--u)*.9);display:none}
 
-@media (max-width:820px){
+/* phones (kiosk.js PHONE_MQ): the cosmic delta stays as a fixed background, the stories scroll over it as a list */
+@media (max-width:820px), (max-height:500px){
   body{touch-action:pan-y;overflow:auto}
-  #flow,#links,.pin{display:none}
-  #head{position:static;padding:18px 14px 8px}
+  html{overflow:auto}
+  #links,.pin{display:none}
+  #head::before{display:none}
+  #head .sub{text-shadow:0 1px 8px rgba(0,0,0,.95)}
+  #head{position:relative;z-index:3;left:auto;top:auto;padding:18px 70px 8px 14px}   /* relative: above the fixed cosmic canvas */
   #head h1{font-size:40px}
   #cards{position:static;transform:none;perspective:none}
   .sc{position:static;width:auto;margin:10px 12px;opacity:1;transform:none;animation:none!important}
   #about{position:static;width:auto;margin:10px 12px 20px;opacity:1}
   #top{position:fixed;top:12px;right:12px}
+}
+@media (max-height:500px) and (min-width:560px){
+  #cards{display:grid;grid-template-columns:1fr 1fr}
+  .sc{margin:8px}
 }
 </style>
 </head>
@@ -112,7 +120,7 @@ body.on #about{opacity:1}
 <script src="shared/vendor/qrcode.js"></script>
 <script type="module">
 import { EXPO } from './shared/config.js';
-import { KIOSK, getLang, toggleLang, onLang, resetLang, goStory, startIdle, ready, ICON, store } from './shared/kiosk.js';
+import { KIOSK, getLang, toggleLang, onLang, resetLang, goStory, startIdle, ready, ICON, store, isPhone } from './shared/kiosk.js';
 
 const $ = id => document.getElementById(id);
 const T = {
@@ -171,7 +179,7 @@ let flow = null, uPx = 18;
 const svg = $('links'), lines = EXPO.stories.map(() => { const l = document.createElementNS('http://www.w3.org/2000/svg', 'line'); svg.appendChild(l); return l; });
 function layout() {
   const W = innerWidth, H = innerHeight;
-  if (innerWidth <= 820) return;
+  if (isPhone()) { if (flow) flow.frame({ x: W * .04, y: H * .06, w: W * .92, h: H * .88 }); return; }   // phones: the whole delta behind the list
   uPx = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--u')) || 18;
   EXPO.stories.forEach((s, i) => { cards[i].style.left = (CARD_AT[i].x * W) + 'px'; cards[i].style.top = (CARD_AT[i].y * H) + 'px'; });
   if (flow) flow.frame(MAP_RECT());
@@ -179,7 +187,7 @@ function layout() {
 }
 let c0 = null;
 function pinsUpdate() {
-  if (innerWidth <= 820) return;
+  if (isPhone()) return;
   if (flow) {                                          // the cards layer drifts against the camera float (parallax: they sit above the delta)
     const m = flow.toScreen(flow.centre.x, flow.centre.z);
     if (!c0) c0 = m;
@@ -212,7 +220,7 @@ setText();
 // main screen idle (kiosk): no popup — back to RO, panels closed, bubble hints armed again
 startIdle(() => { resetLang(); store.del('dh_bubok'); }, { popup: false });
 
-import('./shared/hubflow.js').then(m => m.hubFlow($('flow'), { base: 'shared/data/', onFrame: () => pinsUpdate() }))
+import('./shared/hubflow.js').then(m => m.hubFlow($('flow'), { base: 'shared/data/', onFrame: () => pinsUpdate(), lite: isPhone() }))
   .then(f => { flow = f; layout(); })
   .catch(e => { console.error(e); $('err').textContent = 'Fundalul nu s-a putut încărca: ' + e.message; $('err').style.display = 'block'; layout(); })
   .finally(() => { document.body.classList.add('on'); ready(); });

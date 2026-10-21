@@ -7,7 +7,7 @@
 // Usage: const UI = storyUI({ index: 0, nextBtn, infoBtn, sources: { ro: {sections:[{h, html}]}, en: … } });
 //        every frame: UI.update({ atStop, end, started, blocked });   on arrival at a station: UI.arrived();
 import { EXPO } from './config.js';
-import { getLang, onLang, lastInput, goStory, go, ICON } from './kiosk.js';
+import { getLang, onLang, lastInput, goStory, go, ICON, isPhone, store } from './kiosk.js';
 
 const TX = {
   ro: { stories: 'Povești', next: 'Următoarea poveste', go: n => `Mergi la povestea ${n}`, start: 'Apasă aici când ești gata', cont: 'Apasă aici ca să continui',
@@ -90,7 +90,35 @@ body.dh-nxon #time,body.dh-nxon #vtick{opacity:0!important;transition:opacity .4
 #dh-src .x{position:sticky;float:right;top:0;margin:calc(var(--u)*-.6) calc(var(--u)*-1) 0 0;width:calc(var(--u)*3);height:calc(var(--u)*3);border-radius:50%;
   border:0;background:rgba(255,255,255,.08);color:#dce8f2;display:grid;place-items:center;cursor:pointer;padding:0}
 body.clean #dh-sw,body.clean #dh-nx,body.clean #dh-ndg,body.rendering #dh-sw,body.rendering #dh-nx,body.rendering #dh-ndg{display:none!important}
-@media (max-width:820px){#dh-sw{display:none}#dh-nx{width:calc(100vw - 16px);flex-wrap:wrap}#dh-nx .im,#dh-nx p{display:none}}
+@media (max-width:820px), (max-height:500px){#dh-nx{width:calc(100vw - 16px);flex-wrap:wrap}#dh-nx .im,#dh-nx p{display:none}
+  /* story switcher: four numbered circles down the right edge */
+  #dh-sw{left:auto;right:6px;top:32%;gap:6px}
+  #dh-sw .h{display:none}
+  #dh-sw button{width:34px;height:34px;padding:0;justify-content:center;font-size:0;border-radius:50%;opacity:.72;background:rgba(6,13,23,.55)}
+  #dh-sw button.cur{opacity:1}
+  #dh-sw button i{width:28px;height:28px;font-size:13px}
+  /* the labelled "Method & sources" button becomes an icon */
+  .dh-srcb span{display:none}
+  .dh-srcb{padding:0!important;min-width:44px!important;justify-content:center}
+  #dh-copy{display:none}
+  /* the story card: collapsed to its title, a touch opens it */
+  #card{cursor:pointer;padding-right:34px!important}
+  #card::after{content:'▴';position:absolute;right:12px;top:10px;font-size:16px;color:var(--sand,#e8c170)}
+  #card.min::after{content:'▾'}
+  #card.min #chint{display:none}
+  #dh-ndg .t{font-size:13px}
+  #dh-src .box{width:94vw;max-height:86vh;padding:18px 16px}
+  #dh-src h2{font-size:22px}
+  #dh-rot{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);z-index:30;padding:12px 18px;border-radius:14px;background:rgba(6,13,23,.9);
+    color:#eef4f8;font:600 15px 'Segoe UI',system-ui,sans-serif;border:1px solid rgba(232,193,112,.5);text-align:center;transition:opacity .6s;pointer-events:none}
+}
+/* phones held sideways: the card on the left, the bar on one row */
+@media (max-height:500px) and (min-width:560px){
+  #card{left:10px!important;right:auto!important;width:44vw!important;bottom:68px!important;max-height:calc(100vh - 140px);overflow:auto}
+  #bar{flex-wrap:nowrap!important}
+  #rail{order:0!important;flex:1 1 auto!important;height:46px!important;margin:0 10px!important}
+  #dh-sw{top:56px}
+}
 `;
 const NEXT_DELAY = /[?&]nx(&|$)/.test(location.search) ? 0 : 20000;   // ms at the end of a story before the end-of-story bar slides down (?nx: at once)
 const ARROW = '<svg viewBox="0 0 26 32"><path d="M9 0h8v18h7L13 32 2 18h7z" fill="#e8402f" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
@@ -154,6 +182,15 @@ export function storyUI({ index, hub = '../../', nextBtn, infoBtn, sources, nudg
   refresh(); onLang(refresh);
   addEventListener('resize', () => { if (ndgOn) placeNudge(); });
 
+  /* phones: the card starts collapsed, a short hint to turn the phone in portrait */
+  if (isPhone()) {
+    const card = document.getElementById('card'); if (card) card.classList.add('min');
+    if (innerHeight > innerWidth && store.get('dh_rot') !== '1') {
+      store.set('dh_rot', '1');
+      const r = el('div', 'dh-rot', getLang() === 'en' ? '⟲ Turn your phone for a bigger picture' : '⟲ Rotește telefonul pentru o imagine mai mare');
+      setTimeout(() => { r.style.opacity = '0'; setTimeout(() => r.remove(), 700); }, 4200);
+    }
+  }
   return {
     arrived() { arrivedAt = performance.now(); },
     // state: atStop = standing at a station (not riding), end = at the last station, started = the visitor has set off once,

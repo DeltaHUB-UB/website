@@ -5,7 +5,8 @@ import { CHAPTERS, LABELS, ANCHORS, UI, SOURCES, MOUTHS, ICE, STOPS, TRAVEL, TRI
 import { CONFIG } from './config.js';
 import { makeQR } from './qr.js';
 import { EXPO } from '../../../shared/config.js';
-import { KIOSK, getLang, toggleLang, onLang, go, startIdle, lastInput, ready, ICON } from '../../../shared/kiosk.js';
+import { KIOSK, getLang, toggleLang, onLang, go, startIdle, lastInput, ready, ICON, isPhone } from '../../../shared/kiosk.js';
+import { gpuInfo } from '../../../shared/gpu.js';
 import { Bubbles } from '../../../shared/bubbles.js';
 import { storyUI } from '../../../shared/storyui.js';
 import { cosmos, bgHex } from '../../../shared/cosmos.js';
@@ -102,10 +103,9 @@ function waterLevel(t) { return Math.max(seaLevel(t), t > FLOOD[0][0] ? -999 : p
 /* ------------------------------------------------------------------ renderer */
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, logarithmicDepthBuffer: true, powerPreference: 'high-performance' });
 // quality: integrated / mobile GPUs get the light terrain (lod 2) and 1:1 pixels; ?q=hi | ?q=lo forces it
-const GPU = (() => { try { const gl = renderer.getContext(), e = gl.getExtension('WEBGL_debug_renderer_info'); return e ? gl.getParameter(e.UNMASKED_RENDERER_WEBGL) : ''; } catch (e) { return ''; } })();
+const GPU = gpuInfo(renderer.getContext()).name;
 const QQ = new URLSearchParams(location.search).get('q');
-const WEAK = QQ === 'lo' || (QQ !== 'hi' && (/Mobi|Android|Quest|OculusBrowser/i.test(navigator.userAgent) ||
-  (/Intel|Radeon\(TM\)|Radeon Graphics|Vega \d|Mali|Adreno|PowerVR|Apple GPU|SwiftShader|llvmpipe|Basic Render/i.test(GPU) && !/RTX|GTX|Quadro|Radeon RX|Radeon Pro|Arc\(TM\) A/i.test(GPU))));
+const WEAK = gpuInfo().weak || (QQ !== 'hi' && /Mobi|Android|Quest|OculusBrowser/i.test(navigator.userAgent));
 const PR_MAX = WEAK ? 1 : Math.min(devicePixelRatio, 2);
 let prNow = PR_MAX;
 renderer.setPixelRatio(prNow);
@@ -705,7 +705,7 @@ function wireUI() {
   $('btnPrev').onclick = prev; $('btnNext').onclick = next;
   $('btnLang').onclick = () => toggleLang();
   onLang(l => { LANG = l; setStatic(); });
-  $('card').onclick = () => { if (innerWidth <= 820) $('card').classList.toggle('min'); };
+  $('card').onclick = () => { if (isPhone()) $('card').classList.toggle('min'); };
   wireRail();
   const touches = new Set();             // 3+ contacts on the map = palms resting on the table → ignore
   renderer.domElement.addEventListener('pointerdown', e => { touches.add(e.pointerId); controls.enabled = touches.size <= 2; if (!S.travel) S.manualCam = true; });

@@ -3,6 +3,7 @@
 // Kiosk mode is switched on by ?kiosk=1 (start_kiosk.bat) and remembered for the browser tab.
 // The pages do not all load ui.css (Delta vie is one self-contained file), so the overlays below bring their own CSS.
 import { EXPO } from './config.js';
+import { gpuInfo } from './gpu.js';
 
 const Q = new URLSearchParams(location.search);
 const ss = {
@@ -14,6 +15,10 @@ export const store = ss;
 if (Q.get('kiosk') === '1') ss.set('dh_kiosk', '1');
 if (Q.get('kiosk') === '0') ss.set('dh_kiosk', '0');
 export const KIOSK = ss.get('dh_kiosk') === '1';
+// phones (portrait or landscape): CSS width <= 820 px or height <= 500 px. The 43" table (3840×2160) and any PC never match,
+// so everything behind this query / isPhone() changes nothing on the big screens.
+export const PHONE_MQ = '(max-width: 820px), (max-height: 500px)';
+export const isPhone = () => matchMedia(PHONE_MQ).matches;
 
 if (Q.get('scale')) EXPO.uiScale = parseFloat(Q.get('scale')) || 1;
 document.documentElement.style.setProperty('--uiScale', EXPO.uiScale);
@@ -30,9 +35,13 @@ export function resetLang() { if (lang !== EXPO.lang) setLang(EXPO.lang); }
 document.documentElement.lang = lang;
 const TX = {
   ro: { load: 'Se încarcă…', still: 'Mai ești aici?', keep: 'Atinge ecranul ca să continui.', back: s => `Revenim la ecranul principal în ${s} s`,
-        copy: '© DELTA-Hub & Water Lab · Universitatea din București · date și modele protejate — reutilizarea doar cu acord' },
+        copy: '© DELTA-Hub & Water Lab · Universitatea din București · date și modele protejate — reutilizarea doar cu acord',
+        soft: 'Browserul desenează 3D-ul fără placa video, așa că totul va merge greu. Pornește accelerarea grafică (Chrome / Edge: Setări → Sistem) și repornește browserul. Dacă e deja pornită, actualizează driverul plăcii video.',
+        nogl: 'Browserul nu poate desena 3D: WebGL e oprit. Pornește accelerarea grafică (Chrome / Edge: Setări → Sistem), repornește browserul sau încearcă alt browser.' },
   en: { load: 'Loading…', still: 'Still there?', keep: 'Touch the screen to keep going.', back: s => `Back to the main screen in ${s} s`,
-        copy: '© DELTA-Hub & Water Lab · University of Bucharest · protected data and models — reuse only with permission' }
+        copy: '© DELTA-Hub & Water Lab · University of Bucharest · protected data and models — reuse only with permission',
+        soft: 'Your browser is drawing the 3D without the graphics card, so everything will be slow. Turn on graphics acceleration (Chrome / Edge: Settings → System) and restart the browser. If it is already on, update the graphics driver.',
+        nogl: 'Your browser cannot draw 3D: WebGL is turned off. Turn on graphics acceleration (Chrome / Edge: Settings → System), restart the browser or try another one.' }
 };
 
 /* ---- CSS for the shared overlays (fade + loading message, idle popup, copyright line) */
@@ -66,6 +75,14 @@ body.dh-out #dh-fade .dh-ld{opacity:1}
 #dh-idle .bar{width:calc(var(--u,16px)*22);max-width:70vw;height:6px;margin:.7em auto 0;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
 #dh-idle .bar i{display:block;height:100%;background:#e8c170;border-radius:99px}
 body.rendering #dh-copy,body.clean #dh-idle{display:none!important}
+#dh-gpu{position:fixed;top:calc(var(--u,16px)*.8);left:50%;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:.9em;
+  width:max-content;max-width:min(92vw,46em);padding:.75em .75em .75em 1.15em;border-radius:14px;background:rgba(8,18,31,.95);border:2px solid #e8c170;
+  box-shadow:0 8px 30px rgba(0,0,0,.45);color:#eef4f8;font:500 clamp(14px,calc(var(--u,16px)*.95),40px)/1.45 "Segoe UI",system-ui,sans-serif}
+#dh-gpu p{margin:0}
+#dh-gpu button{flex:none;width:2.3em;height:2.3em;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);
+  display:grid;place-items:center;cursor:pointer}
+#dh-gpu svg{width:1.1em;height:1.1em;fill:none;stroke:#eef4f8;stroke-width:2.2;stroke-linecap:round}
+body.rendering #dh-gpu,body.clean #dh-gpu{display:none!important}
 `;
 const HAND = '<svg viewBox="0 0 64 64"><circle cx="27" cy="16" r="11" fill="none" stroke="#e8c170" stroke-width="2.5" opacity=".55"/>' +
   '<path d="M23 17v22l-5-5c-2-2-5-2-6.5 0s-1 4.5.5 6l12 13c2 2 4.5 3 7.5 3h8c6 0 10-4.5 10-10V32c0-2-1.5-3.5-3.5-3.5S43 30 43 32v-2c0-2-1.5-3.5-3.5-3.5S36 28 36 30v-1.5c0-2-1.5-3.5-3.5-3.5S29 26.5 29 28.5V17c0-2-1.5-3.5-3-3.5S23 15 23 17z" fill="#fff" stroke="#1a1206" stroke-width="2" stroke-linejoin="round"/></svg>';
@@ -146,6 +163,19 @@ function dom() {
   onLang(l => { c.textContent = TX[l].copy; if (lt) lt.textContent = TX[l].load; });
 }
 if (document.body) dom(); else addEventListener('DOMContentLoaded', dom);
+
+/* ---- no GPU (web only): tell the visitor why the 3D is slow or missing; closing it hides it for the rest of the visit */
+function gpuNote() {
+  const g = gpuInfo();
+  if (KIOSK || ss.get('dh_gpunote') || !(g.soft || g.none)) return;
+  const n = document.createElement('div'); n.id = 'dh-gpu'; n.setAttribute('role', 'alert');
+  n.innerHTML = `<p></p><button aria-label="OK">${ICON.close}</button>`;
+  const txt = l => { n.querySelector('p').textContent = TX[l][g.none ? 'nogl' : 'soft']; };
+  txt(lang); onLang(txt);
+  n.querySelector('button').addEventListener('click', () => { n.remove(); ss.set('dh_gpunote', '1'); });
+  document.body.appendChild(n);
+}
+setTimeout(gpuNote, 1200);   // after the fade-in (and after ICON below is defined)
 // the page is on screen: from now on the idle clock counts (a slow load must not eat into the visitor's 30 s)
 export function ready() { last = performance.now(); requestAnimationFrame(() => document.body.classList.add('dh-in')); }
 

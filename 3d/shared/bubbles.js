@@ -2,7 +2,7 @@
 // Usage: const B = new Bubbles(); B.set([{id, label, title, body, kicker?, src?}]); every frame B.place(id, x, y, visible);
 // Until a visitor has opened one bubble (per visit: the main screen clears 'dh_bubok'), the first visible bubble
 // carries a tapping hand and a "touch here" tag.
-import { ICON, getLang, onLang, store } from './kiosk.js';
+import { ICON, getLang, onLang, store, isPhone } from './kiosk.js';
 
 const CSS = `
 #dh-bubbles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:6}
@@ -55,7 +55,9 @@ const CSS = `
 #dh-lbox img{max-width:92vw;max-height:82vh;border-radius:calc(var(--u)*.6);box-shadow:0 20px 80px rgba(0,0,0,.6)}
 #dh-lbox figcaption{margin-top:.8em;font-size:calc(var(--u)*.85);color:#cfdbe6;font-family:"Segoe UI",system-ui,sans-serif}
 body.clean #dh-bubbles,body.rendering #dh-bubbles{display:none!important}
-@media (max-width:820px){#dh-sheet{left:8px!important;right:8px;width:auto;max-width:none;bottom:96px;top:auto!important}}
+@media (max-width:820px), (max-height:500px){#dh-sheet,#dh-sheet.photo{left:8px!important;right:8px;width:auto;max-width:none;bottom:96px;top:auto!important;max-height:calc(100vh - 150px);overflow:auto}
+  #dh-sheet .ph img{max-height:28vh}}
+@media (max-height:500px){#dh-sheet,#dh-sheet.photo{left:auto!important;right:8px;width:min(60vw,420px);bottom:8px;max-height:calc(100vh - 16px)}}
 `;
 const HAND = '<svg viewBox="0 0 64 64"><path d="M23 17v22l-5-5c-2-2-5-2-6.5 0s-1 4.5.5 6l12 13c2 2 4.5 3 7.5 3h8c6 0 10-4.5 10-10V32c0-2-1.5-3.5-3.5-3.5S43 30 43 32v-2c0-2-1.5-3.5-3.5-3.5S36 28 36 30v-1.5c0-2-1.5-3.5-3.5-3.5S29 26.5 29 28.5V17c0-2-1.5-3.5-3-3.5S23 15 23 17z" fill="#fff" stroke="#1a1206" stroke-width="2.2" stroke-linejoin="round"/></svg>';
 const HINT = { ro: 'Atinge aici', en: 'Touch here' };
@@ -137,7 +139,7 @@ export class Bubbles {
     this.openId = null; this.sheet.classList.remove('on');
   }
   position() {                       // next to the bubble, on the side with more room, kept on screen and above the bottom bar
-    if (innerWidth <= 820) return;
+    if (isPhone()) return;           // phones: a bottom sheet (CSS)
     const it = this.items.get(this.openId), s = this.sheet, r = s.getBoundingClientRect();
     const u = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--u')) || 16;
     const gap = u * 2.6, w = r.width, h = r.height, W = innerWidth, H = innerHeight - u * 6.5;

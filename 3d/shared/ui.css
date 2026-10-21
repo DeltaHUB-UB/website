@@ -42,7 +42,8 @@ body.dh-out #dh-fade{opacity:1;pointer-events:auto}
 #dh-copy{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--u)*.25);font-size:calc(var(--u)*.6);color:rgba(184,200,214,.45);
   letter-spacing:.06em;pointer-events:none;z-index:4;white-space:nowrap}
 
-/* ---- phones */
-@media (max-width:820px){
+/* ---- phones (same query as kiosk.js PHONE_MQ) */
+@media (max-width:820px), (max-height:500px){
   :root{--u:13px}
+  #dh-copy{display:none}   /* on phones the © sits in the about box / Method & sources */
 }

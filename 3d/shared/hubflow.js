@@ -15,7 +15,8 @@ const VCS = 400;                   // velocity grid cell (m)
 const DCS = 1500;                  // crowding grid cell (m)
 const FOV = 34;
 
-export async function hubFlow(canvasParent, { base = 'shared/data/', count = 24000, onFrame = null } = {}) {
+export async function hubFlow(canvasParent, { base = 'shared/data/', count = 24000, onFrame = null, lite = false } = {}) {
+  if (lite) count = 9000;                                    // phones: fewer sparkles, a cheaper bloom
   const meta = await (await fetch(base + 'hub_flow.json')).json();
   const r = await fetch(base + 'hub_flow.bin.gz');
   if (!r.ok) throw new Error('hub_flow.bin.gz ' + r.status);
@@ -102,7 +103,7 @@ export async function hubFlow(canvasParent, { base = 'shared/data/', count = 240
   cam.up.set(0, 0, -1);                                                    // north (−z) at the top of the screen
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, cam));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / 2, innerHeight / 2), 0.62, 0.8, 0.10);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / (lite ? 3 : 2), innerHeight / (lite ? 3 : 2)), 0.62, 0.8, 0.10);
   composer.addPass(bloom); composer.addPass(new OutputPass());
   const TIME = { value: 0 }; SKY.uT = TIME;
 
@@ -234,7 +235,7 @@ export async function hubFlow(canvasParent, { base = 'shared/data/', count = 240
   let fit = { tx: MX, tz: MZ, d: EXT };
   function frame(rect) {          // fit the water extent into rect {x, y, w, h} (CSS px) of the window, seen from straight above
     const W = innerWidth, H = innerHeight;
-    renderer.setSize(W, H); composer.setSize(W, H); bloom.resolution.set(W / 2, H / 2);
+    renderer.setSize(W, H); composer.setSize(W, H); bloom.resolution.set(W / (lite ? 3 : 2), H / (lite ? 3 : 2));
     cam.aspect = W / H; cam.updateProjectionMatrix(); SKY.uAsp.value = W / H;
     const mpp = Math.max((ex1 - ex0) / rect.w, (ez1 - ez0) / rect.h), tanH = Math.tan(FOV * Math.PI / 360);
     fit = { d: mpp * H / (2 * tanH), tx: MX - (rect.x + rect.w / 2 - W / 2) * mpp, tz: MZ - (rect.y + rect.h / 2 - H / 2) * mpp };
