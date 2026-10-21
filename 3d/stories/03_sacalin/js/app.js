@@ -5,7 +5,8 @@ import * as THREE from 'three';
 import { OrbitControls } from '../../../shared/vendor/addons/OrbitControls.js';
 import { STOPS, LABELS, ANCHORS, UI, SOURCES } from './story.js';
 import { EXPO } from '../../../shared/config.js';
-import { getLang, toggleLang, onLang, go, startIdle, lastInput, ready, ICON } from '../../../shared/kiosk.js';
+import { getLang, toggleLang, onLang, go, startIdle, lastInput, ready, ICON, isPhone } from '../../../shared/kiosk.js';
+import { gpuInfo } from '../../../shared/gpu.js';
 import { Bubbles } from '../../../shared/bubbles.js';
 import { storyUI } from '../../../shared/storyui.js';
 import { cosmos, bgHex } from '../../../shared/cosmos.js';
@@ -69,7 +70,8 @@ function liveLine(t) {
 
 /* ------------------------------------------------------------------ renderer */
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+// phones: 3x screens would cost too much; integrated GPUs (laptops with 150-200 % screens): 1:1 pixels
+renderer.setPixelRatio(Math.min(devicePixelRatio, isPhone() ? 1.5 : gpuInfo(renderer.getContext()).weak ? 1 : 2));
 renderer.setSize(innerWidth, innerHeight);
 $('app').appendChild(renderer.domElement);
 const scene = new THREE.Scene();
@@ -586,7 +588,7 @@ function wireUI() {
   $('btnLang').onclick = () => toggleLang();
   onLang(l => { LANG = l; setStatic(); });
   SUI = storyUI({ index: 2, hub: HUB, nextBtn: $('btnNext'), infoBtn: $('btnData'), sources: SOURCES });
-  $('card').onclick = () => { if (innerWidth <= 820) $('card').classList.toggle('min'); };
+  $('card').onclick = () => { if (isPhone()) $('card').classList.toggle('min'); };
   wireRail();
   const touches = new Set();             // 3+ contacts on the map = palms resting on the table → ignore
   renderer.domElement.addEventListener('pointerdown', e => { touches.add(e.pointerId); controls.enabled = touches.size <= 2; if (!S.travel) S.manualCam = true; });
