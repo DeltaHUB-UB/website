@@ -8,8 +8,16 @@ export const EXPO = {
   nudgeSec: 8,
   // Default language ('ro' | 'en'); the kiosk falls back to it every time it returns to the main screen.
   lang: 'ro',
-  // Public HTTPS address of the hosted version (for the QR code). Empty = no QR.
+  // Public HTTPS address of the hosted version (for story 1's QR code). Empty = no QR.
   publicUrl: '',
+  // The 3D Experience page on the DELTA-Hub website: QR code + link in the "Follow DELTA-Hub" box (main screen, bottom left).
+  webPage: 'https://delta-hub.unibuc.ro/experience.html',
+  // DELTA-Hub on social media, stacked top to bottom in the same box.
+  social: [
+    { id: 'li', name: 'LinkedIn', handle: 'DELTA-Hub', url: 'https://www.linkedin.com/company/delta-hub-river-delta-science-education-and-modeling-hub/' },
+    { id: 'fb', name: 'Facebook', handle: 'DeltaHubUniBuc', url: 'https://www.facebook.com/DeltaHubUniBuc/' },
+    { id: 'ig', name: 'Instagram', handle: '@deltahub2025', url: 'https://www.instagram.com/deltahub2025' }
+  ],
   // UI size multiplier (1 = ~1 % of the screen width per unit). Raise if the text looks small on the table.
   uiScale: 1,
   // Stories, in the suggested order (also the "next story" order: 1 → 2 → 3 → 4 → 1).
