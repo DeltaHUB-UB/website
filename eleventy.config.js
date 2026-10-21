@@ -42,6 +42,8 @@ export default function (eleventyConfig) {
   for (const dir of ["content", "data", "admin", "static"]) {
     eleventyConfig.addPassthroughCopy(dir);
   }
+  // 3d/ = the DELTA-Hub 3D Experience (static app, no build step), served at /3d/
+  eleventyConfig.addPassthroughCopy("3d");
   eleventyConfig.addPassthroughCopy("CNAME");
   eleventyConfig.addPassthroughCopy(".nojekyll");
 

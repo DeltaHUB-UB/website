@@ -1,0 +1,28 @@
+{
+ "years": [
+  1985,
+  2025
+ ],
+ "bounds_km": [
+  -26.4,
+  -38.1,
+  44.0,
+  60.0
+ ],
+ "stats": {
+  "north": {
+   "lost_km2": 4.16,
+   "gain_km2": 0.03,
+   "km": 26.0,
+   "max_m": 330,
+   "net_m_per_yr": -4.0
+  },
+  "sacalin": {
+   "lost_km2": 4.47,
+   "gain_km2": 8.57,
+   "km": 16.5,
+   "max_m": 1380,
+   "net_m_per_yr": 6.2
+  }
+ }
+}

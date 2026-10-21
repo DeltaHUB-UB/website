@@ -1,0 +1,48 @@
+/* DELTA-Hub 3D Experience — shared look & feel (all stories + hub).
+   One unit --u scales the whole UI with the screen width (≈1 % of the width; 43" 4K → ~9 mm). */
+:root{
+  --bg:#060d17; --bg2:#0b1826; --glass:rgba(8,16,27,.76); --glass2:rgba(11,22,35,.92); --line:rgba(190,215,235,.15);
+  --flow-a:150,212,245; --flow-b:236,198,118;   /* cosmic flow streaks: blue water, golden sediment */
+  --ink:#eef4f8; --ink2:#b8c8d6; --ink3:#7f95a8; --sand:#e8c170; --green:#8fc24a; --blue:#6fb2e8; --flood:#4fc3e8;
+  --r:calc(var(--u)*.9); --uiScale:1;
+  --u:clamp(12px, calc(.95vw * var(--uiScale)), 48px);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  user-select:none;-webkit-user-select:none;touch-action:none;overscroll-behavior:none}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
+img{-webkit-user-drag:none;user-drag:none}
+.glass{background:var(--glass);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:var(--r)}
+
+/* ---- shared cosmic background (shared/cosmos.js) */
+#dh-cosmos{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen;transition:opacity 1.2s}
+
+/* ---- buttons (bottom bar grammar: ⌂ · ◀ ▶ · progress · RO/EN · ⓘ) */
+.bt{min-width:calc(var(--u)*3.6);height:calc(var(--u)*3.6);border-radius:calc(var(--u)*.75);display:grid;place-items:center;
+  font-size:calc(var(--u)*1.3);background:rgba(255,255,255,.07);flex:none;transition:background .2s,transform .15s,opacity .3s}
+.bt:active{background:rgba(255,255,255,.2);transform:scale(.96)}
+.bt.txt{padding:0 1em;font-size:calc(var(--u)*.9);font-weight:600;letter-spacing:.06em}
+.bt.go{background:var(--sand);color:#1a1206}
+.bt.go:active{background:#f3d590}
+.bt[disabled]{opacity:.28;pointer-events:none}
+.bt svg{width:48%;height:48%;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.bt.pulse{animation:dhpulse 2.2s infinite}
+@keyframes dhpulse{0%,100%{box-shadow:0 0 0 0 rgba(232,193,112,.5)}60%{box-shadow:0 0 0 calc(var(--u)*1.1) rgba(232,193,112,0)}}
+
+/* ---- bubbles + info sheet: CSS lives in bubbles.js (Delta vie does not load this file) */
+
+/* ---- page transitions */
+#dh-fade{position:fixed;inset:0;background:var(--bg);z-index:100;opacity:1;pointer-events:none;transition:opacity .6s ease}
+body.dh-in #dh-fade{opacity:0}
+body.dh-out #dh-fade{opacity:1;pointer-events:auto}
+
+/* ---- copyright line (always visible, discreet) */
+#dh-copy{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--u)*.25);font-size:calc(var(--u)*.6);color:rgba(184,200,214,.45);
+  letter-spacing:.06em;pointer-events:none;z-index:4;white-space:nowrap}
+
+/* ---- phones */
+@media (max-width:820px){
+  :root{--u:13px}
+}

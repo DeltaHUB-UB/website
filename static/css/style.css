@@ -604,6 +604,30 @@ a:focus-visible, button:focus-visible {
     .split { grid-template-columns: 1fr; }
 }
 
+/* 3D Experience page: clickable preview video with a "Launch" chip */
+.xp-split { align-items: center; }
+.xp-preview { position: relative; display: block; border-radius: var(--radius); box-shadow: var(--shadow); transition: box-shadow .2s, transform .2s; }
+.xp-preview:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+.xp-preview .ratio-16x9 > video { border-radius: var(--radius); }
+.xp-play {
+    position: absolute;
+    left: 50%;
+    bottom: 1.25rem;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .55rem 1.3rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .92);
+    color: var(--brand-dark);
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity .2s;
+}
+.xp-preview:hover .xp-play, .xp-preview:focus-visible .xp-play { opacity: 1; }
+@media (hover: none) { .xp-play { opacity: 1; } }
+
 /* --------------------------------------------------------------------------
    Footer
    -------------------------------------------------------------------------- */
